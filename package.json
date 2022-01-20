@@ -8,6 +8,6 @@
     "prettier": "2.5.1"
   },
   "scripts": {
-    "format": "npm run format"
+    "format": ""
   }
 }
