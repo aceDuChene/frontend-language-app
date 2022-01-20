@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install packages
         run: npm ci
-      - name: Prettier
+      - name: format
         run: npm run format
-      - name: Lint
+      - name: lint
         run: npm run lint
