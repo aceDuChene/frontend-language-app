@@ -9,7 +9,6 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
-import { RECORDING_OPTION_IOS_OUTPUT_FORMAT_LINEARPCM } from "expo-av/build/Audio";
 
 const initialData = {
   id: 12312432,
@@ -21,6 +20,12 @@ const initialData = {
 };
 
 function ProviderScenarioScreen(translatorId) {
+  /* **** TO ADD ******
+    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
+    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
+    - On Submit button press: POST request to Firebase
+  */
+
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(initialData);
 
@@ -29,10 +34,10 @@ function ProviderScenarioScreen(translatorId) {
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
-  const [recordingPrompt, setRecordingPrompt] = useState();
-  const [recordingAnswer, setRecordingAnswer] = useState();
+  const [recording, setRecording] = useState();
+  const [recordedObject, setRecordedObject] = useState();
 
-  //Stores just the recording URI; change to what's needed for Firebase
+  //Stores just the recording URI; change to what's needed for Firebase (sound?)
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
@@ -48,12 +53,6 @@ function ProviderScenarioScreen(translatorId) {
     translatorID: 11111111,
   };
 
-  /* **** TO ADD ******
-    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
-    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
-  */
-
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to Firebase", promptAudio);
@@ -64,7 +63,7 @@ function ProviderScenarioScreen(translatorId) {
   };
 
   /* For recording audio using expo-av */
-  async function startRecordingPrompt() {
+  async function startRecording() {
     try {
       console.log("Requesting permissions..");
       await Audio.requestPermissionsAsync();
@@ -73,49 +72,30 @@ function ProviderScenarioScreen(translatorId) {
         playsInSilentModeIOS: true,
       });
       console.log("Starting recording..");
-      const { recordingPrompt } = await Audio.Recording.createAsync(
+      const { recording } = await Audio.Recording.createAsync(
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
-      setRecordingPrompt(recordingPrompt);
+      setRecording(recording);
       console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
   }
 
-  async function stopRecordingPrompt() {
+  async function stopRecording() {
     console.log("Stopping recording..");
-    setRecordingPrompt(undefined);
-    await recordingPrompt.stopAndUnloadAsync();
-    console.log("Recording stopped and stored at", recordingPrompt.getURI());
-    setPromptAudio(recordingPrompt.getURI());
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    setRecordedObject(recording);
+    console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  async function startRecordingAnswer() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      console.log("Starting recording..");
-      const { recordingAnswer } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecordingAnswer(recordingAnswer);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
+  async function toggleRecording(itemType) {
+    console.log();
+    recording ? stopRecording : startRecording;
+    if (recording && itemType === "prompt") {
+      setPromptAudio(recordedObject);
     }
-  }
-
-  async function stopRecordingAnswer() {
-    console.log("Stopping recording..");
-    setRecordingAnswer(undefined);
-    await recordingAnswer.stopAndUnloadAsync();
-    console.log("Recording stopped and stored at", recordingAnswer.getURI());
-    setAnswerAudio(recordingAnswer.getURI());
   }
 
   return (
@@ -127,10 +107,8 @@ function ProviderScenarioScreen(translatorId) {
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
           <Button
-            title={recordingPrompt ? "Stop" : "Start"}
-            onPress={
-              recordingPrompt ? stopRecordingPrompt : startRecordingPrompt
-            }
+            title={recording ? "Stop Recording" : "Start Recording"}
+            onPress={(e) => (e.preventDefault(), toggleRecording("prompt"))}
           />
           <TextInput
             style={styles.input}
@@ -139,10 +117,8 @@ function ProviderScenarioScreen(translatorId) {
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
           <Button
-            title={recordingAnswer ? "Stop Recording" : "Start Recording"}
-            onPress={
-              recordingAnswer ? stopRecordingAnswer : startRecordingAnswer
-            }
+            title={recording ? "Stop Recording" : "Start Recording"}
+            onPress={recording ? stopRecording : startRecording}
           />
           <TextInput
             style={styles.input}
