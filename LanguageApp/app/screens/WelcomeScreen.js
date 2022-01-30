@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 
 import AppTitle from "../components/AppTitle";
 import AppText from "../components/AppText";
@@ -10,8 +10,14 @@ const WelcomeScreen = () => {
   return (
     <Screen>
       <View style={styles.container}>
-        <AppTitle style={styles.title}>TITLE OF THE APP</AppTitle>
-        <AppText>
+        <Image
+          style={styles.mainLogo}
+          source={{
+            uri: "https://picsum.photos/200",
+          }}
+        />
+        <AppTitle>TITLE OF THE APP</AppTitle>
+        <AppText style={{ justifyContent: "center" }}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </AppText>
@@ -27,6 +33,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 10,
+    paddingTop: 50,
+    paddingRight: 25,
+    paddingLeft: 25,
+  },
+  mainLogo: {
+    height: 200,
+    width: 200,
+    borderRadius: 100,
   },
 });
 
