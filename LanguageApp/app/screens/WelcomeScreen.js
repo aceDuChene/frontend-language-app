@@ -5,6 +5,7 @@ import AppTitle from "../components/AppTitle";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
+import colors from "../config/colors";
 
 const WelcomeScreen = () => {
   return (
@@ -16,12 +17,12 @@ const WelcomeScreen = () => {
             uri: "https://picsum.photos/200",
           }}
         />
-        <AppTitle>TITLE OF THE APP</AppTitle>
-        <AppText style={{ justifyContent: "center" }}>
+        <AppTitle style={styles.welcomeText}>TITLE OF THE APP</AppTitle>
+        <AppText style={styles.welcomeText}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </AppText>
-        <AppButton title="LOG IN" />
+        <AppButton title="LOG IN" color={colors.white} />
         <AppButton title="REGISTER" />
       </View>
     </Screen>
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 10,
-    paddingTop: 50,
+    paddingTop: 100,
     paddingRight: 25,
     paddingLeft: 25,
   },
@@ -41,6 +42,9 @@ const styles = StyleSheet.create({
     height: 200,
     width: 200,
     borderRadius: 100,
+  },
+  welcomeText: {
+    textAlign: "center",
   },
 });
 
