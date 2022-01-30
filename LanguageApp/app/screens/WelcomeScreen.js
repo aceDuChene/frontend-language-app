@@ -18,7 +18,7 @@ const WelcomeScreen = () => {
           }}
         />
         <AppTitle style={styles.welcomeText}>TITLE OF THE APP</AppTitle>
-        <AppText style={styles.welcomeText}>
+        <AppText style={[styles.welcomeText, { paddingBottom: 50 }]}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </AppText>
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   welcomeText: {
+    paddingTop: 15,
     textAlign: "center",
   },
 });
