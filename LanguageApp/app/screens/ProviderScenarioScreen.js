@@ -9,6 +9,8 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
+import RecordButton from "../components/RecordButton";
+
 
 const initialData = {
   id: 12312432,
@@ -45,6 +47,15 @@ function ProviderScenarioScreen(translatorId) {
   const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
   const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
 
+  // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
+  const passLinkPrompt = (data) => {
+    setPromptAudio(data);
+  };
+
+  const passLinkAnswer = (data) => {
+    setAnswerAudio(data);
+  };
+
   const translatedScenario = {
     promptTranslation: cpPrompt,
     answerTranslation: cpAnswer,
@@ -60,43 +71,6 @@ function ProviderScenarioScreen(translatorId) {
     /* TO DO:  Add code to sumbit to Firestore */
     setCpPrompt("");
     setCpAnswer("");
-  };
-
-  /* For recording audio using expo-av */
-  async function startRecording() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
-
-  async function stopRecording() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    setRecordedObject(recording);
-    console.log("Recording stopped and stored at", recording.getURI());
-  }
-
-  async function toggleRecording(itemType) {
-    console.log();
-    recording ? stopRecording : startRecording;
-    if (recording && itemType === "prompt") {
-      setPromptAudio(recordedObject);
-    }
-  }
 
   return (
     <Screen>
@@ -106,20 +80,14 @@ function ProviderScenarioScreen(translatorId) {
 
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <Button
-            title={recording ? "Stop Recording" : "Start Recording"}
-            onPress={(e) => (e.preventDefault(), toggleRecording("prompt"))}
-          />
+          <RecordButton id="prompt" passData={passLinkPrompt} />
           <TextInput
             style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <Button
-            title={recording ? "Stop Recording" : "Start Recording"}
-            onPress={recording ? stopRecording : startRecording}
-          />
+          <RecordButton id="answer" passData={passLinkAnswer} />
           <TextInput
             style={styles.input}
             placeholder="Type Answer Translation"
