@@ -55,18 +55,16 @@ function RecordButton({
     console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    setRecordedObject(recording);
-    console.log("Recording stopped and stored at", recording.getURI());
+    // setRecordedObject(recording);
+    const uri = recording.getURI();
     if (id == "answer") {
       console.log("storing answer");
-      setAnswerAudio(recording.getURI());
-      console.log(answerAudio);
-      passData(answerAudio);
+      passData(uri);
+      console.log("Recording stopped and stored at", uri);
     } else {
       console.log("storing prompt");
-      setPromptAudio(recording.getURI());
-      console.log(promptAudio);
-      passData(promptAudio);
+      passData(uri);
+      console.log("Recording stopped and stored at", uri);
     }
   }
 
