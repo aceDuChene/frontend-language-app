@@ -8,6 +8,7 @@ import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppTitle from "../components/AppTitle";
 import Screen from "../components/Screen";
+import AppButtonSecondary from "../components/AppButtonSecondary";
 
 const initialData = {
   id: 12312432,
@@ -36,6 +37,7 @@ function LearnerScenarioScreen(translatorId) {
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
 
+  /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
   const gradeTranslation = async () => {
     // If audio -> speech-to-text, update text state with setllAnswer
     // determine distancde-wise match
@@ -71,7 +73,8 @@ function LearnerScenarioScreen(translatorId) {
     console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  /* For playing audio */
+  /* For playing audio 
+  TO DO: fill remaining function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
     // load the recording based on the URI from firebase
     console.log("Loading recording");
@@ -87,17 +90,17 @@ function LearnerScenarioScreen(translatorId) {
           <AppTitle style={styles.text}>{scenario.title}</AppTitle>
 
           <ScenarioImage uriLink={scenario.image} />
-          <Button
+          <AppButtonSecondary
             style={styles.button}
-            title={"Play prompt recording"}
+            title={"Play prompt"}
             onPress={playSound}
           />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
           <View style={styles.spacer}></View>
 
-          <Button
+          <AppButtonSecondary
             style={styles.button}
-            title={recording ? "Stop Recording" : "Start Recording Answer"}
+            title={recording ? "Stop Recording" : "Record Answer"}
             onPress={recording ? stopRecording : startRecording}
           />
           <TextInput
