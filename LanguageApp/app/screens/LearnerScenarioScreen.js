@@ -97,6 +97,7 @@ function LearnerScenarioScreen(translatorId) {
           <AppTitle style={styles.text}>{scenario.title}</AppTitle>
 
           <ScenarioImage uriLink={scenario.image} />
+
           <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
 
