@@ -49,6 +49,7 @@ function ProviderScenarioScreen(translatorId) {
     setAnswerAudio(data);
   };
 
+  // Data to be passed to Firebase
   const translatedScenario = {
     promptTranslation: cpPrompt,
     answerTranslation: cpAnswer,

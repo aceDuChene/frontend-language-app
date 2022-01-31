@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
-import AppButton from "../components/AppButton";
-import AppText from "../components/AppText";
-import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
+import AppButtonSecondary from "./AppButtonSecondary";
 import colors from "../config/colors";
-import Screen from "../components/Screen";
 
 function RecordButton({
   passData,
   id,
   title,
   onPress,
-  color = colors.primary,
+  color = colors.lightBlue,
 }) {
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
@@ -26,11 +21,6 @@ function RecordButton({
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
   const [recording, setRecording] = useState();
-  const [recordedObject, setRecordedObject] = useState();
-
-  //Stores just the recording URI; change to what's needed for Firebase (sound?)
-  const [promptAudio, setPromptAudio] = useState();
-  const [answerAudio, setAnswerAudio] = useState();
 
   async function startRecording() {
     try {
@@ -63,31 +53,11 @@ function RecordButton({
   }
 
   return (
-    <AppButton
-      style={[styles.button, { backgroundColor: color }]}
+    <AppButtonSecondary
       title={recording ? "Stop Recording" : "Start Recording"}
       onPress={recording ? stopRecording : startRecording}
-    ></AppButton>
+    ></AppButtonSecondary>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 15,
-    width: "100%",
-    marginVertical: 10,
-  },
-  text: {
-    color: colors.white,
-    fontSize: 18,
-    textTransform: "uppercase",
-    fontWeight: "bold",
-    fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
-  },
-});
 
 export default RecordButton;
