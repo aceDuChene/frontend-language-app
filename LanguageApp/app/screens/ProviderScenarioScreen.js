@@ -21,6 +21,7 @@ const initialData = {
 
 function ProviderScenarioScreen(translatorId) {
   /* **** TO ADD ******
+    - Add call to Firebase to retrieve scenario data and setScenario
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
     - On Submit button press: POST request to Firebase
@@ -29,17 +30,19 @@ function ProviderScenarioScreen(translatorId) {
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(initialData);
 
+  // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
 
-  //Stores just the recording URI; change to what's needed for Firebase (sound?)
+  // Stores just the recording URI; change to what's needed for Firebase (sound?)
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
-  /* To be used with Firebase - links set after Firebase API call */
+  // Store the audio links from Firebase - links set after the Firebase call
   const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
   const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
 
+  // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
   const passLinkPrompt = (data) => {
     setPromptAudio(data);
@@ -49,7 +52,7 @@ function ProviderScenarioScreen(translatorId) {
     setAnswerAudio(data);
   };
 
-  // Data to be passed to Firebase
+  // Submission data to be passed to Firebase
   const translatedScenario = {
     promptTranslation: cpPrompt,
     answerTranslation: cpAnswer,
@@ -66,6 +69,7 @@ function ProviderScenarioScreen(translatorId) {
     setCpPrompt("");
     setCpAnswer("");
   };
+
   return (
     <Screen>
       <KeyboardAwareScrollView>
@@ -111,11 +115,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: "100%",
     padding: 10,
-  },
-  recordAnswer: {
-    width: 50,
-    height: 50,
-    backgroundColor: colors.primary,
   },
   text: {
     textAlign: "center",

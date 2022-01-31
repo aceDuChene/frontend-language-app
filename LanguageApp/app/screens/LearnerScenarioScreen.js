@@ -24,6 +24,13 @@ const initialData = {
 };
 
 function LearnerScenarioScreen(translatorId) {
+  /* **** TO ADD ******
+    - Add call to Firebase to retrieve scenario data and setScenario
+    - Add call to Speech-to-Text to convert LL audio to text
+    - Add function to compare LL answer to CP answer and respond with alert success/try again
+    - Add playback functionality to play CP Prompt recording
+  */
+
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(initialData);
   const [cpRecording, setCpRecording] = useState();
@@ -90,16 +97,12 @@ function LearnerScenarioScreen(translatorId) {
           <AppTitle style={styles.text}>{scenario.title}</AppTitle>
 
           <ScenarioImage uriLink={scenario.image} />
-          <AppButtonSecondary
-            style={styles.button}
-            title={"Play prompt"}
-            onPress={playSound}
-          />
+          <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
+
           <View style={styles.spacer}></View>
 
           <AppButtonSecondary
-            style={styles.button}
             title={recording ? "Stop Recording" : "Record Answer"}
             onPress={recording ? stopRecording : startRecording}
           />
@@ -139,9 +142,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: "100%",
     padding: 10,
-  },
-  button: {
-    marginBottom: 12,
   },
   spacer: {
     margin: 30,

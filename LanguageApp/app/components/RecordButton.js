@@ -3,22 +3,12 @@ import { Button, StyleSheet, TextInput, View } from "react-native";
 import { Audio } from "expo-av";
 
 import AppButtonSecondary from "./AppButtonSecondary";
-import colors from "../config/colors";
 
-function RecordButton({
-  passData,
-  id,
-  title,
-  onPress,
-  color = colors.lightBlue,
-}) {
-  /* **** TO ADD ******
-    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
-    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
+function RecordButton({ passData, id }) {
+  /* To store Audio recordings 
+    Method obatined from 'expo-av' documentation https://docs.expo.dev/versions/latest/sdk/audio/
   */
 
-  /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
   const [recording, setRecording] = useState();
 
@@ -45,7 +35,6 @@ function RecordButton({
     console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    // setRecordedObject(recording);
     const uri = recording.getURI();
     console.log("Storing " + id);
     passData(uri);
