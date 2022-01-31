@@ -57,15 +57,9 @@ function RecordButton({
     await recording.stopAndUnloadAsync();
     // setRecordedObject(recording);
     const uri = recording.getURI();
-    if (id == "answer") {
-      console.log("storing answer");
-      passData(uri);
-      console.log("Recording stopped and stored at", uri);
-    } else {
-      console.log("storing prompt");
-      passData(uri);
-      console.log("Recording stopped and stored at", uri);
-    }
+    console.log("Storing " + id);
+    passData(uri);
+    console.log("Recording stopped and stored at", uri);
   }
 
   return (

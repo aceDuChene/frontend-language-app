@@ -46,6 +46,15 @@ function ProviderScenarioScreen(translatorId) {
   const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
   const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
 
+  // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
+  const passLinkPrompt = (data) => {
+    setPromptAudio(data);
+  };
+
+  const passLinkAnswer = (data) => {
+    setAnswerAudio(data);
+  };
+
   const translatedScenario = {
     promptTranslation: cpPrompt,
     answerTranslation: cpAnswer,
@@ -61,15 +70,6 @@ function ProviderScenarioScreen(translatorId) {
     /* TO DO:  Add code to sumbit to Firestore */
     setCpPrompt("");
     setCpAnswer("");
-  };
-
-  // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-  const passLinkPrompt = (data) => {
-    setPromptAudio(data);
-  };
-
-  const passLinkAnswer = (data) => {
-    setAnswerAudio(data);
   };
 
   return (
