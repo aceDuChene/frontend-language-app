@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Audio } from "expo-av";
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
@@ -10,7 +9,6 @@ import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import RecordButton from "../components/RecordButton";
-
 
 const initialData = {
   id: 12312432,
@@ -33,11 +31,6 @@ function ProviderScenarioScreen(translatorId) {
 
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
-
-  /* To store Audio recordings */
-  // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
-  const [recording, setRecording] = useState();
-  const [recordedObject, setRecordedObject] = useState();
 
   //Stores just the recording URI; change to what's needed for Firebase (sound?)
   const [promptAudio, setPromptAudio] = useState();
@@ -71,7 +64,7 @@ function ProviderScenarioScreen(translatorId) {
     /* TO DO:  Add code to sumbit to Firestore */
     setCpPrompt("");
     setCpAnswer("");
-
+  };
   return (
     <Screen>
       <KeyboardAwareScrollView>
