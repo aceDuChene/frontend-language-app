@@ -10,15 +10,18 @@ import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 
-function RecordButton({ title, onPress, color = colors.primary }) {
+function RecordButton({
+  passData,
+  id,
+  title,
+  onPress,
+  color = colors.primary,
+}) {
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
     - On Submit button press: POST request to Firebase
   */
-
-  const [cpPrompt, setCpPrompt] = useState("");
-  const [cpAnswer, setCpAnswer] = useState("");
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
@@ -54,6 +57,17 @@ function RecordButton({ title, onPress, color = colors.primary }) {
     await recording.stopAndUnloadAsync();
     setRecordedObject(recording);
     console.log("Recording stopped and stored at", recording.getURI());
+    if (id == "answer") {
+      console.log("storing answer");
+      setAnswerAudio(recording.getURI());
+      console.log(answerAudio);
+      passData(answerAudio);
+    } else {
+      console.log("storing prompt");
+      setPromptAudio(recording.getURI());
+      console.log(promptAudio);
+      passData(promptAudio);
+    }
   }
 
   return (

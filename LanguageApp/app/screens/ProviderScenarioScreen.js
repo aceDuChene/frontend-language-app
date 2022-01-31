@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
@@ -63,69 +63,14 @@ function ProviderScenarioScreen(translatorId) {
     setCpAnswer("");
   };
 
-  /* For recording audio using expo-av */
-  async function startRecording() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
+  // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
+  const passLinkPrompt = (data) => {
+    setPromptAudio(data);
+  };
 
-  async function stopRecording() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    setRecordedObject(recording);
-    console.log("Recording stopped and stored at", recording.getURI());
-  }
-
-  async function toggleRecording(itemType) {
-    console.log();
-    recording ? stopRecording : startRecording;
-    if (recording && itemType === "prompt") {
-      setPromptAudio(recordedObject);
-    }
-  }
-
-  /* For recording audio using expo-av */
-  async function startRecordingTwo() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
-
-  async function stopRecordingTwo() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    setRecordedObject(recording);
-    console.log("Recording stopped and stored at", recording.getURI());
-  }
+  const passLinkAnswer = (data) => {
+    setAnswerAudio(data);
+  };
 
   return (
     <Screen>
@@ -135,14 +80,14 @@ function ProviderScenarioScreen(translatorId) {
 
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton />
+          <RecordButton id="prompt" passData={passLinkPrompt} />
           <TextInput
             style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton />
+          <RecordButton id="answer" passData={passLinkAnswer} />
           <TextInput
             style={styles.input}
             placeholder="Type Answer Translation"
