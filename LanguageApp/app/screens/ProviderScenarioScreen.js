@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, StyleSheet, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
@@ -10,6 +10,7 @@ import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import Screen from "../components/Screen";
 import RecordButton from "../components/RecordButton";
+
 
 const initialData = {
   id: 12312432,
@@ -70,7 +71,6 @@ function ProviderScenarioScreen(translatorId) {
     /* TO DO:  Add code to sumbit to Firestore */
     setCpPrompt("");
     setCpAnswer("");
-  };
 
   return (
     <Screen>
