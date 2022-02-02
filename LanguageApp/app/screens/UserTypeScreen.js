@@ -9,7 +9,9 @@ function UserTypeScreen() {
   return (
     <Screen>
       <View style={styles.container}>
-        <AppTitle style={styles.title}>Choose User Type</AppTitle>
+        <AppTitle style={[styles.title, { paddingBottom: 50 }]}>
+          Choose User Type
+        </AppTitle>
         <AppButton
           title="Content Provider"
           onPress={() => console.log("pressed CP")}
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 10,
+    paddingTop: 100,
   },
 });
 
