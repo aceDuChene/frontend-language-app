@@ -8,9 +8,7 @@ import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
-import Screen from "../components/Screen";
 import RecordButton from "../components/RecordButton";
-
 
 const initialData = {
   id: 12312432,
@@ -21,7 +19,7 @@ const initialData = {
   category: "Time",
 };
 
-function ProviderScenarioScreen(translatorId) {
+function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
@@ -71,12 +69,13 @@ function ProviderScenarioScreen(translatorId) {
     /* TO DO:  Add code to sumbit to Firestore */
     setCpPrompt("");
     setCpAnswer("");
+  };
 
   return (
-    <Screen>
+    <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <AppTitle style={styles.text}>{scenario.title}</AppTitle>
+          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
 
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
@@ -100,7 +99,7 @@ function ProviderScenarioScreen(translatorId) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </Screen>
+    </View>
   );
 }
 

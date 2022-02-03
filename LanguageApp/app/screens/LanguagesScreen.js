@@ -5,6 +5,7 @@ import AppTitle from "../components/AppTitle";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import Screen from "../components/Screen";
+import routes from "../navigation/routes";
 
 const initialLanguages = [
   {
@@ -25,15 +26,15 @@ const initialLanguages = [
   },
 ];
 
-function LanguagesScreen(props) {
+function LanguagesScreen({ route, navigation }) {
   const [languages, setLanguages] = useState(initialLanguages);
   const [refreshing, setRefreshing] = useState(false);
 
   return (
-    <Screen>
-      <View style={styles.container}>
+    <View>
+      {/* <View style={styles.container}>
         <AppTitle style={styles.title}>Languages</AppTitle>
-      </View>
+      </View> */}
       <ListItemSeparator />
       <FlatList
         data={languages}
@@ -42,7 +43,12 @@ function LanguagesScreen(props) {
           <ListItem
             title={item.name}
             imageLink={item.image}
-            onPress={() => console.log("pressed", item)}
+            onPress={() =>
+              navigation.navigate(routes.CATEGORIES, {
+                language: item.name,
+                user_type: route.params.user_type,
+              })
+            }
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}
@@ -52,7 +58,7 @@ function LanguagesScreen(props) {
           setLanguages(languages)
         }
       />
-    </Screen>
+    </View>
   );
 }
 

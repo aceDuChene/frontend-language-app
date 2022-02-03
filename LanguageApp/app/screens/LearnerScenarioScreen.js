@@ -7,7 +7,6 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppTitle from "../components/AppTitle";
-import Screen from "../components/Screen";
 
 const initialData = {
   id: 12312432,
@@ -22,7 +21,7 @@ const initialData = {
   category: "Time",
 };
 
-function LearnerScenarioScreen(translatorId) {
+function LearnerScenarioScreen({ route }) {
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(initialData);
   const [cpRecording, setCpRecording] = useState();
@@ -81,10 +80,10 @@ function LearnerScenarioScreen(translatorId) {
   }
 
   return (
-    <Screen>
+    <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <AppTitle style={styles.text}>{scenario.title}</AppTitle>
+          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
 
           <ScenarioImage uriLink={scenario.image} />
           <Button
@@ -119,7 +118,7 @@ function LearnerScenarioScreen(translatorId) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </Screen>
+    </View>
   );
 }
 
