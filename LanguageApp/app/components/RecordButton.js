@@ -1,36 +1,16 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
-import AppButton from "../components/AppButton";
-import AppText from "../components/AppText";
-import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
-import colors from "../config/colors";
-import Screen from "../components/Screen";
+import AppButtonSecondary from "./AppButtonSecondary";
 
-function RecordButton({
-  passData,
-  id,
-  title,
-  onPress,
-  color = colors.primary,
-}) {
-  /* **** TO ADD ******
-    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
-    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
+function RecordButton({ passData, id }) {
+  /* To store Audio recordings 
+    Method obatined from 'expo-av' documentation https://docs.expo.dev/versions/latest/sdk/audio/
   */
 
-  /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
   const [recording, setRecording] = useState();
-  const [recordedObject, setRecordedObject] = useState();
-
-  //Stores just the recording URI; change to what's needed for Firebase (sound?)
-  const [promptAudio, setPromptAudio] = useState();
-  const [answerAudio, setAnswerAudio] = useState();
 
   async function startRecording() {
     try {
@@ -55,7 +35,6 @@ function RecordButton({
     console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    // setRecordedObject(recording);
     const uri = recording.getURI();
     console.log("Storing " + id);
     passData(uri);
@@ -63,31 +42,11 @@ function RecordButton({
   }
 
   return (
-    <AppButton
-      style={[styles.button, { backgroundColor: color }]}
+    <AppButtonSecondary
       title={recording ? "Stop Recording" : "Start Recording"}
       onPress={recording ? stopRecording : startRecording}
-    ></AppButton>
+    ></AppButtonSecondary>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 15,
-    width: "100%",
-    marginVertical: 10,
-  },
-  text: {
-    color: colors.white,
-    fontSize: 18,
-    textTransform: "uppercase",
-    fontWeight: "bold",
-    fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
-  },
-});
 
 export default RecordButton;

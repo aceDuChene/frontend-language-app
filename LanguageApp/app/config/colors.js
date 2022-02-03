@@ -3,5 +3,7 @@ export default {
   secondary: "grey",
   white: "white",
   black: "black",
+  lightBlue: "#1a91f0",
+  red: "red",
   separator: "lightgrey",
 };
