@@ -5,6 +5,22 @@ import AppTitle from "../components/AppTitle";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import Screen from "../components/Screen";
+import { fireDB } from "../../firebaseSetup";
+
+const getLanguages = async () => {
+  let languageArray = [];
+
+  await fireDB
+    .collection("Languages")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        languageArray.push(documentSnapshot.data());
+      });
+    });
+
+  console.log(languageArray);
+};
 
 const initialLanguages = [
   {
@@ -26,6 +42,7 @@ const initialLanguages = [
 ];
 
 function LanguagesScreen(props) {
+  getLanguages();
   const [languages, setLanguages] = useState(initialLanguages);
   const [refreshing, setRefreshing] = useState(false);
 
