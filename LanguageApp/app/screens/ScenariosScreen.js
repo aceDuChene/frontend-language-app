@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View } from "react-native";
 
-import AppTitle from "../components/AppTitle";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
@@ -26,9 +25,6 @@ function ScenariosScreen({ route, navigation }) {
 
   return (
     <View>
-      {/* <View style={styles.container}>
-        <AppTitle style={styles.title}>Time</AppTitle>
-      </View> */}
       <ListItemSeparator />
       <FlatList
         data={scenarios}
@@ -56,13 +52,5 @@ function ScenariosScreen({ route, navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 10,
-  },
-});
 
 export default ScenariosScreen;

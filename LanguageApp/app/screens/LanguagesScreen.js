@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View } from "react-native";
 
-import AppTitle from "../components/AppTitle";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
-import Screen from "../components/Screen";
 import routes from "../navigation/routes";
 
 const initialLanguages = [
@@ -32,9 +30,6 @@ function LanguagesScreen({ route, navigation }) {
 
   return (
     <View>
-      {/* <View style={styles.container}>
-        <AppTitle style={styles.title}>Languages</AppTitle>
-      </View> */}
       <ListItemSeparator />
       <FlatList
         data={languages}
@@ -61,13 +56,5 @@ function LanguagesScreen({ route, navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 10,
-  },
-});
 
 export default LanguagesScreen;

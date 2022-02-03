@@ -5,7 +5,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
 import RecordButton from "../components/RecordButton";
 
