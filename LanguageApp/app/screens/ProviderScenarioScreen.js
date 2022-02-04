@@ -5,9 +5,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
 import colors from "../config/colors";
-import Screen from "../components/Screen";
 import RecordButton from "../components/RecordButton";
 
 const initialData = {
@@ -19,7 +17,7 @@ const initialData = {
   category: "Time",
 };
 
-function ProviderScenarioScreen(translatorId) {
+function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
     - Add call to Firebase to retrieve scenario data and setScenario
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
@@ -71,10 +69,10 @@ function ProviderScenarioScreen(translatorId) {
   };
 
   return (
-    <Screen>
+    <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <AppTitle style={styles.text}>{scenario.title}</AppTitle>
+          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
 
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
@@ -98,7 +96,7 @@ function ProviderScenarioScreen(translatorId) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </Screen>
+    </View>
   );
 }
 

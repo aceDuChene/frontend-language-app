@@ -1,14 +1,19 @@
 import React from "react";
 import { Image, View, StyleSheet, TouchableHighlight } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-function ListItem({ title, prompt, imageLink, onPress }) {
+function ListItem({ title, prompt, imageLink, icon, onPress }) {
   return (
     <TouchableHighlight onPress={onPress} underlayColor={colors.separator}>
       <View style={styles.container}>
+        {icon && (
+          <View style={styles.icon}>
+            <MaterialCommunityIcons name={icon} size={30} />
+          </View>
+        )}
         {imageLink && (
           <View>
             <Image
@@ -29,7 +34,7 @@ function ListItem({ title, prompt, imageLink, onPress }) {
             <AppText style={styles.category}>{title}</AppText>
           )}
         </View>
-        <View style={styles.icon}>
+        <View style={styles.right}>
           <MaterialCommunityIcons
             name="chevron-right"
             color={colors.separator}
@@ -52,6 +57,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   icon: {
+    justifyContent: "center",
+  },
+  right: {
     flex: 1,
     alignItems: "flex-end",
     justifyContent: "center",
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: 25,
+    fontSize: 24,
   },
 });
 

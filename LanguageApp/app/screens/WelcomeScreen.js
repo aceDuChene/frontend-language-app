@@ -5,9 +5,10 @@ import AppTitle from "../components/AppTitle";
 import AppText from "../components/AppText";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
+import routes from "../navigation/routes";
 import colors from "../config/colors";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
   return (
     <Screen>
       <View style={styles.container}>
@@ -22,8 +23,15 @@ const WelcomeScreen = () => {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </AppText>
-        <AppButton title="LOG IN" color={colors.white} />
-        <AppButton title="REGISTER" />
+        <AppButton
+          title="LOG IN"
+          color={colors.white}
+          onPress={() => navigation.navigate(routes.USER_TYPE)}
+        />
+        <AppButton
+          title="REGISTER"
+          onPress={() => navigation.navigate(routes.USER_TYPE)}
+        />
       </View>
     </Screen>
   );

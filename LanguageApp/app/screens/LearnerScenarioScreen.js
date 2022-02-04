@@ -6,8 +6,6 @@ import { Audio } from "expo-av";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
-import Screen from "../components/Screen";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 
 const initialData = {
@@ -91,10 +89,10 @@ function LearnerScenarioScreen(translatorId) {
   }
 
   return (
-    <Screen>
+    <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <AppTitle style={styles.text}>{scenario.title}</AppTitle>
+          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
 
           <ScenarioImage uriLink={scenario.image} />
 
@@ -126,7 +124,7 @@ function LearnerScenarioScreen(translatorId) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </Screen>
+    </View>
   );
 }
 
