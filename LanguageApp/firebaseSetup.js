@@ -18,4 +18,4 @@ const app = firebase.initializeApp({
   appId: REACT_APP_FB_APP_ID,
 });
 
-export const fireDB = app.firestore();
+export const db = app.firestore();

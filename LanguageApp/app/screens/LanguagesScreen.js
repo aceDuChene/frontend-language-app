@@ -3,12 +3,12 @@ import { FlatList, View } from "react-native";
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
-import { fireDB } from "../../firebaseSetup";
+import { db } from "../../firebaseSetup";
 
 const getLanguages = async () => {
   let languageArray = [];
 
-  await fireDB
+  await db
     .collection("Languages")
     .get()
     .then((querySnapshot) => {
