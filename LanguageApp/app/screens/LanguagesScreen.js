@@ -1,9 +1,24 @@
 import React, { useState } from "react";
 import { FlatList, View } from "react-native";
-
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
+import { db } from "../../firebaseSetup";
+
+const getLanguages = async () => {
+  let languageArray = [];
+
+  await db
+    .collection("Languages")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((documentSnapshot) => {
+        languageArray.push(documentSnapshot.data());
+      });
+    });
+
+  console.log(languageArray);
+};
 
 const initialLanguages = [
   {
@@ -25,6 +40,7 @@ const initialLanguages = [
 ];
 
 function LanguagesScreen({ route, navigation }) {
+  getLanguages();
   const [languages, setLanguages] = useState(initialLanguages);
   const [refreshing, setRefreshing] = useState(false);
 
