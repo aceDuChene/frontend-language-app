@@ -4,19 +4,24 @@ import React from "react";
 import AppTitle from "../components/AppTitle";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
+import routes from "../navigation/routes";
+import colors from "../config/colors";
 
-function UserTypeScreen() {
+function UserTypeScreen({ navigation }) {
   return (
     <Screen>
       <View style={styles.container}>
-        <AppTitle style={styles.title}>Choose User Type</AppTitle>
+        {/* <AppTitle style={styles.title}>Choose User Type</AppTitle> */}
         <AppButton
           title="Content Provider"
-          onPress={() => console.log("pressed CP")}
+          color={colors.white}
+          onPress={() =>
+            navigation.navigate(routes.LANGUAGES, { user_type: "CP" })
+          }
         />
         <AppButton
           title="Language Learner"
-          onPress={() => console.log("pressed LL")}
+          onPress={() => navigation.navigate(routes.LANGUAGES, { type: "LL" })}
         />
       </View>
     </Screen>
@@ -28,6 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 10,
+    paddingHorizontal: 25,
   },
 });
 
