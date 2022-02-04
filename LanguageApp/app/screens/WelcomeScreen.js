@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 
 import AppTitle from "../components/AppTitle";
 import AppText from "../components/AppText";
@@ -12,12 +12,18 @@ const WelcomeScreen = ({ navigation }) => {
   return (
     <Screen>
       <View style={styles.container}>
-        <Image
-          style={styles.mainLogo}
-          source={{
-            uri: "https://picsum.photos/200",
+        <TouchableOpacity
+          title="ABOUT"
+          onPress={() => {
+            navigation.navigate(routes.ABOUT);
           }}
-        />
+        >
+          <Image
+            style={styles.mainLogo}
+            source={require("../assets/LOCUTE.png")}
+          />
+        </TouchableOpacity>
+
         <AppTitle style={styles.welcomeText}>TITLE OF THE APP</AppTitle>
         <AppText style={[styles.welcomeText, { paddingBottom: 50 }]}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

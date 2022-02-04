@@ -8,6 +8,7 @@ import CategoriesScreen from "../screens/CategoriesScreen";
 import ScenariosScreen from "../screens/ScenariosScreen";
 import ProviderScenarioScreen from "../screens/ProviderScenarioScreen";
 import LearnerScenarioScreen from "../screens/LearnerScenarioScreen";
+import AboutScreen from "../screens/AboutScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const AppNavigator = () => (
     />
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
+    <Stack.Screen name="About" component={AboutScreen} />
     <Stack.Screen
       name="Categories"
       component={CategoriesScreen}
