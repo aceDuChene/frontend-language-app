@@ -1,8 +1,14 @@
 import React from "react";
-import Screen from "./app/components/Screen";
+import { NavigationContainer } from "@react-navigation/native";
+
+import AppNavigator from "./app/navigation/AppNavigator";
 
 function App() {
-  return <Screen />;
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 }
 
 export default App;

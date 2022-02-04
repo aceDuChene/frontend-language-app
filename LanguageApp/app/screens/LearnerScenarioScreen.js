@@ -6,8 +6,7 @@ import { Audio } from "expo-av";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
-import AppTitle from "../components/AppTitle";
-import Screen from "../components/Screen";
+import AppButtonSecondary from "../components/AppButtonSecondary";
 
 const initialData = {
   id: 12312432,
@@ -23,6 +22,13 @@ const initialData = {
 };
 
 function LearnerScenarioScreen(translatorId) {
+  /* **** TO ADD ******
+    - Add call to Firebase to retrieve scenario data and setScenario
+    - Add call to Speech-to-Text to convert LL audio to text
+    - Add function to compare LL answer to CP answer and respond with alert success/try again
+    - Add playback functionality to play CP Prompt recording
+  */
+
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(initialData);
   const [cpRecording, setCpRecording] = useState();
@@ -36,6 +42,7 @@ function LearnerScenarioScreen(translatorId) {
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
 
+  /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
   const gradeTranslation = async () => {
     // If audio -> speech-to-text, update text state with setllAnswer
     // determine distancde-wise match
@@ -71,7 +78,8 @@ function LearnerScenarioScreen(translatorId) {
     console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  /* For playing audio */
+  /* For playing audio 
+  TO DO: fill remaining function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
     // load the recording based on the URI from firebase
     console.log("Loading recording");
@@ -81,23 +89,20 @@ function LearnerScenarioScreen(translatorId) {
   }
 
   return (
-    <Screen>
+    <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <AppTitle style={styles.text}>{scenario.title}</AppTitle>
+          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
 
           <ScenarioImage uriLink={scenario.image} />
-          <Button
-            style={styles.button}
-            title={"Play prompt recording"}
-            onPress={playSound}
-          />
+
+          <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
+
           <View style={styles.spacer}></View>
 
-          <Button
-            style={styles.button}
-            title={recording ? "Stop Recording" : "Start Recording Answer"}
+          <AppButtonSecondary
+            title={recording ? "Stop Recording" : "Record Answer"}
             onPress={recording ? stopRecording : startRecording}
           />
           <TextInput
@@ -119,7 +124,7 @@ function LearnerScenarioScreen(translatorId) {
           />
         </View>
       </KeyboardAwareScrollView>
-    </Screen>
+    </View>
   );
 }
 
@@ -136,9 +141,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: "100%",
     padding: 10,
-  },
-  button: {
-    marginBottom: 12,
   },
   spacer: {
     margin: 30,
