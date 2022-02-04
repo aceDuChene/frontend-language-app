@@ -31,6 +31,10 @@ function UserTypeScreen({ navigation }) {
             and enter text of your translation of prompts and answers. Your
             reponses will be saved for Language Learners to study from.{"\n"}
           </AppText>
+          <AppButton
+            title="Let's get started!"
+            onPress={() => navigation.navigate(routes.USER_TYPE)}
+          ></AppButton>
         </ScrollView>
       </View>
     </Screen>
@@ -52,6 +56,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 5,
     borderRadius: 5,
+    backgroundColor: colors.white,
   },
   contentContainer: {
     justifyContent: "center",
