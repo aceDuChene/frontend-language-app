@@ -72,8 +72,6 @@ function ProviderScenarioScreen({ route }) {
     <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
-
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
           <RecordButton id="prompt" passData={passLinkPrompt} />

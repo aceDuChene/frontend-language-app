@@ -92,8 +92,6 @@ function LearnerScenarioScreen(translatorId) {
     <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          {/* <AppTitle style={styles.text}>{scenario.title}</AppTitle> */}
-
           <ScenarioImage uriLink={scenario.image} />
 
           <AppButtonSecondary title={"Play prompt"} onPress={playSound} />

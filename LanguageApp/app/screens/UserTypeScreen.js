@@ -11,7 +11,6 @@ function UserTypeScreen({ navigation }) {
   return (
     <Screen>
       <View style={styles.container}>
-        {/* <AppTitle style={styles.title}>Choose User Type</AppTitle> */}
         <AppButton
           title="Content Provider"
           color={colors.white}
