@@ -7,31 +7,19 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
+import { db } from "../../firebaseSetup";
 
-const initialData = {
-  id: 12312432,
-  title: "Telling Time",
-  prompt: "What time is it?",
-  answer: "It's three in the afternoon.",
-  image: "https://reactnative.dev/img/tiny_logo.png",
-  promptRecording: "firebaselink",
-  answerRecording: "firebaseLink",
-  promptTranslation: "Quehora es?",
-  answerTranslation: "Son las tres de la tarde",
-  category: "Time",
-};
-
-function LearnerScenarioScreen(translatorId) {
+function LearnerScenarioScreen({ route }) {
   /* **** TO ADD ******
-    - Add call to Firebase to retrieve scenario data and setScenario
     - Add call to Speech-to-Text to convert LL audio to text
     - Add function to compare LL answer to CP answer and respond with alert success/try again
     - Add playback functionality to play CP Prompt recording
   */
 
   /* To be updated with scenario data from DB */
-  const [scenario, setScenario] = useState(initialData);
+  const [scenario, setScenario] = useState(route.params.scenario.item);
   const [cpRecording, setCpRecording] = useState();
+  console.log("Scenario", scenario);
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
