@@ -5,28 +5,18 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
-import colors from "../config/colors";
 import RecordButton from "../components/RecordButton";
-
-const initialData = {
-  id: 12312432,
-  title: "Scenario Title",
-  prompt: "What time is it?",
-  answer: "It's three in the afternoon.",
-  image: "https://reactnative.dev/img/tiny_logo.png",
-  category: "Time",
-};
+import { db } from "../../firebaseSetup";
 
 function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
-    - Add call to Firebase to retrieve scenario data and setScenario
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
     - On Submit button press: POST request to Firebase
   */
 
   /* To be updated with scenario data from DB */
-  const [scenario, setScenario] = useState(initialData);
+  const [scenario, setScenario] = useState(route.params.scenario.item);
 
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");

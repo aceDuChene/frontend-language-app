@@ -1,22 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
-
-const initialCategories = [
-  { name: "Time", icon: "clock" },
-  { name: "Weather", icon: "weather-partly-cloudy" },
-  { name: "Animals", icon: "dog-side" },
-  { name: "Travel", icon: "wallet-travel" },
-  { name: "Food", icon: "food" },
-  { name: "Activities", icon: "lightbulb-on-outline" },
-];
+import { db } from "../../firebaseSetup";
 
 function CategoriesScreen({ route, navigation }) {
-  const [categories, setCategories] = useState(initialCategories);
+  const [categories, setCategories] = useState();
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    let categoryArray = [];
+
+    db.collection("Categories")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          categoryArray.push(documentSnapshot.data());
+        });
+        setCategories(categoryArray);
+        // console.log("db array: ", categoryArray);
+      });
+  }, []);
 
   return (
     <View>
