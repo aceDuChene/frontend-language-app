@@ -5,25 +5,6 @@ import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 
-// const initialLanguages = [
-//   {
-//     id: 1,
-//     name: "Spanish",
-//     image: "https://cdn.britannica.com/36/4336-004-6BD81071/Flag-Spain.jpg",
-//   },
-//   {
-//     id: 2,
-//     name: "Japanese",
-//     image:
-//       "https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/1-japanese-flag-with-heavy-grunge-bigalbaloo-stock.jpg",
-//   },
-//   {
-//     id: 3,
-//     name: "French",
-//     image: "https://flagpedia.net/data/flags/w580/fr.png",
-//   },
-// ];
-
 function LanguagesScreen({ route, navigation }) {
   const [languages, setLanguages] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +19,7 @@ function LanguagesScreen({ route, navigation }) {
           languageArray.push(documentSnapshot.data());
         });
         setLanguages(languageArray);
-        console.log("db array: ", languageArray);
+        // console.log("db array: ", languageArray);
       });
   }, []);
 

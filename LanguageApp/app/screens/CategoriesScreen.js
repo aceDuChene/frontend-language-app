@@ -6,15 +6,6 @@ import ListItemSeparator from "../components/ListItemSeparator";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 
-// const initialCategories = [
-//   { name: "Time", icon: "clock" },
-//   { name: "Weather", icon: "weather-partly-cloudy" },
-//   { name: "Animals", icon: "dog-side" },
-//   { name: "Travel", icon: "wallet-travel" },
-//   { name: "Food", icon: "food" },
-//   { name: "Activities", icon: "lightbulb-on-outline" },
-// ];
-
 function CategoriesScreen({ route, navigation }) {
   const [categories, setCategories] = useState();
   const [refreshing, setRefreshing] = useState(false);
@@ -29,7 +20,7 @@ function CategoriesScreen({ route, navigation }) {
           categoryArray.push(documentSnapshot.data());
         });
         setCategories(categoryArray);
-        console.log("db array: ", categoryArray);
+        // console.log("db array: ", categoryArray);
       });
   }, []);
 
