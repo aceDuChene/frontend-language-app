@@ -7,7 +7,6 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
-import { storage } from "../../firebaseSetup";
 
 function LearnerScenarioScreen({ route }) {
   /* **** TO ADD ******
@@ -18,17 +17,8 @@ function LearnerScenarioScreen({ route }) {
 
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(route.params.scenario.item);
-  const [imageURL, setImageURL] = useState(route.params.scenario.item.image);
   const [cpRecording, setCpRecording] = useState();
   console.log("Scenario", scenario);
-
-  let imageRef = storage.refFromURL(imageURL);
-  imageRef
-    .getDownloadURL()
-    .then((url) => {
-      setImageURL(url);
-    })
-    .catch((error) => console.log("Error getting image URL: ", error));
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
@@ -89,7 +79,7 @@ function LearnerScenarioScreen({ route }) {
     <View>
       <KeyboardAwareScrollView>
         <View style={styles.container}>
-          <ScenarioImage uriLink={imageURL} />
+          <ScenarioImage uriLink={scenario.image} />
 
           <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
           <AppText style={styles.text}>{scenario.promptTranslation}</AppText>
