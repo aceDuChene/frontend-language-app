@@ -1,5 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import "firebase/compat/storage";
+
 import {
   REACT_APP_API_KEY,
   REACT_APP_AUTH_DOMAIN,
@@ -19,3 +21,4 @@ const app = firebase.initializeApp({
 });
 
 export const db = app.firestore();
+export const storage = app.storage();
