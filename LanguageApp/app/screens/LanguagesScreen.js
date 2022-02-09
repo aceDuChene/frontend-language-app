@@ -9,18 +9,22 @@ function LanguagesScreen({ route, navigation }) {
   const [languages, setLanguages] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  async function getLanguages() {
     let languageArray = [];
 
-    db.collection("Languages")
+    await db
+      .collection("Languages")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           languageArray.push(documentSnapshot.data());
         });
-        setLanguages(languageArray);
-        // console.log("db array: ", languageArray);
       });
+    setLanguages(languageArray);
+  }
+
+  useEffect(() => {
+    getLanguages();
   }, []);
 
   return (
@@ -43,7 +47,7 @@ function LanguagesScreen({ route, navigation }) {
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        // onRefresh={() => getLanguages()}
+        onRefresh={() => setLanguages(languages)}
       />
     </View>
   );

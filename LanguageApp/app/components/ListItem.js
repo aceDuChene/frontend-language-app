@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, View, StyleSheet, TouchableHighlight } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { storage } from "../../firebaseSetup";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
 
 function ListItem({ title, prompt, imageLink, icon, onPress }) {
+  const [imageURL, setImageURL] = useState();
+  if (imageLink != null) {
+    let imageRef = storage.refFromURL(imageLink);
+    imageRef
+      .getDownloadURL()
+      .then((url) => {
+        setImageURL(url);
+      })
+      .catch((error) => console.log("Error getting image URL: ", error));
+  }
+
   return (
     <TouchableHighlight onPress={onPress} underlayColor={colors.separator}>
       <View style={styles.container}>
@@ -19,7 +31,7 @@ function ListItem({ title, prompt, imageLink, icon, onPress }) {
             <Image
               style={styles.image}
               source={{
-                uri: imageLink,
+                uri: imageURL,
               }}
             />
           </View>

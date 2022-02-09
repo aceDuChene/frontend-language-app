@@ -7,7 +7,6 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
-import { db } from "../../firebaseSetup";
 
 function LearnerScenarioScreen({ route }) {
   /* **** TO ADD ******
@@ -83,7 +82,7 @@ function LearnerScenarioScreen({ route }) {
           <ScenarioImage uriLink={scenario.image} />
 
           <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
-          <AppText style={styles.text}>{scenario.prompt}</AppText>
+          <AppText style={styles.text}>{scenario.promptTranslation}</AppText>
 
           <View style={styles.spacer}></View>
 
@@ -104,9 +103,7 @@ function LearnerScenarioScreen({ route }) {
 
           <AppButton
             title="Show Answer"
-            onPress={(e) => (
-              e.preventDefault(), console.log("Show the Answer")
-            )}
+            onPress={(e) => alert(scenario.answerTranslation)}
           />
         </View>
       </KeyboardAwareScrollView>

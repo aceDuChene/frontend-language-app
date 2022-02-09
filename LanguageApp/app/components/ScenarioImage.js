@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, StyleSheet } from "react-native";
+import { storage } from "../../firebaseSetup";
 
 function ScenarioImage({ uriLink }) {
-  return <Image style={styles.rectangle} source={{ uri: uriLink }} />;
+  const [imageURL, setImageURL] = useState();
+  let imageRef = storage.refFromURL(uriLink);
+  imageRef
+    .getDownloadURL()
+    .then((url) => {
+      setImageURL(url);
+    })
+    .catch((error) => console.log("Error getting image URL: ", error));
+
+  return <Image style={styles.rectangle} source={{ uri: imageURL }} />;
 }
 
 const styles = StyleSheet.create({
