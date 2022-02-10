@@ -30,11 +30,11 @@ function ScenariosScreen({ route, navigation }) {
         });
         if (route.params.user_type === "CP") {
           scenarioArray = scenarioArray.filter((item) => {
-            return route.params.language in item.promptTranslation;
+            return !(route.params.language in item.promptTranslation);
           });
         } else {
           scenarioArray = scenarioArray.filter((item) => {
-            return !(route.params.language in item.promptTranslation);
+            return route.params.language in item.promptTranslation;
           });
         }
         setScenarios(scenarioArray);
