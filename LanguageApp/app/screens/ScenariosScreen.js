@@ -20,22 +20,41 @@ function ScenariosScreen({ route, navigation }) {
 
   const getScenarios = async () => {
     let scenarioArray = [];
-    await db
-      .collection("Scenarios")
-      // .where("category", "==", route.params.category)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          scenarioArray.push(documentSnapshot.data());
+    if (route.params.user_type === "CP") {
+      await db
+        .collection("Scenarios")
+        .where("category", "==", route.params.category)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            scenarioArray.push(documentSnapshot.data());
+          });
+          setScenarios(scenarioArray);
+          setFilteredScenarios(scenarioArray);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
         });
-        setScenarios(scenarioArray);
-        setFilteredScenarios(scenarioArray);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setError(err);
-      });
+    } else {
+      await db
+        .collection("Scenarios")
+        .where("category", "==", route.params.category)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            scenarioArray.push(documentSnapshot.data());
+          });
+          setScenarios(scenarioArray);
+          setFilteredScenarios(scenarioArray);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
+        });
+    }
   };
 
   useEffect(() => {

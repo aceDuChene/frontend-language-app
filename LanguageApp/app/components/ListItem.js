@@ -21,7 +21,6 @@ function ListItem({ title, prompt, imageLink, icon, onPress }) {
         .then((url) => {
           setImageURL(url);
           setIsLoading(false);
-          setError(err);
         })
         .catch((err) => {
           setIsLoading(false);
