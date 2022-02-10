@@ -16,7 +16,7 @@ function LearnerScenarioScreen({ route }) {
   */
 
   /* To be updated with scenario data from DB */
-  const [scenario, setScenario] = useState(route.params.scenario.item);
+  const [scenario, setScenario] = useState(route.params);
   const [cpRecording, setCpRecording] = useState();
   console.log("Scenario", scenario);
 

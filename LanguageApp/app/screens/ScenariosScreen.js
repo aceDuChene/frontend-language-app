@@ -26,7 +26,6 @@ function ScenariosScreen({ route, navigation }) {
         });
         setScenarios(scenarioArray);
         setFilteredScenarios(scenarioArray);
-        // console.log("db array: ", scenarioArray);
       });
   };
 
@@ -79,12 +78,13 @@ function ScenariosScreen({ route, navigation }) {
               if (route.params.user_type === "CP") {
                 navigation.navigate(routes.PROVIDER_SCENARIO, {
                   language: route.params.language,
-                  scenario: { item },
+                  ...item,
                 });
               } else {
                 navigation.navigate(routes.LEARNER_SCENARIO, {
                   language: route.params.language,
-                  scenario: { item },
+                  // scenario: { item },
+                  ...item,
                 });
               }
             }}

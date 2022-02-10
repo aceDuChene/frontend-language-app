@@ -17,8 +17,7 @@ function ProviderScenarioScreen({ route }) {
   */
 
   /* To be updated with scenario data from DB */
-  const [scenario, setScenario] = useState(route.params.scenario.item);
-
+  const [scenario, setScenario] = useState(route.params);
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
