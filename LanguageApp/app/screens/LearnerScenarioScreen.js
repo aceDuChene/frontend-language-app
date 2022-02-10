@@ -16,10 +16,8 @@ function LearnerScenarioScreen({ route }) {
     - Add playback functionality to play CP Prompt recording
   */
 
-  /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(route.params);
   const [cpRecording, setCpRecording] = useState();
-  console.log("Scenario", scenario);
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
