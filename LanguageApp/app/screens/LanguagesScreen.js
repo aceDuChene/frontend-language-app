@@ -16,21 +16,38 @@ function LanguagesScreen({ route, navigation }) {
 
   async function getLanguages() {
     let languageArray = [];
-
-    await db
-      .collection("Languages")
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
-          languageArray.push(documentSnapshot.data());
+    if (route.params.type === "LL") {
+      await db
+        .collection("Languages")
+        .where("hasContent", "==", true)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            languageArray.push(documentSnapshot.data());
+          });
+          setLanguages(languageArray);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
         });
-        setLanguages(languageArray);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setError(err);
-      });
+    } else {
+      await db
+        .collection("Languages")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((documentSnapshot) => {
+            languageArray.push(documentSnapshot.data());
+          });
+          setLanguages(languageArray);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
+        });
+    }
   }
 
   useEffect(() => {
