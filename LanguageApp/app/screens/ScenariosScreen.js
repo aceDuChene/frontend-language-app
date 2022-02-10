@@ -20,41 +20,31 @@ function ScenariosScreen({ route, navigation }) {
 
   const getScenarios = async () => {
     let scenarioArray = [];
-    if (route.params.user_type === "CP") {
-      await db
-        .collection("Scenarios")
-        .where("category", "==", route.params.category)
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((documentSnapshot) => {
-            scenarioArray.push(documentSnapshot.data());
-          });
-          setScenarios(scenarioArray);
-          setFilteredScenarios(scenarioArray);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          setError(err);
+    await db
+      .collection("Scenarios")
+      .where("category", "==", route.params.category)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          scenarioArray.push(documentSnapshot.data());
         });
-    } else {
-      await db
-        .collection("Scenarios")
-        .where("category", "==", route.params.category)
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((documentSnapshot) => {
-            scenarioArray.push(documentSnapshot.data());
+        if (route.params.user_type === "CP") {
+          scenarioArray = scenarioArray.filter((item) => {
+            return route.params.language in item.promptTranslation;
           });
-          setScenarios(scenarioArray);
-          setFilteredScenarios(scenarioArray);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setIsLoading(false);
-          setError(err);
-        });
-    }
+        } else {
+          scenarioArray = scenarioArray.filter((item) => {
+            return !(route.params.language in item.promptTranslation);
+          });
+        }
+        setScenarios(scenarioArray);
+        setFilteredScenarios(scenarioArray);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
+      });
   };
 
   useEffect(() => {
@@ -91,7 +81,10 @@ function ScenariosScreen({ route, navigation }) {
 
   if (error) {
     return (
-      <ErrorMessage message="Error fetching data... Please check your network connection!" />
+      <ErrorMessage
+        style={{ flex: 1 }}
+        message="Error fetching data... Please check your network connection!"
+      />
     );
   }
 
