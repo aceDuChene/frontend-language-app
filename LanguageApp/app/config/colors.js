@@ -6,4 +6,5 @@ export default {
   lightBlue: "#1a91f0",
   red: "red",
   separator: "lightgrey",
+  medium: "#6e6969",
 };

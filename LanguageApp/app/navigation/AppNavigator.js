@@ -27,7 +27,11 @@ const AppNavigator = () => (
     />
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
-    <Stack.Screen name="About" component={AboutScreen} />
+    <Stack.Screen
+      name="About"
+      component={AboutScreen}
+      options={{ title: "What is Locute?" }}
+    />
     <Stack.Screen
       name="Categories"
       component={CategoriesScreen}

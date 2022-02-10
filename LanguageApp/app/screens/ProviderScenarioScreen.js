@@ -6,6 +6,7 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
+import AppTextInput from "../components/AppTextInput";
 import { db } from "../../firebaseSetup";
 
 function ProviderScenarioScreen({ route }) {
@@ -65,15 +66,15 @@ function ProviderScenarioScreen({ route }) {
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
           <RecordButton id="prompt" passData={passLinkPrompt} />
-          <TextInput
-            style={styles.input}
+          <AppTextInput
+            // style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
           <RecordButton id="answer" passData={passLinkAnswer} />
-          <TextInput
-            style={styles.input}
+          <AppTextInput
+            // style={styles.input}
             placeholder="Type Answer Translation"
             onChangeText={(value) => setCpAnswer(value)}
           />
