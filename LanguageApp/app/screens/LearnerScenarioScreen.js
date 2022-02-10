@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
 import AppButton from "../components/AppButton";
+import AppTextInput from "../components/AppTextInput";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
@@ -82,7 +83,9 @@ function LearnerScenarioScreen({ route }) {
           <ScenarioImage uriLink={scenario.image} />
 
           <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
-          <AppText style={styles.text}>{scenario.promptTranslation}</AppText>
+          <AppText style={styles.text}>
+            {scenario.promptTranslation[scenario.language]}
+          </AppText>
 
           <View style={styles.spacer}></View>
 
@@ -90,8 +93,8 @@ function LearnerScenarioScreen({ route }) {
             title={recording ? "Stop Recording" : "Record Answer"}
             onPress={recording ? stopRecording : startRecording}
           />
-          <TextInput
-            style={styles.input}
+          <AppTextInput
+            // style={styles.input}
             placeholder="Type Answer Translation"
             onChangeText={(value) => setllAnswer(value)}
           />
@@ -103,7 +106,9 @@ function LearnerScenarioScreen({ route }) {
 
           <AppButton
             title="Show Answer"
-            onPress={(e) => alert(scenario.answerTranslation)}
+            onPress={(e) =>
+              alert(scenario.answerTranslation[scenario.language])
+            }
           />
         </View>
       </KeyboardAwareScrollView>
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   spacer: {
-    margin: 30,
+    margin: 20,
   },
   text: {
     textAlign: "center",
