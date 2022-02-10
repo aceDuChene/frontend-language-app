@@ -1,25 +1,57 @@
-import React, { useState } from "react";
-import { Image, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Image, StyleSheet, View } from "react-native";
 import { storage } from "../../firebaseSetup";
+import LoadingSign from "./LoadingSign";
+
+import ErrorMessage from "./ErrorMessage";
 
 function ScenarioImage({ uriLink }) {
+  const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState(null);
   const [imageURL, setImageURL] = useState();
-  let imageRef = storage.refFromURL(uriLink);
-  imageRef
-    .getDownloadURL()
-    .then((url) => {
-      setImageURL(url);
-    })
-    .catch((error) => console.log("Error getting image URL: ", error));
 
-  return <Image style={styles.rectangle} source={{ uri: imageURL }} />;
+  const getImage = async () => {
+    let imageRef = storage.refFromURL(uriLink);
+    imageRef
+      .getDownloadURL()
+      .then((url) => {
+        setImageURL(url);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
+      });
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getImage();
+  }, []);
+
+  return (
+    <View>
+      {error ? (
+        <ErrorMessage message="Picture Unavailable" style={styles.square} />
+      ) : (
+        <View>
+          {isLoading ? (
+            <LoadingSign style={styles.square} />
+          ) : (
+            <Image style={styles.square} source={{ uri: imageURL }} />
+          )}
+        </View>
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  rectangle: {
-    width: 300,
-    height: 200,
-    margin: 12,
+  square: {
+    width: 220,
+    height: 220,
+    marginBottom: 10,
+    borderRadius: 15,
   },
 });
 

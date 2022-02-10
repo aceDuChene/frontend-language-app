@@ -3,18 +3,22 @@ import { FlatList, StyleSheet, View } from "react-native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
+import LoadingSign from "../components/LoadingSign";
 import AppTextInput from "../components/AppTextInput";
+import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 import colors from "../config/colors";
 
 function ScenariosScreen({ route, navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [scenarios, setScenarios] = useState([]);
   const [filteredScenarios, setFilteredScenarios] = useState([]);
   const [search, setSearch] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
-  const getCategories = async () => {
+  const getScenarios = async () => {
     let scenarioArray = [];
     await db
       .collection("Scenarios")
@@ -26,11 +30,17 @@ function ScenariosScreen({ route, navigation }) {
         });
         setScenarios(scenarioArray);
         setFilteredScenarios(scenarioArray);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
       });
   };
 
   useEffect(() => {
-    getCategories();
+    setIsLoading(true);
+    getScenarios();
   }, []);
 
   const searchFilter = (text) => {
@@ -55,6 +65,16 @@ function ScenariosScreen({ route, navigation }) {
       setSearch(text);
     }
   };
+
+  if (isLoading) {
+    return <LoadingSign />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage message="Error fetching data... Please check your network connection!" />
+    );
+  }
 
   return (
     <View>
@@ -93,9 +113,7 @@ function ScenariosScreen({ route, navigation }) {
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
         onRefresh={() => {
-          // call backend to retrieve Scenarios
-          console.log(search);
-          searchFilter(search);
+          getScenarios();
         }}
       />
     </View>

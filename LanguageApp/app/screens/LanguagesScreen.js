@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
+
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
+import LoadingSign from "../components/LoadingSign";
+import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 
 function LanguagesScreen({ route, navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [languages, setLanguages] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -19,13 +24,29 @@ function LanguagesScreen({ route, navigation }) {
         querySnapshot.forEach((documentSnapshot) => {
           languageArray.push(documentSnapshot.data());
         });
+        setLanguages(languageArray);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
       });
-    setLanguages(languageArray);
   }
 
   useEffect(() => {
+    setIsLoading(true);
     getLanguages();
   }, []);
+
+  if (isLoading) {
+    return <LoadingSign />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage message="Error fetching data... Please check your network connection!" />
+    );
+  }
 
   return (
     <View>
