@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Image, View, StyleSheet, TouchableHighlight } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { storage } from "../../firebaseSetup";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
+import LoadingSign from "./LoadingSign";
+import ErrorMessage from "./ErrorMessage";
 
 function ListItem({ title, prompt, imageLink, icon, onPress }) {
+  const [isLoading, setIsLoading] = useState();
+  const [error, setError] = useState(null);
   const [imageURL, setImageURL] = useState();
-  if (imageLink != null) {
-    let imageRef = storage.refFromURL(imageLink);
-    imageRef
-      .getDownloadURL()
-      .then((url) => {
-        setImageURL(url);
-      })
-      .catch((error) => console.log("Error getting image URL: ", error));
-  }
+
+  const getImage = async () => {
+    if (imageLink != null) {
+      let imageRef = storage.refFromURL(imageLink);
+      await imageRef
+        .getDownloadURL()
+        .then((url) => {
+          setImageURL(url);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err);
+        });
+    }
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getImage();
+  }, []);
 
   return (
     <TouchableHighlight onPress={onPress} underlayColor={colors.separator}>
@@ -27,14 +43,28 @@ function ListItem({ title, prompt, imageLink, icon, onPress }) {
           </View>
         )}
         {imageLink && (
-          <View>
-            <Image
-              style={styles.image}
-              source={{
-                uri: imageURL,
-              }}
-            />
-          </View>
+          <>
+            {error ? (
+              <ErrorMessage
+                message="No Image"
+                style={styles.image}
+                textSize={5}
+              />
+            ) : (
+              <View>
+                {isLoading ? (
+                  <LoadingSign style={styles.image} />
+                ) : (
+                  <Image
+                    style={styles.image}
+                    source={{
+                      uri: imageURL,
+                    }}
+                  />
+                )}
+              </View>
+            )}
+          </>
         )}
         <View style={styles.textContainer}>
           {prompt ? (

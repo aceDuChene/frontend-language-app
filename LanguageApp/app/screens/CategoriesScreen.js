@@ -3,14 +3,18 @@ import { FlatList, View } from "react-native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
+import LoadingSign from "../components/LoadingSign";
+import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 
 function CategoriesScreen({ route, navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [categories, setCategories] = useState();
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  const getCategories = async () => {
     let categoryArray = [];
 
     db.collection("Categories")
@@ -20,9 +24,28 @@ function CategoriesScreen({ route, navigation }) {
           categoryArray.push(documentSnapshot.data());
         });
         setCategories(categoryArray);
-        // console.log("db array: ", categoryArray);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(err);
       });
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getCategories();
   }, []);
+
+  if (isLoading) {
+    return <LoadingSign />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage message="Error fetching data... Please check your network connection!" />
+    );
+  }
 
   return (
     <View>
