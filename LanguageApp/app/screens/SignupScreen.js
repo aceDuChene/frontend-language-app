@@ -12,7 +12,7 @@ export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLogin = async () => {
+  const onHandleSignup = async () => {
     try {
       if (email !== "" && password !== "") {
         await auth.createUserWithEmailAndPassword(email, password);
@@ -36,7 +36,7 @@ export default function SignupScreen({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <AppButton title="Submit" />
+      <AppButton title="Submit" onPress={onHandleSignup} />
     </View>
   );
 }

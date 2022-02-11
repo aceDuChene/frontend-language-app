@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
 import AppTitle from "../components/AppTitle";
 import Screen from "../components/Screen";
@@ -7,7 +7,11 @@ import AppButton from "../components/AppButton";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
 
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+
 function UserTypeScreen({ navigation }) {
+  const user = useContext(AuthenticatedUserContext);
+
   return (
     <Screen>
       <View style={styles.container}>

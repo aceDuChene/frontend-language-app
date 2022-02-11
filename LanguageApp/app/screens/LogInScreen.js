@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <AppButton title="Submit" />
+      <AppButton title="Submit" onPress={onLogin} />
     </View>
   );
 }
