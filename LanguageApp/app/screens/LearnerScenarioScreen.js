@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
+import { storage } from "../../firebaseSetup";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -18,6 +19,7 @@ function LearnerScenarioScreen({ route }) {
 
   const [scenario, setScenario] = useState(route.params);
   const [cpRecording, setCpRecording] = useState();
+  const [sound, setSound] = useState();
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
@@ -27,6 +29,29 @@ function LearnerScenarioScreen({ route }) {
 
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
+
+  const getAudioUrl = async () => {
+    console.log(
+      "senario is set: ",
+      scenario.promptRecording[scenario.language]
+    );
+    let audioRef = storage.refFromURL(
+      scenario.promptRecording[scenario.language]
+    );
+    await audioRef
+      .getDownloadURL()
+      .then((url) => {
+        setCpRecording(url);
+        console.log("recording url: ", cpRecording);
+      })
+      .catch((err) => {
+        console.log("Error retrieving audio file: ", err);
+      });
+  };
+
+  useEffect(() => {
+    getAudioUrl();
+  }, []);
 
   /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
   const gradeTranslation = async () => {
@@ -67,11 +92,13 @@ function LearnerScenarioScreen({ route }) {
   /* For playing audio 
   TO DO: fill remaining function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
-    // load the recording based on the URI from firebase
+    getAudioUrl();
     console.log("Loading recording");
-    // const { cpRecording } = await Audio.Sound.createAsync({
-    //   uri: scenario.promptRecording,
-    // });
+    const { sound } = await Audio.Sound.createAsync({
+      uri: cpRecording,
+    });
+    setSound(sound);
+    await sound.playAsync();
   }
 
   return (
