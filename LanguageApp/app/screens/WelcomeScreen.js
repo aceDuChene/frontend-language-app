@@ -36,7 +36,7 @@ const WelcomeScreen = ({ navigation }) => {
         />
         <AppButton
           title="REGISTER"
-          onPress={() => navigation.navigate(routes.USER_TYPE)}
+          onPress={() => navigation.navigate(routes.SIGNUP)}
         />
       </View>
     </Screen>

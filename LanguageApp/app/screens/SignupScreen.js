@@ -8,14 +8,14 @@ import AppTextInput from "../components/AppTextInput";
 
 import { auth } from "../../firebaseSetup";
 
-export default function LoginScreen({ navigation }) {
+export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const onLogin = async () => {
     try {
       if (email !== "" && password !== "") {
-        await auth.signInWithEmailAndPassword(email, password);
+        await auth.createUserWithEmailAndPassword(email, password);
       }
     } catch (error) {
       console.log(error.message);
