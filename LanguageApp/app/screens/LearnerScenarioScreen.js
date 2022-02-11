@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
 
@@ -103,9 +103,14 @@ function LearnerScenarioScreen({ route }) {
           />
 
           <AppButton
+            color="grey"
             title="Show Answer"
             onPress={(e) =>
-              alert(scenario.answerTranslation[scenario.language])
+              Alert.alert(
+                "The translated sencario answer is: ",
+                scenario.answerTranslation[scenario.language],
+                [{ text: "OK" }]
+              )
             }
           />
         </View>
