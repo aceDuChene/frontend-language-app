@@ -11,13 +11,8 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 
 function LearnerScenarioScreen({ route }) {
-  /* **** TO ADD ******
-    - Add call to Speech-to-Text to convert LL audio to text
-    - Add function to compare LL answer to CP answer and respond with alert success/try again
-    - Add playback functionality to play CP Prompt recording
-  */
-
   const [scenario, setScenario] = useState(route.params);
+  const [error, setError] = useState(null);
   const [cpRecording, setCpRecording] = useState();
   const [sound, setSound] = useState();
 
@@ -30,11 +25,8 @@ function LearnerScenarioScreen({ route }) {
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
 
+  /* Retrieve audio recording from Storage */
   const getAudioUrl = async () => {
-    console.log(
-      "senario is set: ",
-      scenario.promptRecording[scenario.language]
-    );
     let audioRef = storage.refFromURL(
       scenario.promptRecording[scenario.language]
     );
@@ -42,10 +34,9 @@ function LearnerScenarioScreen({ route }) {
       .getDownloadURL()
       .then((url) => {
         setCpRecording(url);
-        console.log("recording url: ", cpRecording);
       })
       .catch((err) => {
-        console.log("Error retrieving audio file: ", err);
+        setError(err);
       });
   };
 
@@ -89,16 +80,18 @@ function LearnerScenarioScreen({ route }) {
     console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  /* For playing audio 
-  TO DO: fill remaining function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
+  /* Playing audio function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
     getAudioUrl();
-    console.log("Loading recording");
     const { sound } = await Audio.Sound.createAsync({
       uri: cpRecording,
     });
     setSound(sound);
     await sound.playAsync();
+  }
+
+  if (error) {
+    return <ErrorMessage message="Error fetching data" />;
   }
 
   return (
@@ -134,7 +127,7 @@ function LearnerScenarioScreen({ route }) {
             title="Show Answer"
             onPress={(e) =>
               Alert.alert(
-                "The translated sencario answer is: ",
+                "The translated answer is: ",
                 scenario.answerTranslation[scenario.language],
                 [{ text: "OK" }]
               )
