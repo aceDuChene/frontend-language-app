@@ -40,6 +40,13 @@ export default function SignupScreen({ navigation }) {
         onChangeText={(text) => setPassword(text)}
         style={LoginSignUpStyles.inputs}
       />
+      <AppTextInput
+        placeholder="Re-enter password"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        style={LoginSignUpStyles.inputs}
+      />
       <AppButton title="Submit" onPress={onHandleSignup} />
     </View>
   );
