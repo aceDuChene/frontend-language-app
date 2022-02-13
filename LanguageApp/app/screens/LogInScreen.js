@@ -6,6 +6,8 @@ import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
 
+import LoginSignUpStyles from "../styles/LoginSignupStyles";
+
 import { auth } from "../../firebaseSetup";
 
 export default function LoginScreen({ navigation }) {
@@ -23,26 +25,21 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={LoginSignUpStyles.container}>
       <AppTextInput
-        placeholder="Enter email"
-        textContentType="emailAddress"
+        placeholder="Enter Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
+        style={LoginSignUpStyles.inputs}
       />
       <AppTextInput
-        placeholder="Enter password"
+        placeholder="Enter Password"
         secureTextEntry={true}
         value={password}
         onChangeText={(text) => setPassword(text)}
+        style={LoginSignUpStyles.inputs}
       />
       <AppButton title="Submit" onPress={onLogin} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-  },
-});
