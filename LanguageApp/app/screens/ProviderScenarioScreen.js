@@ -21,7 +21,7 @@ function ProviderScenarioScreen({ route }) {
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(route.params);
   const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
-  const [scenarioCategory, setScenarioCategory] = userState(scenario.category);
+  const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
 
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
@@ -109,13 +109,21 @@ function ProviderScenarioScreen({ route }) {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to Firebase", promptAudio);
     console.log("Answer audio uri to submit to Firebase", answerAudio);
+
     /* TO DO:  Add code to sumbit to Firestore */
     // https://firebase.google.com/docs/firestore/manage-data/add-data
     db.collection("Scenarios")
       .doc(scenario.id)
-      .update({
-        answerTranslation: db.FieldValue.arrayUnion("get translation here"),
-      });
+      .withConverter(infoConverter)
+      .set(
+        new infoToSubmit(
+          answerAudio,
+          cpAnswer,
+          promptAudio,
+          cpPrompt,
+          scenario.user_id
+        )
+      );
 
     db.collection("Languages")
       .doc(scenarioLanguage)

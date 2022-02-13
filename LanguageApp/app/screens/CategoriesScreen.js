@@ -62,6 +62,7 @@ function CategoriesScreen({ route, navigation }) {
                 language: route.params.language,
                 category: item.name,
                 user_type: route.params.user_type,
+                user_id: route.params.user_id,
               })
             }
           />

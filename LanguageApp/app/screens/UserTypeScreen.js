@@ -15,12 +15,17 @@ function UserTypeScreen({ navigation }) {
           title="Content Provider"
           color={colors.white}
           onPress={() =>
-            navigation.navigate(routes.LANGUAGES, { user_type: "CP" })
+            navigation.navigate(routes.LANGUAGES, {
+              user_type: "CP",
+              user_id: 1111,
+            })
           }
         />
         <AppButton
           title="Language Learner"
-          onPress={() => navigation.navigate(routes.LANGUAGES, { type: "LL" })}
+          onPress={() =>
+            navigation.navigate(routes.LANGUAGES, { type: "LL", user_id: 2222 })
+          }
         />
       </View>
     </Screen>

@@ -64,6 +64,7 @@ function LanguagesScreen({ route, navigation }) {
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
                 user_type: route.params.user_type,
+                user_id: route.params.user_id,
               })
             }
           />
