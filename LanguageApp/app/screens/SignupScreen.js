@@ -32,7 +32,7 @@ export default function SignupScreen({ navigation }) {
       />
       <AppTextInput
         placeholder="Enter password"
-        textContentType="password"
+        secureTextEntry={true}
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
