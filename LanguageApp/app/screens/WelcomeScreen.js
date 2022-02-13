@@ -35,7 +35,7 @@ const WelcomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate(routes.LOGIN)}
         />
         <AppButton
-          title="REGISTER"
+          title="SIGN UP"
           onPress={() => navigation.navigate(routes.SIGNUP)}
         />
       </View>
