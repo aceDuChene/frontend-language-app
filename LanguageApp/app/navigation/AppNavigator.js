@@ -22,20 +22,8 @@ const AppNavigator = () => (
       headerTitleStyle: { fontSize: 30, paddingBottom: 10 },
     }}
   >
-    <Stack.Screen
-      name="Welcome"
-      component={WelcomeScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen name="Login" component={LoginScreen} />
-    <Stack.Screen name="Signup" component={SignupScreen} />
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
-    <Stack.Screen
-      name="About"
-      component={AboutScreen}
-      options={{ title: "What is Locute?" }}
-    />
     <Stack.Screen
       name="Categories"
       component={CategoriesScreen}
