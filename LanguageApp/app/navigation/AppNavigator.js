@@ -1,16 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import WelcomeScreen from "../screens/WelcomeScreen";
 import UserTypeScreen from "../screens/UserTypeScreen";
 import LanguagesScreen from "../screens/LanguagesScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import ScenariosScreen from "../screens/ScenariosScreen";
 import ProviderScenarioScreen from "../screens/ProviderScenarioScreen";
 import LearnerScenarioScreen from "../screens/LearnerScenarioScreen";
-import AboutScreen from "../screens/AboutScreen";
-import LoginScreen from "../screens/LoginScreen";
-import SignupScreen from "../screens/SignupScreen";
 
 const Stack = createStackNavigator();
 
