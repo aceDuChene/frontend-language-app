@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { storage } from "../../firebaseSetup";
 import LoadingSign from "./LoadingSign";
-
 import ErrorMessage from "./ErrorMessage";
 
 function ScenarioImage({ uriLink }) {
