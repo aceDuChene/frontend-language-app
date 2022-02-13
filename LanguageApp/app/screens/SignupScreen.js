@@ -1,10 +1,12 @@
+// Source: https://blog.jscrambler.com/how-to-integrate-firebase-authentication-with-an-expo-app
+
 import React from "react";
 import { useState } from "react";
-import { StyleSheet, View, Button as RNButton } from "react-native";
+import { View } from "react-native";
 
 import AppButton from "../components/AppButton";
-import AppText from "../components/AppText";
 import AppTextInput from "../components/AppTextInput";
+import AuthErrorMsg from "../components/AuthErrorMsg";
 
 import LoginSignUpStyles from "../styles/LoginSignupStyles";
 
@@ -13,6 +15,7 @@ import { auth } from "../../firebaseSetup";
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signupError, setSignupError] = useState("");
 
   const onHandleSignup = async () => {
     try {
@@ -20,7 +23,7 @@ export default function SignupScreen({ navigation }) {
         await auth.createUserWithEmailAndPassword(email, password);
       }
     } catch (error) {
-      console.log(error.message);
+      setSignupError(error.message);
     }
   };
 
@@ -48,6 +51,7 @@ export default function SignupScreen({ navigation }) {
         style={LoginSignUpStyles.inputs}
       />
       <AppButton title="Submit" onPress={onHandleSignup} />
+      {signupError ? <AuthErrorMsg error={signupError} visible={true} /> : null}
     </View>
   );
 }
