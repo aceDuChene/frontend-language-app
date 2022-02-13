@@ -16,8 +16,13 @@ function ProviderScenarioScreen({ route }) {
     - On Submit button press: POST request to Firebase
   */
 
+  const [uploading, setUploading] = useState("");
+
   /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(route.params);
+  const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
+  const [scenarioCategory, setScenarioCategory] = userState(scenario.category);
+
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
@@ -48,12 +53,89 @@ function ProviderScenarioScreen({ route }) {
     answerRecording: answerAudioLink,
     translatorID: 11111111,
   };
+  // custom object: https://firebase.google.com/docs/firestore/manage-data/add-data#custom_objects
+  class infoToSubmit {
+    constructor(
+      answerRecording,
+      answerTranslation,
+      promptRecording,
+      promptTranslation,
+      translatorID
+    ) {
+      this.answerRecording = answerRecording;
+      this.answerTranslation = answerTranslation;
+      this.promptRecording = promptRecording;
+      this.promptTranslation = promptTranslation;
+      this.translatorID = translatorID;
+    }
+    toString() {
+      return (
+        this.answerRecording +
+        ", " +
+        this.answerTranslation +
+        ", " +
+        this.promptRecording +
+        ", " +
+        this.promptTranslation +
+        ", " +
+        this.translatorID
+      );
+    }
+  }
+  // Firestore data converter
+  var infoConverter = {
+    toFirestore: function (infoToSubmit) {
+      return {
+        answerRecording: infoToSubmit.answerRecording,
+        answerTranslation: infoToSubmit.answerTranslation,
+        promptRecording: infoToSubmit.promptRecording,
+        promptTranslation: infoToSubmit.promptTranslation,
+        translatorID: infoToSubmit.translatorID,
+      };
+    },
+    fromFirestore: function (snapshot, options) {
+      const data = snapshot.data(options);
+      return new infoToSubmit(
+        data.answerRecording,
+        data.answerTranslation,
+        data.promptRecording,
+        data.promptTranslation,
+        data.translatorID
+      );
+    },
+  };
 
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to Firebase", promptAudio);
     console.log("Answer audio uri to submit to Firebase", answerAudio);
     /* TO DO:  Add code to sumbit to Firestore */
+    // https://firebase.google.com/docs/firestore/manage-data/add-data
+    db.collection("Scenarios")
+      .doc(scenario.id)
+      .update({
+        answerTranslation: db.FieldValue.arrayUnion("get translation here"),
+      });
+
+    db.collection("Languages")
+      .doc(scenarioLanguage)
+      .update({
+        hasContent: true,
+      })
+      .then(() => {
+        console.log("Language successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    db.collection("Categories")
+      .doc(scenarioCategory)
+      .update({
+        //? does arrayUnion need a then() and catch(error)?
+        hasContent: db.FieldValue.arrayUnion(scenarioLanguage),
+      });
+
     setCpPrompt("");
     setCpAnswer("");
   };
