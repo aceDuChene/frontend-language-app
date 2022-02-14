@@ -17,16 +17,28 @@ function CategoriesScreen({ route, navigation }) {
   const getCategories = async () => {
     let categoryArray = [];
 
-    db.collection("Categories")
+    let categoryQuery = db.collection("Categories");
+
+    if (route.params.user_type === "LL") {
+      categoryQuery = categoryQuery.where(
+        "hasContent",
+        "array-contains",
+        route.params.language
+      );
+    }
+
+    categoryQuery
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           categoryArray.push(documentSnapshot.data());
         });
+
         setCategories(categoryArray);
         setIsLoading(false);
       })
       .catch((err) => {
+        console.log(err);
         setIsLoading(false);
         setError(err);
       });
