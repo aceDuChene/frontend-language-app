@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import AppButton from "../components/AppButton";
@@ -10,15 +10,17 @@ import AppTextInput from "../components/AppTextInput";
 import { db } from "../../firebaseSetup";
 
 function ProviderScenarioScreen({ route }) {
+  console.log(route.params);
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
+    ! - On Submit button press: POST request to Firebase (WORKING ON IT) 
+    ! TO DO: need to get the id of the scenario
+    ! need to get user id
   */
-
   const [uploading, setUploading] = useState("");
 
-  /* To be updated with scenario data from DB */
+  /* scenario data from DB brought in from previous screens */
   const [scenario, setScenario] = useState(route.params);
   const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
   const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
