@@ -7,11 +7,7 @@ import AppButton from "../components/AppButton";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
 
-import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
-
 function UserTypeScreen({ navigation }) {
-  const user = useContext(AuthenticatedUserContext);
-
   return (
     <Screen>
       <View style={styles.container}>
