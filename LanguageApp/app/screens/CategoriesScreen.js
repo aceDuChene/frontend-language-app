@@ -19,6 +19,7 @@ function CategoriesScreen({ route, navigation }) {
 
     let categoryQuery = db.collection("Categories");
 
+    // Restrict contents of LL screen to categories that have content in the selected language
     if (route.params.user_type === "LL") {
       categoryQuery = categoryQuery.where(
         "hasContent",
