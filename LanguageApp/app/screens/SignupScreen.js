@@ -35,21 +35,21 @@ export default function SignupScreen({ navigation }) {
   return (
     <View style={LoginSignUpStyles.container}>
       <AppTextInput
-        placeholder="Enter email"
+        placeholder="Enter Email"
         textContentType="emailAddress"
         value={email}
         onChangeText={(text) => setEmail(text)}
         style={LoginSignUpStyles.inputs}
       />
       <AppTextInput
-        placeholder="Enter password"
+        placeholder="Enter Password"
         secureTextEntry={true}
         value={password1}
         onChangeText={(text) => setPassword1(text)}
         style={LoginSignUpStyles.inputs}
       />
       <AppTextInput
-        placeholder="Re-enter password"
+        placeholder="Re-enter Password"
         secureTextEntry={true}
         value={password2}
         onChangeText={(text) => setPassword2(text)}
