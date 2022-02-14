@@ -8,15 +8,16 @@ import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
 import { db } from "../../firebaseSetup";
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 function ProviderScenarioScreen({ route }) {
   console.log(route.params);
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    ! - On Submit button press: POST request to Firebase (WORKING ON IT) 
-    ! TO DO: need to get the id of the scenario
-    ! need to get user id
+    - On Submit button press: POST request to Firebase
+    ! TO DO: need to get user id
   */
   const [uploading, setUploading] = useState("");
 
@@ -47,88 +48,32 @@ function ProviderScenarioScreen({ route }) {
     setAnswerAudio(data);
   };
 
-  // Submission data to be passed to Firebase
-  const translatedScenario = {
-    promptTranslation: cpPrompt,
-    answerTranslation: cpAnswer,
-    promptRecording: promptAudioLink,
-    answerRecording: answerAudioLink,
-    translatorID: 11111111,
-  };
-  // custom object: https://firebase.google.com/docs/firestore/manage-data/add-data#custom_objects
-  class infoToSubmit {
-    constructor(
-      answerRecording,
-      answerTranslation,
-      promptRecording,
-      promptTranslation,
-      translatorID
-    ) {
-      this.answerRecording = answerRecording;
-      this.answerTranslation = answerTranslation;
-      this.promptRecording = promptRecording;
-      this.promptTranslation = promptTranslation;
-      this.translatorID = translatorID;
-    }
-    toString() {
-      return (
-        this.answerRecording +
-        ", " +
-        this.answerTranslation +
-        ", " +
-        this.promptRecording +
-        ", " +
-        this.promptTranslation +
-        ", " +
-        this.translatorID
-      );
-    }
-  }
-  // Firestore data converter
-  var infoConverter = {
-    toFirestore: function (infoToSubmit) {
-      return {
-        answerRecording: infoToSubmit.answerRecording,
-        answerTranslation: infoToSubmit.answerTranslation,
-        promptRecording: infoToSubmit.promptRecording,
-        promptTranslation: infoToSubmit.promptTranslation,
-        translatorID: infoToSubmit.translatorID,
-      };
-    },
-    fromFirestore: function (snapshot, options) {
-      const data = snapshot.data(options);
-      return new infoToSubmit(
-        data.answerRecording,
-        data.answerTranslation,
-        data.promptRecording,
-        data.promptTranslation,
-        data.translatorID
-      );
-    },
-  };
-
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to Firebase", promptAudio);
     console.log("Answer audio uri to submit to Firebase", answerAudio);
 
     /* TO DO:  Add code to sumbit to Firestore */
-    // https://firebase.google.com/docs/firestore/manage-data/add-data
-    db.collection("Scenarios")
-      .doc(scenario.id)
-      .withConverter(infoConverter)
-      .set(
-        new infoToSubmit(
-          answerAudio,
-          cpAnswer,
-          promptAudio,
-          cpPrompt,
-          scenario.user_id
-        )
-      );
+    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
+    var answerRecordingLanguage = "answerRecording." + route.params.language;
+    var answerTranslationLanguage = "answerTranslation." + route.params.language;
+    var promptRecordingLanguage = "promptRecording." + route.params.language;
+    var promptTranslationLanguage = "promptTranslation." + route.params.language;
+    var translatorIdLanguage = "translatorId." + route.params.language;
+    db.collection("Scenarios").doc(route.params.scenarioID).update({
+      [answerRecordingLanguage]: answerAudio,
+      [answerTranslationLanguage]: cpPrompt,
+      [promptRecordingLanguage]: promptAudio,
+      [promptTranslationLanguage]: cpAnswer,
+      [translatorIdLanguage]: 12353464563
+    }).then(() => {
+        console.log("Scenario successfully updated!");})
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
 
     db.collection("Languages")
-      .doc(scenarioLanguage)
+      .doc(route.params.languageID)
       .update({
         hasContent: true,
       })
@@ -139,15 +84,15 @@ function ProviderScenarioScreen({ route }) {
         console.error("Error updating document: ", error);
       });
 
-    db.collection("Categories")
-      .doc(scenarioCategory)
-      .update({
-        //? does arrayUnion need a then() and catch(error)?
-        hasContent: db.FieldValue.arrayUnion(scenarioLanguage),
-      });
-
-    setCpPrompt("");
-    setCpAnswer("");
+    var hasContentLanguage = "hasContent." + route.params.language;
+    db.collection("Categories").doc(route.params.categoryID).update({
+      [hasContentLanguage]: true
+    })      .then(() => {
+      console.log("Category successfully updated!");
+    })
+    .catch((error) => {
+      console.error("Error updating document: ", error);
+    });
   };
 
   return (
