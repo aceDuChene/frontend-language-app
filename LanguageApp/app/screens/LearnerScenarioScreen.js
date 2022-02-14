@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
+import { storage } from "../../firebaseSetup";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -10,16 +11,10 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 
 function LearnerScenarioScreen({ route }) {
-  /* **** TO ADD ******
-    - Add call to Speech-to-Text to convert LL audio to text
-    - Add function to compare LL answer to CP answer and respond with alert success/try again
-    - Add playback functionality to play CP Prompt recording
-  */
-
-  /* To be updated with scenario data from DB */
   const [scenario, setScenario] = useState(route.params);
+  const [error, setError] = useState(null);
   const [cpRecording, setCpRecording] = useState();
-  console.log("Scenario", scenario);
+  const [sound, setSound] = useState();
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
@@ -29,6 +24,25 @@ function LearnerScenarioScreen({ route }) {
 
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
+
+  /* Retrieve audio recording from Storage */
+  const getAudioUrl = async () => {
+    let audioRef = storage.refFromURL(
+      scenario.promptRecording[scenario.language]
+    );
+    await audioRef
+      .getDownloadURL()
+      .then((url) => {
+        setCpRecording(url);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  };
+
+  useEffect(() => {
+    getAudioUrl();
+  }, []);
 
   /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
   const gradeTranslation = async () => {
@@ -66,14 +80,18 @@ function LearnerScenarioScreen({ route }) {
     console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  /* For playing audio 
-  TO DO: fill remaining function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
+  /* Playing audio function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
-    // load the recording based on the URI from firebase
-    console.log("Loading recording");
-    // const { cpRecording } = await Audio.Sound.createAsync({
-    //   uri: scenario.promptRecording,
-    // });
+    getAudioUrl();
+    const { sound } = await Audio.Sound.createAsync({
+      uri: cpRecording,
+    });
+    setSound(sound);
+    await sound.playAsync();
+  }
+
+  if (error) {
+    return <ErrorMessage message="Error fetching data" />;
   }
 
   return (
@@ -105,9 +123,14 @@ function LearnerScenarioScreen({ route }) {
           />
 
           <AppButton
+            color="grey"
             title="Show Answer"
             onPress={(e) =>
-              alert(scenario.answerTranslation[scenario.language])
+              Alert.alert(
+                "The translated answer is: ",
+                scenario.answerTranslation[scenario.language],
+                [{ text: "OK" }]
+              )
             }
           />
         </View>
