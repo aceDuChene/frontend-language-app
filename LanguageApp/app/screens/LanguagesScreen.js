@@ -17,6 +17,7 @@ function LanguagesScreen({ route, navigation }) {
   async function getLanguages() {
     let languageArray = [];
     let query = db.collection("Languages");
+    var languageCount = 0;
 
     if (route.params.type === "LL") {
       query = query.where("hasContent", "==", true);
@@ -26,6 +27,8 @@ function LanguagesScreen({ route, navigation }) {
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           languageArray.push(documentSnapshot.data());
+          languageArray[languageCount]["languageID"] = documentSnapshot.id;
+          languageCount++;
         });
       })
       .catch((err) => {
@@ -64,7 +67,7 @@ function LanguagesScreen({ route, navigation }) {
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
                 user_type: route.params.user_type,
-                user_id: route.params.user_id,
+                languageID: item.languageID
               })
             }
           />

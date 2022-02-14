@@ -10,7 +10,7 @@ import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 import colors from "../config/colors";
 
-function ScenariosScreen({ route, navigation }) {
+function ScenariosScreen({ route, navigation }) {console.log(route.params);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [scenarios, setScenarios] = useState([]);
@@ -20,6 +20,8 @@ function ScenariosScreen({ route, navigation }) {
 
   const getScenarios = async () => {
     let scenarioArray = [];
+    var scenarioCount = 0;
+
     await db
       .collection("Scenarios")
       .where("category", "==", route.params.category)
@@ -27,6 +29,8 @@ function ScenariosScreen({ route, navigation }) {
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           scenarioArray.push(documentSnapshot.data());
+          scenarioArray[scenarioCount]["scenarioID"] = documentSnapshot.id;
+          scenarioCount++;
         });
         if (route.params.user_type === "CP") {
           scenarioArray = scenarioArray.filter((item) => {
@@ -110,6 +114,8 @@ function ScenariosScreen({ route, navigation }) {
               if (route.params.user_type === "CP") {
                 navigation.navigate(routes.PROVIDER_SCENARIO, {
                   language: route.params.language,
+                  languageID: route.params.languageID,
+                  categoryID: route.params.categoryID,
                   ...item,
                 });
               } else {

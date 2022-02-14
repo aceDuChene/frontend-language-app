@@ -16,12 +16,15 @@ function CategoriesScreen({ route, navigation }) {
 
   const getCategories = async () => {
     let categoryArray = [];
+    var categoryCount = 0;
 
     db.collection("Categories")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
           categoryArray.push(documentSnapshot.data());
+          categoryArray[categoryCount]["categoryID"] = documentSnapshot.id;
+          categoryCount++;
         });
         setCategories(categoryArray);
         setIsLoading(false);
@@ -62,7 +65,8 @@ function CategoriesScreen({ route, navigation }) {
                 language: route.params.language,
                 category: item.name,
                 user_type: route.params.user_type,
-                user_id: route.params.user_id,
+                languageID: route.params.languageID,
+                categoryID: item.categoryID
               })
             }
           />
