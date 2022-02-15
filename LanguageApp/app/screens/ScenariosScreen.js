@@ -28,9 +28,8 @@ function ScenariosScreen({ route, navigation }) {console.log(route.params);
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
-          scenarioArray.push(documentSnapshot.data());
-          scenarioArray[scenarioCount]["scenarioID"] = documentSnapshot.id;
-          scenarioCount++;
+          const id = documentSnapshot.id;
+          scenarioArray.push({ id: id, ...documentSnapshot.data() });
         });
         if (route.params.user_type === "CP") {
           scenarioArray = scenarioArray.filter((item) => {
@@ -114,8 +113,8 @@ function ScenariosScreen({ route, navigation }) {console.log(route.params);
               if (route.params.user_type === "CP") {
                 navigation.navigate(routes.PROVIDER_SCENARIO, {
                   language: route.params.language,
-                  languageID: route.params.languageID,
-                  categoryID: route.params.categoryID,
+                  language_key: route.params.language_key,
+                  category_key: route.params.category_key,
                   ...item,
                 });
               } else {

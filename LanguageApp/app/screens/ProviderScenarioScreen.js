@@ -12,7 +12,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 function ProviderScenarioScreen({ route }) {
-  console.log(route.params);
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
@@ -48,47 +47,56 @@ function ProviderScenarioScreen({ route }) {
     setAnswerAudio(data);
   };
 
+    // Submission data to be passed to Firebase
+    const translatedScenario = {
+      promptTranslation: cpPrompt,
+      answerTranslation: cpAnswer,
+      promptRecording: promptAudioLink,
+      answerRecording: answerAudioLink,
+      translatorID: 11111111,
+    };
+
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to Firebase", promptAudio);
     console.log("Answer audio uri to submit to Firebase", answerAudio);
 
-    /* TO DO:  Add code to sumbit to Firestore */
+    // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     var answerRecordingLanguage = "answerRecording." + route.params.language;
     var answerTranslationLanguage = "answerTranslation." + route.params.language;
     var promptRecordingLanguage = "promptRecording." + route.params.language;
     var promptTranslationLanguage = "promptTranslation." + route.params.language;
     var translatorIdLanguage = "translatorId." + route.params.language;
-    db.collection("Scenarios").doc(route.params.scenarioID).update({
+    db.collection("Scenarios").doc(route.params.id).update({
       [answerRecordingLanguage]: answerAudio,
       [answerTranslationLanguage]: cpPrompt,
       [promptRecordingLanguage]: promptAudio,
       [promptTranslationLanguage]: cpAnswer,
       [translatorIdLanguage]: 12353464563
     }).then(() => {
-        console.log("Scenario successfully updated!");})
+        console.log(route.params.title, " scenario successfully updated!");})
       .catch((error) => {
         console.error("Error updating document: ", error);
       });
 
     db.collection("Languages")
-      .doc(route.params.languageID)
+      .doc(route.params.language_key)
       .update({
         hasContent: true,
       })
       .then(() => {
-        console.log("Language successfully updated!");
+        console.log(route.params.language, " language successfully updated!");
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
       });
 
     var hasContentLanguage = "hasContent." + route.params.language;
-    db.collection("Categories").doc(route.params.categoryID).update({
+    db.collection("Categories").doc(route.params.category_key).update({
       [hasContentLanguage]: true
     })      .then(() => {
-      console.log("Category successfully updated!");
+      console.log(route.params.category, " category successfully updated!");
     })
     .catch((error) => {
       console.error("Error updating document: ", error);
