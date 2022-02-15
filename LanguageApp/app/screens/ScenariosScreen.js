@@ -10,7 +10,7 @@ import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 import colors from "../config/colors";
 
-function ScenariosScreen({ route, navigation }) {console.log(route.params);
+function ScenariosScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [scenarios, setScenarios] = useState([]);
@@ -20,7 +20,6 @@ function ScenariosScreen({ route, navigation }) {console.log(route.params);
 
   const getScenarios = async () => {
     let scenarioArray = [];
-    var scenarioCount = 0;
 
     await db
       .collection("Scenarios")
