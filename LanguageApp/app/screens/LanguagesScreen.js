@@ -65,7 +65,8 @@ function LanguagesScreen({ route, navigation }) {
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
                 language_key: item.id,
-                user_type: route.params.user_type              })
+                user_type: route.params.user_type
+              })
             }
           />
         )}
