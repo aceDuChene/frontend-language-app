@@ -16,7 +16,6 @@ function CategoriesScreen({ route, navigation }) {
 
   const getCategories = async () => {
     let categoryArray = [];
-    var categoryCount = 0;
 
     let categoryQuery = db.collection("Categories");
 
