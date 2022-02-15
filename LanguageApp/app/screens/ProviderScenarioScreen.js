@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import firebase from "firebase/compat/app";
+import 'firebase/firestore';
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
@@ -8,8 +10,6 @@ import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
 import { db } from "../../firebaseSetup";
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 
 function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
@@ -94,7 +94,7 @@ function ProviderScenarioScreen({ route }) {
 
     var hasContentLanguage = "hasContent." + route.params.language;
     db.collection("Categories").doc(route.params.category_key).update({
-      [hasContentLanguage]: true
+      hasContent: firebase.firestore.FieldValue.arrayUnion(route.params.language)
     })      .then(() => {
       console.log(route.params.category, " category successfully updated!");
     })
