@@ -18,7 +18,18 @@ function CategoriesScreen({ route, navigation }) {
     let categoryArray = [];
     var categoryCount = 0;
 
-    db.collection("Categories")
+    let categoryQuery = db.collection("Categories");
+
+    // Restrict contents of LL screen to categories that have content in the selected language
+    if (route.params.user_type === "LL") {
+      categoryQuery = categoryQuery.where(
+        "hasContent",
+        "array-contains",
+        route.params.language
+      );
+    }
+
+    categoryQuery
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
@@ -26,6 +37,7 @@ function CategoriesScreen({ route, navigation }) {
           categoryArray[categoryCount]["categoryID"] = documentSnapshot.id;
           categoryCount++;
         });
+
         setCategories(categoryArray);
         setIsLoading(false);
       })

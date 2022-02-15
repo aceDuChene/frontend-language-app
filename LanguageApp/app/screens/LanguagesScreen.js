@@ -19,16 +19,15 @@ function LanguagesScreen({ route, navigation }) {
     let query = db.collection("Languages");
     var languageCount = 0;
 
-    if (route.params.type === "LL") {
+    if (route.params.user_type === "LL") {
       query = query.where("hasContent", "==", true);
     }
     await query
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
-          languageArray.push(documentSnapshot.data());
-          languageArray[languageCount]["languageID"] = documentSnapshot.id;
-          languageCount++;
+          const id = documentSnapshot.id;
+          languageArray.push({ id: id, ...documentSnapshot.data() });
         });
       })
       .catch((err) => {
@@ -66,6 +65,7 @@ function LanguagesScreen({ route, navigation }) {
             onPress={() =>
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
+                language_key: item.id,
                 user_type: route.params.user_type,
                 languageID: item.languageID
               })

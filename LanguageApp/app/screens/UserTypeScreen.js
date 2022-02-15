@@ -23,7 +23,7 @@ function UserTypeScreen({ navigation }) {
         <AppButton
           title="Language Learner"
           onPress={() =>
-            navigation.navigate(routes.LANGUAGES, { type: "LL", user_id: 2222 })
+            navigation.navigate(routes.LANGUAGES, { user_type: "LL" })
           }
         />
       </View>
