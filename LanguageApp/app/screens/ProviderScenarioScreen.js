@@ -15,7 +15,6 @@ function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
     ! TO DO: need to get user id
   */
   const [uploading, setUploading] = useState("");
@@ -58,8 +57,8 @@ function ProviderScenarioScreen({ route }) {
 
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
-    console.log("Prompt audio uri to submit to Firebase", promptAudio);
-    console.log("Answer audio uri to submit to Firebase", answerAudio);
+    console.log("Prompt audio uri to submit to storage??", promptAudio);
+    console.log("Answer audio uri to submit to storage...", answerAudio);
 
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
@@ -69,9 +68,9 @@ function ProviderScenarioScreen({ route }) {
     var promptTranslationLanguage = "promptTranslation." + route.params.language;
     var translatorIdLanguage = "translatorId." + route.params.language;
     db.collection("Scenarios").doc(route.params.id).update({
-      [answerRecordingLanguage]: answerAudio,
-      [answerTranslationLanguage]: cpPrompt,
-      [promptRecordingLanguage]: promptAudio,
+      [answerRecordingLanguage]: answerAudio, // needs to be changed to the storage link
+      [answerTranslationLanguage]: cpPrompt, 
+      [promptRecordingLanguage]: promptAudio, // needs to be changed to the storage link
       [promptTranslationLanguage]: cpAnswer,
       [translatorIdLanguage]: 12353464563
     }).then(() => {
@@ -92,7 +91,6 @@ function ProviderScenarioScreen({ route }) {
         console.error("Error updating document: ", error);
       });
 
-    var hasContentLanguage = "hasContent." + route.params.language;
     db.collection("Categories").doc(route.params.category_key).update({
       hasContent: firebase.firestore.FieldValue.arrayUnion(route.params.language)
     })      .then(() => {
