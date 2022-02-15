@@ -1,14 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import WelcomeScreen from "../screens/WelcomeScreen";
 import UserTypeScreen from "../screens/UserTypeScreen";
 import LanguagesScreen from "../screens/LanguagesScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import ScenariosScreen from "../screens/ScenariosScreen";
 import ProviderScenarioScreen from "../screens/ProviderScenarioScreen";
 import LearnerScenarioScreen from "../screens/LearnerScenarioScreen";
-import AboutScreen from "../screens/AboutScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,18 +18,8 @@ const AppNavigator = () => (
       headerTitleStyle: { fontSize: 30, paddingBottom: 10 },
     }}
   >
-    <Stack.Screen
-      name="Welcome"
-      component={WelcomeScreen}
-      options={{ headerShown: false }}
-    />
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
-    <Stack.Screen
-      name="About"
-      component={AboutScreen}
-      options={{ title: "What is Locute?" }}
-    />
     <Stack.Screen
       name="Categories"
       component={CategoriesScreen}

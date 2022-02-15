@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
 import AppTitle from "../components/AppTitle";
 import Screen from "../components/Screen";

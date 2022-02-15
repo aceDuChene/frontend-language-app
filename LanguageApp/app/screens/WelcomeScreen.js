@@ -32,11 +32,11 @@ const WelcomeScreen = ({ navigation }) => {
         <AppButton
           title="LOG IN"
           color={colors.white}
-          onPress={() => navigation.navigate(routes.USER_TYPE)}
+          onPress={() => navigation.navigate(routes.LOGIN)}
         />
         <AppButton
-          title="REGISTER"
-          onPress={() => navigation.navigate(routes.USER_TYPE)}
+          title="SIGN UP"
+          onPress={() => navigation.navigate(routes.SIGNUP)}
         />
       </View>
     </Screen>

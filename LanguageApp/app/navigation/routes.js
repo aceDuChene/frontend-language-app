@@ -1,5 +1,7 @@
 export default Object.freeze({
   ABOUT: "About",
+  LOGIN: "Login",
+  SIGNUP: "Signup",
   USER_TYPE: "User Type",
   LANGUAGES: "Languages",
   CATEGORIES: "Categories",
