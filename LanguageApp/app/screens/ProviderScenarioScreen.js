@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
@@ -32,26 +32,75 @@ function ProviderScenarioScreen({ route }) {
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
-  // Store the audio links from Firebase - links set after the Firebase call
-  const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
-  const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
+  // // Store the audio links from Firebase - links set after the Firebase call
+  // const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
+  // const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
+
+  const updateStorage = async (uri, type) => {
+    try {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          try {
+            resolve(xhr.response);
+          } catch (error) {
+            console.log("error:", error);
+          }
+        };
+        xhr.onerror = (e) => {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+      if (blob != null) {
+        const uriParts = uri.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+        const fileName =
+          type + scenario.id + route.params.language + "." + fileType;
+        const filePath = "/cp-audio/" + fileName;
+        storage
+          .ref()
+          .child(`${filePath}`)
+          .put(blob, {
+            contentType: `audio/${fileType}`,
+          })
+          .then(() => {
+            console.log("Sent!");
+            const storagePath = "gs://capstone-language-app-fa069.appspot.com";
+            if (type == "prompt") {
+              setPromptAudio(storagePath + filePath);
+              console.log("update", storagePath + filePath);
+            } else {
+              setAnswerAudio(storagePath + filePath);
+              console.log("update", storagePath + filePath);
+            }
+          })
+          .catch((e) => console.log("error:", e));
+      } else {
+        console.log("error with blob");
+      }
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
 
   // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-  const passLinkPrompt = (data) => {
-    console.log(data);
-    setPromptAudio(data);
-    console.log(promptAudio);
+  const passLinkPrompt = async (data) => {
+    updateStorage(data, "prompt");
   };
 
   const passLinkAnswer = (data) => {
-    setAnswerAudio(data);
+    updateStorage(data, "answer");
   };
 
   const submitTranslation = async () => {
-    console.log("submitting to database", translatedScenario);
-    console.log("Prompt audio uri to submit to storage??", promptAudio);
-    console.log("Answer audio uri to submit to storage...", answerAudio);
+    // console.log("submitting to database", translatedScenario);
+    // console.log("Prompt audio uri to submit to storage??", promptAudio);
+    // console.log("Answer audio uri to submit to storage...", answerAudio);
 
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
@@ -111,21 +160,13 @@ function ProviderScenarioScreen({ route }) {
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton
-            type="prompt"
-            passData={passLinkPrompt}
-            scenarioID={scenario.id}
-          />
+          <RecordButton type="prompt" passData={passLinkPrompt} />
           <AppTextInput
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton
-            type="answer"
-            passData={passLinkAnswer}
-            scenarioID={scenario.id}
-          />
+          <RecordButton type="answer" passData={passLinkAnswer} />
           <AppTextInput
             placeholder="Type Answer Translation"
             onChangeText={(value) => setCpAnswer(value)}

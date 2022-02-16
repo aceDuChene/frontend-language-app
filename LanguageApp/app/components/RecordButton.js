@@ -37,46 +37,47 @@ function RecordButton({ passData, type, scenarioID }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
+    passData(uri, type);
 
-    try {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          try {
-            resolve(xhr.response);
-          } catch (error) {
-            console.log("error:", error);
-          }
-        };
-        xhr.onerror = (e) => {
-          console.log(e);
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", uri, true);
-        xhr.send(null);
-      });
-      if (blob != null) {
-        const uriParts = uri.split(".");
-        const fileType = uriParts[uriParts.length - 1];
-        const filePath = "/cp-audio/" + type + scenarioID + fileType;
-        storage
-          .ref()
-          .child(`${filePath}`)
-          .put(blob, {
-            contentType: `audio/${fileType}`,
-          })
-          .then(() => {
-            console.log("Sent!");
-            passData(filePath);
-          })
-          .catch((e) => console.log("error:", e));
-      } else {
-        console.log("error with blob");
-      }
-    } catch (error) {
-      console.log("error:", error);
-    }
+    // try {
+    //   const blob = await new Promise((resolve, reject) => {
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.onload = () => {
+    //       try {
+    //         resolve(xhr.response);
+    //       } catch (error) {
+    //         console.log("error:", error);
+    //       }
+    //     };
+    //     xhr.onerror = (e) => {
+    //       console.log(e);
+    //       reject(new TypeError("Network request failed"));
+    //     };
+    //     xhr.responseType = "blob";
+    //     xhr.open("GET", uri, true);
+    //     xhr.send(null);
+    //   });
+    //   if (blob != null) {
+    //     const uriParts = uri.split(".");
+    //     const fileType = uriParts[uriParts.length - 1];
+    //     const filePath = "/cp-audio/" + type + scenarioID + fileType;
+    //     storage
+    //       .ref()
+    //       .child(`${filePath}`)
+    //       .put(blob, {
+    //         contentType: `audio/${fileType}`,
+    //       })
+    //       .then(() => {
+    //         console.log("Sent!");
+    //         passData(filePath);
+    //       })
+    //       .catch((e) => console.log("error:", e));
+    //   } else {
+    //     console.log("error with blob");
+    //   }
+    // } catch (error) {
+    //   console.log("error:", error);
+    // }
   }
 
   return (
