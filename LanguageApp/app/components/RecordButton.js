@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 import { Audio } from "expo-av";
+import { storage } from "../../firebaseSetup";
 
 import AppButtonSecondary from "./AppButtonSecondary";
 
-function RecordButton({ passData, id }) {
+function RecordButton({ passData, type, scenarioID }) {
   /* To store Audio recordings 
     Method obatined from 'expo-av' documentation https://docs.expo.dev/versions/latest/sdk/audio/
   */
@@ -36,9 +37,49 @@ function RecordButton({ passData, id }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    console.log("Storing " + id);
+    console.log("recording object", recording);
     passData(uri);
-    console.log("Recording stopped and stored at", uri);
+
+    let fileName = type + scenarioID;
+    console.log("recordingName", fileName);
+
+    try {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          try {
+            resolve(xhr.response);
+          } catch (error) {
+            console.log("error:", error);
+          }
+        };
+        xhr.onerror = (e) => {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+      if (blob != null) {
+        const uriParts = uri.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+        storage
+          .ref()
+          .child(`${fileName}.${fileType}`)
+          .put(blob, {
+            contentType: `audio/${fileType}`,
+          })
+          .then(() => {
+            console.log("Sent!");
+          })
+          .catch((e) => console.log("error:", e));
+      } else {
+        console.log("error with blob");
+      }
+    } catch (error) {
+      console.log("error:", error);
+    }
   }
 
   return (

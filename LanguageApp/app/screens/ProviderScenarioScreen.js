@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
-import 'firebase/firestore';
+import "firebase/firestore";
+import { db, storage } from "../../firebaseSetup";
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
-import { db } from "../../firebaseSetup";
 
 function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
@@ -40,20 +40,49 @@ function ProviderScenarioScreen({ route }) {
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
   const passLinkPrompt = (data) => {
     setPromptAudio(data);
+
+    // try {
+    //   const blob = await new Promise((resolve, reject) => {
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.onload = () => {
+    //       try {
+    //         resolve(xhr.response);
+    //       } catch (error) {
+    //         console.log("error:", error);
+    //       }
+    //     };
+    //     xhr.onerror = (e) => {
+    //       console.log(e);
+    //       reject(new TypeError("Network request failed"));
+    //     };
+    //     xhr.responseType = "blob";
+    //     xhr.open("GET", uri, true);
+    //     xhr.send(null);
+    //   });
+    //   if (blob != null) {
+    //     const uriParts = uri.split(".");
+    //     const fileType = uriParts[uriParts.length - 1];
+    //     storage
+    //       .ref()
+    //       .child(`nameOfTheFile.${fileType}`)
+    //       .put(blob, {
+    //         contentType: `audio/${fileType}`,
+    //       })
+    //       .then(() => {
+    //         console.log("Sent!");
+    //       })
+    //       .catch((e) => console.log("error:", e));
+    //   } else {
+    //     console.log("erroor with blob");
+    //   }
+    // } catch (error) {
+    //   console.log("error:", error);
+    // }
   };
 
   const passLinkAnswer = (data) => {
     setAnswerAudio(data);
   };
-
-    // Submission data to be passed to Firebase
-    const translatedScenario = {
-      promptTranslation: cpPrompt,
-      answerTranslation: cpAnswer,
-      promptRecording: promptAudioLink,
-      answerRecording: answerAudioLink,
-      translatorID: 11111111,
-    };
 
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
@@ -63,18 +92,24 @@ function ProviderScenarioScreen({ route }) {
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     var answerRecordingLanguage = "answerRecording." + route.params.language;
-    var answerTranslationLanguage = "answerTranslation." + route.params.language;
+    var answerTranslationLanguage =
+      "answerTranslation." + route.params.language;
     var promptRecordingLanguage = "promptRecording." + route.params.language;
-    var promptTranslationLanguage = "promptTranslation." + route.params.language;
+    var promptTranslationLanguage =
+      "promptTranslation." + route.params.language;
     var translatorIdLanguage = "translatorId." + route.params.language;
-    db.collection("Scenarios").doc(route.params.id).update({
-      [answerRecordingLanguage]: answerAudio, // needs to be changed to the storage link
-      [answerTranslationLanguage]: cpPrompt, 
-      [promptRecordingLanguage]: promptAudio, // needs to be changed to the storage link
-      [promptTranslationLanguage]: cpAnswer,
-      [translatorIdLanguage]: 12353464563
-    }).then(() => {
-        console.log(route.params.title, " scenario successfully updated!");})
+    db.collection("Scenarios")
+      .doc(route.params.id)
+      .update({
+        [answerRecordingLanguage]: answerAudio, // needs to be changed to the storage link
+        [answerTranslationLanguage]: cpPrompt,
+        [promptRecordingLanguage]: promptAudio, // needs to be changed to the storage link
+        [promptTranslationLanguage]: cpAnswer,
+        [translatorIdLanguage]: 12353464563,
+      })
+      .then(() => {
+        console.log(route.params.title, " scenario successfully updated!");
+      })
       .catch((error) => {
         console.error("Error updating document: ", error);
       });
@@ -91,14 +126,19 @@ function ProviderScenarioScreen({ route }) {
         console.error("Error updating document: ", error);
       });
 
-    db.collection("Categories").doc(route.params.category_key).update({
-      hasContent: firebase.firestore.FieldValue.arrayUnion(route.params.language)
-    })      .then(() => {
-      console.log(route.params.category, " category successfully updated!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-    });
+    db.collection("Categories")
+      .doc(route.params.category_key)
+      .update({
+        hasContent: firebase.firestore.FieldValue.arrayUnion(
+          route.params.language
+        ),
+      })
+      .then(() => {
+        console.log(route.params.category, " category successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
   return (
@@ -107,14 +147,22 @@ function ProviderScenarioScreen({ route }) {
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton id="prompt" passData={passLinkPrompt} />
+          <RecordButton
+            type="prompt"
+            passData={passLinkPrompt}
+            scenarioID={scenario.id}
+          />
           <AppTextInput
             // style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton id="answer" passData={passLinkAnswer} />
+          <RecordButton
+            type="answer"
+            passData={passLinkAnswer}
+            scenarioID={scenario.id}
+          />
           <AppTextInput
             // style={styles.input}
             placeholder="Type Answer Translation"
