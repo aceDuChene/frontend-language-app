@@ -13,8 +13,6 @@ import AppTextInput from "../components/AppTextInput";
 
 function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
-    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
-    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
     ! TO DO: need to get user id
   */
   const [uploading, setUploading] = useState("");
@@ -28,13 +26,9 @@ function ProviderScenarioScreen({ route }) {
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
 
-  // Stores just the recording URI; change to what's needed for Firebase (sound?)
+  // Stores storage bath
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
-
-  // // Store the audio links from Firebase - links set after the Firebase call
-  // const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
-  // const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
 
   const updateStorage = async (uri, type) => {
     try {
@@ -89,19 +83,11 @@ function ProviderScenarioScreen({ route }) {
 
   // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-  const passLinkPrompt = async (data) => {
-    updateStorage(data, "prompt");
-  };
-
-  const passLinkAnswer = (data) => {
-    updateStorage(data, "answer");
+  const passLink = async (data, type) => {
+    updateStorage(data, type);
   };
 
   const submitTranslation = async () => {
-    // console.log("submitting to database", translatedScenario);
-    // console.log("Prompt audio uri to submit to storage??", promptAudio);
-    // console.log("Answer audio uri to submit to storage...", answerAudio);
-
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     var answerRecordingLanguage = "answerRecording." + route.params.language;
@@ -160,13 +146,13 @@ function ProviderScenarioScreen({ route }) {
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton type="prompt" passData={passLinkPrompt} />
+          <RecordButton type="prompt" passData={passLink} />
           <AppTextInput
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton type="answer" passData={passLinkAnswer} />
+          <RecordButton type="answer" passData={passLink} />
           <AppTextInput
             placeholder="Type Answer Translation"
             onChangeText={(value) => setCpAnswer(value)}
