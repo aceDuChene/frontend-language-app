@@ -59,14 +59,14 @@ function ProviderScenarioScreen({ route }) {
     console.log("submitting to database", translatedScenario);
     console.log("Prompt audio uri to submit to storage??", promptAudio);
     console.log("Answer audio uri to submit to storage...", answerAudio);
-
+    
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
-    var answerRecordingLanguage = "answerRecording." + route.params.language;
-    var answerTranslationLanguage = "answerTranslation." + route.params.language;
-    var promptRecordingLanguage = "promptRecording." + route.params.language;
-    var promptTranslationLanguage = "promptTranslation." + route.params.language;
-    var translatorIdLanguage = "translatorId." + route.params.language;
+    const answerRecordingLanguage = "answerRecording." + route.params.language;
+    const answerTranslationLanguage = "answerTranslation." + route.params.language;
+    const promptRecordingLanguage = "promptRecording." + route.params.language;
+    const promptTranslationLanguage = "promptTranslation." + route.params.language;
+    const translatorIdLanguage = "translatorId." + route.params.language;
     db.collection("Scenarios").doc(route.params.id).update({
       [answerRecordingLanguage]: answerAudio, // needs to be changed to the storage link
       [answerTranslationLanguage]: cpPrompt, 
