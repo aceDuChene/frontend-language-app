@@ -37,11 +37,6 @@ function RecordButton({ passData, type, scenarioID }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    console.log("recording object", recording);
-    passData(uri);
-
-    let fileName = type + scenarioID;
-    console.log("recordingName", fileName);
 
     try {
       const blob = await new Promise((resolve, reject) => {
@@ -64,14 +59,16 @@ function RecordButton({ passData, type, scenarioID }) {
       if (blob != null) {
         const uriParts = uri.split(".");
         const fileType = uriParts[uriParts.length - 1];
+        const filePath = "/cp-audio/" + type + scenarioID + fileType;
         storage
           .ref()
-          .child(`${fileName}.${fileType}`)
+          .child(`${filePath}`)
           .put(blob, {
             contentType: `audio/${fileType}`,
           })
           .then(() => {
             console.log("Sent!");
+            passData(filePath);
           })
           .catch((e) => console.log("error:", e));
       } else {

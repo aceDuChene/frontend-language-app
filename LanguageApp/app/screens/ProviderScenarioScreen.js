@@ -39,45 +39,9 @@ function ProviderScenarioScreen({ route }) {
   // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
   const passLinkPrompt = (data) => {
+    console.log(data);
     setPromptAudio(data);
-
-    // try {
-    //   const blob = await new Promise((resolve, reject) => {
-    //     const xhr = new XMLHttpRequest();
-    //     xhr.onload = () => {
-    //       try {
-    //         resolve(xhr.response);
-    //       } catch (error) {
-    //         console.log("error:", error);
-    //       }
-    //     };
-    //     xhr.onerror = (e) => {
-    //       console.log(e);
-    //       reject(new TypeError("Network request failed"));
-    //     };
-    //     xhr.responseType = "blob";
-    //     xhr.open("GET", uri, true);
-    //     xhr.send(null);
-    //   });
-    //   if (blob != null) {
-    //     const uriParts = uri.split(".");
-    //     const fileType = uriParts[uriParts.length - 1];
-    //     storage
-    //       .ref()
-    //       .child(`nameOfTheFile.${fileType}`)
-    //       .put(blob, {
-    //         contentType: `audio/${fileType}`,
-    //       })
-    //       .then(() => {
-    //         console.log("Sent!");
-    //       })
-    //       .catch((e) => console.log("error:", e));
-    //   } else {
-    //     console.log("erroor with blob");
-    //   }
-    // } catch (error) {
-    //   console.log("error:", error);
-    // }
+    console.log(promptAudio);
   };
 
   const passLinkAnswer = (data) => {
@@ -153,7 +117,6 @@ function ProviderScenarioScreen({ route }) {
             scenarioID={scenario.id}
           />
           <AppTextInput
-            // style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
@@ -164,7 +127,6 @@ function ProviderScenarioScreen({ route }) {
             scenarioID={scenario.id}
           />
           <AppTextInput
-            // style={styles.input}
             placeholder="Type Answer Translation"
             onChangeText={(value) => setCpAnswer(value)}
           />
