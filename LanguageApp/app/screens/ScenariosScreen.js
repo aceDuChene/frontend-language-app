@@ -20,13 +20,15 @@ function ScenariosScreen({ route, navigation }) {
 
   const getScenarios = async () => {
     let scenarioArray = [];
+
     await db
       .collection("Scenarios")
       .where("category", "==", route.params.category)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
-          scenarioArray.push(documentSnapshot.data());
+          const id = documentSnapshot.id;
+          scenarioArray.push({ id: id, ...documentSnapshot.data() });
         });
         if (route.params.user_type === "CP") {
           scenarioArray = scenarioArray.filter((item) => {
@@ -110,6 +112,8 @@ function ScenariosScreen({ route, navigation }) {
               if (route.params.user_type === "CP") {
                 navigation.navigate(routes.PROVIDER_SCENARIO, {
                   language: route.params.language,
+                  language_key: route.params.language_key,
+                  category_key: route.params.category_key,
                   ...item,
                 });
               } else {

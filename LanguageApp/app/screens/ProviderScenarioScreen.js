@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import firebase from "firebase/compat/app";
+import 'firebase/firestore';
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
@@ -13,11 +15,15 @@ function ProviderScenarioScreen({ route }) {
   /* **** TO ADD ******
     - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
     - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
+    ! TO DO: need to get user id
   */
+  const [uploading, setUploading] = useState("");
 
-  /* To be updated with scenario data from DB */
+  /* scenario data from DB brought in from previous screens */
   const [scenario, setScenario] = useState(route.params);
+  const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
+  const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
+
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
@@ -40,22 +46,59 @@ function ProviderScenarioScreen({ route }) {
     setAnswerAudio(data);
   };
 
-  // Submission data to be passed to Firebase
-  const translatedScenario = {
-    promptTranslation: cpPrompt,
-    answerTranslation: cpAnswer,
-    promptRecording: promptAudioLink,
-    answerRecording: answerAudioLink,
-    translatorID: 11111111,
-  };
+    // Submission data to be passed to Firebase
+    const translatedScenario = {
+      promptTranslation: cpPrompt,
+      answerTranslation: cpAnswer,
+      promptRecording: promptAudioLink,
+      answerRecording: answerAudioLink,
+      translatorID: 11111111,
+    };
 
   const submitTranslation = async () => {
     console.log("submitting to database", translatedScenario);
-    console.log("Prompt audio uri to submit to Firebase", promptAudio);
-    console.log("Answer audio uri to submit to Firebase", answerAudio);
-    /* TO DO:  Add code to sumbit to Firestore */
-    setCpPrompt("");
-    setCpAnswer("");
+    console.log("Prompt audio uri to submit to storage??", promptAudio);
+    console.log("Answer audio uri to submit to storage...", answerAudio);
+
+    // Create calls to use to add to DB
+    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
+    var answerRecordingLanguage = "answerRecording." + route.params.language;
+    var answerTranslationLanguage = "answerTranslation." + route.params.language;
+    var promptRecordingLanguage = "promptRecording." + route.params.language;
+    var promptTranslationLanguage = "promptTranslation." + route.params.language;
+    var translatorIdLanguage = "translatorId." + route.params.language;
+    db.collection("Scenarios").doc(route.params.id).update({
+      [answerRecordingLanguage]: answerAudio, // needs to be changed to the storage link
+      [answerTranslationLanguage]: cpPrompt, 
+      [promptRecordingLanguage]: promptAudio, // needs to be changed to the storage link
+      [promptTranslationLanguage]: cpAnswer,
+      [translatorIdLanguage]: 12353464563
+    }).then(() => {
+        console.log(route.params.title, " scenario successfully updated!");})
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    db.collection("Languages")
+      .doc(route.params.language_key)
+      .update({
+        hasContent: true,
+      })
+      .then(() => {
+        console.log(route.params.language, " language successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    db.collection("Categories").doc(route.params.category_key).update({
+      hasContent: firebase.firestore.FieldValue.arrayUnion(route.params.language)
+    })      .then(() => {
+      console.log(route.params.category, " category successfully updated!");
+    })
+    .catch((error) => {
+      console.error("Error updating document: ", error);
+    });
   };
 
   return (
