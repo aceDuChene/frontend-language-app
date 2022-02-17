@@ -26,7 +26,7 @@ function ProviderScenarioScreen({ route }) {
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
 
-  // Contains path to audio files in Storage
+  // Contains path to audio files uploaded to Storage
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
@@ -90,10 +90,6 @@ function ProviderScenarioScreen({ route }) {
   };
 
   const submitTranslation = async () => {
-    // console.log("submitting to database", translatedScenario);
-    // console.log("Prompt audio uri to submit to storage??", promptAudio);
-    // console.log("Answer audio uri to submit to storage...", answerAudio);
-
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     const answerRecordingLanguage = "answerRecording." + route.params.language;

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
 import { Audio } from "expo-av";
-import { storage } from "../../firebaseSetup";
 
 import AppButtonSecondary from "./AppButtonSecondary";
 
