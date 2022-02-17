@@ -24,7 +24,6 @@ function RecordButton({ passData, type }) {
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecording(recording);
-      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }

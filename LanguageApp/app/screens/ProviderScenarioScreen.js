@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
@@ -82,7 +82,7 @@ function ProviderScenarioScreen({ route }) {
 
   // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-  const passLink = async (data, type) => {
+  const passLink = (data, type) => {
     updateStorage(data, type);
   };
 
