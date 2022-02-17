@@ -26,10 +26,12 @@ function ProviderScenarioScreen({ route }) {
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
 
-  // Stores storage bath
+  // Contains path to audio files in Storage
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
+  /* Method to upload audio file to Storage: 
+  https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 */
   const updateStorage = async (uri, type) => {
     try {
       const blob = await new Promise((resolve, reject) => {
@@ -88,9 +90,9 @@ function ProviderScenarioScreen({ route }) {
   };
 
   const submitTranslation = async () => {
-    console.log("submitting to database", translatedScenario);
-    console.log("Prompt audio uri to submit to storage??", promptAudio);
-    console.log("Answer audio uri to submit to storage...", answerAudio);
+    // console.log("submitting to database", translatedScenario);
+    // console.log("Prompt audio uri to submit to storage??", promptAudio);
+    // console.log("Answer audio uri to submit to storage...", answerAudio);
 
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
