@@ -64,14 +64,11 @@ function ProviderScenarioScreen({ route }) {
             contentType: `audio/${fileType}`,
           })
           .then(() => {
-            console.log("Sent!");
             const storagePath = "gs://capstone-language-app-fa069.appspot.com";
             if (type == "prompt") {
               setPromptAudio(storagePath + filePath);
-              console.log("update", storagePath + filePath);
             } else {
               setAnswerAudio(storagePath + filePath);
-              console.log("update", storagePath + filePath);
             }
           })
           .catch((e) => console.log("error:", e));
