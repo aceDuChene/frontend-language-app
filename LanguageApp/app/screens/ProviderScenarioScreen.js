@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
@@ -10,14 +10,15 @@ import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 
 function ProviderScenarioScreen({ route }) {
-  /* **** TO ADD ******
-    ! TO DO: need to get user id
-  */
+  // Retrieve authenticated user information
+  const { user } = useContext(AuthenticatedUserContext);
+
   const [uploading, setUploading] = useState("");
 
-  /* scenario data from DB brought in from previous screens */
+  // scenario data from DB brought in from previous screens
   const [scenario, setScenario] = useState(route.params);
   const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
   const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
@@ -103,7 +104,7 @@ function ProviderScenarioScreen({ route }) {
         [answerTranslationLanguage]: cpPrompt,
         [promptRecordingLanguage]: promptAudio,
         [promptTranslationLanguage]: cpAnswer,
-        [translatorIdLanguage]: 12353464563,
+        [translatorIdLanguage]: user.uid,
       })
       .then(() => {
         console.log(route.params.title, " scenario successfully updated!");
