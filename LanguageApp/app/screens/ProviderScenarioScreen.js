@@ -1,61 +1,143 @@
-import React, { useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import firebase from "firebase/compat/app";
+import "firebase/firestore";
+import { db, storage } from "../../firebaseSetup";
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
-import { db } from "../../firebaseSetup";
+import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 
 function ProviderScenarioScreen({ route }) {
-  /* **** TO ADD ******
-    - API call to Firebase to post recording and get link for cpPrompt recording, setPromptAudioLink
-    - API call to Firebase to post recording get link for cpAnswer recording, setAnswerAudioLink
-    - On Submit button press: POST request to Firebase
-  */
+  // Retrieve authenticated user information
+  const { user } = useContext(AuthenticatedUserContext);
 
-  /* To be updated with scenario data from DB */
+  const [uploading, setUploading] = useState("");
+
+  // scenario data from DB brought in from previous screens
   const [scenario, setScenario] = useState(route.params);
+  const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
+  const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
+
   // Stores the translated text
   const [cpPrompt, setCpPrompt] = useState("");
   const [cpAnswer, setCpAnswer] = useState("");
 
-  // Stores just the recording URI; change to what's needed for Firebase (sound?)
+  // Contains path to audio files uploaded to Storage
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
-  // Store the audio links from Firebase - links set after the Firebase call
-  const [promptAudioLink, setPromptAudioLink] = useState("example link 1");
-  const [answerAudioLink, setAnswerAudioLink] = useState("example link 2");
+  /* Method to upload audio file to Storage: 
+  https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 */
+  const updateStorage = async (uri, type) => {
+    try {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          try {
+            resolve(xhr.response);
+          } catch (error) {
+            console.log("error:", error);
+          }
+        };
+        xhr.onerror = (e) => {
+          console.log(e);
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", uri, true);
+        xhr.send(null);
+      });
+      if (blob != null) {
+        const uriParts = uri.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+        const fileName =
+          type + scenario.id + route.params.language + "." + fileType;
+        const filePath = "/cp-audio/" + fileName;
+        storage
+          .ref()
+          .child(`${filePath}`)
+          .put(blob, {
+            contentType: `audio/${fileType}`,
+          })
+          .then(() => {
+            const storagePath = "gs://capstone-language-app-fa069.appspot.com";
+            if (type == "prompt") {
+              setPromptAudio(storagePath + filePath);
+            } else {
+              setAnswerAudio(storagePath + filePath);
+            }
+          })
+          .catch((e) => console.log("error:", e));
+      } else {
+        console.log("error with blob");
+      }
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
 
   // Passes audio data between the screen and RecordButton component
   // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-  const passLinkPrompt = (data) => {
-    setPromptAudio(data);
-  };
-
-  const passLinkAnswer = (data) => {
-    setAnswerAudio(data);
-  };
-
-  // Submission data to be passed to Firebase
-  const translatedScenario = {
-    promptTranslation: cpPrompt,
-    answerTranslation: cpAnswer,
-    promptRecording: promptAudioLink,
-    answerRecording: answerAudioLink,
-    translatorID: 11111111,
+  const passLink = (data, type) => {
+    updateStorage(data, type);
   };
 
   const submitTranslation = async () => {
-    console.log("submitting to database", translatedScenario);
-    console.log("Prompt audio uri to submit to Firebase", promptAudio);
-    console.log("Answer audio uri to submit to Firebase", answerAudio);
-    /* TO DO:  Add code to sumbit to Firestore */
-    setCpPrompt("");
-    setCpAnswer("");
+    // Create calls to use to add to DB
+    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
+    const answerRecordingLanguage = "answerRecording." + route.params.language;
+    const answerTranslationLanguage =
+      "answerTranslation." + route.params.language;
+    const promptRecordingLanguage = "promptRecording." + route.params.language;
+    const promptTranslationLanguage =
+      "promptTranslation." + route.params.language;
+    const translatorIdLanguage = "translatorId." + route.params.language;
+    db.collection("Scenarios")
+      .doc(route.params.id)
+      .update({
+        [answerRecordingLanguage]: answerAudio,
+        [answerTranslationLanguage]: cpPrompt,
+        [promptRecordingLanguage]: promptAudio,
+        [promptTranslationLanguage]: cpAnswer,
+        [translatorIdLanguage]: user.uid,
+      })
+      .then(() => {
+        console.log(route.params.title, " scenario successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    db.collection("Languages")
+      .doc(route.params.language_key)
+      .update({
+        hasContent: true,
+      })
+      .then(() => {
+        console.log(route.params.language, " language successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    db.collection("Categories")
+      .doc(route.params.category_key)
+      .update({
+        hasContent: firebase.firestore.FieldValue.arrayUnion(
+          route.params.language
+        ),
+      })
+      .then(() => {
+        console.log(route.params.category, " category successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
   };
 
   return (
@@ -64,16 +146,14 @@ function ProviderScenarioScreen({ route }) {
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
           <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton id="prompt" passData={passLinkPrompt} />
+          <RecordButton type="prompt" passData={passLink} />
           <AppTextInput
-            // style={styles.input}
             placeholder="Type Prompt Translation"
             onChangeText={(value) => setCpPrompt(value)}
           />
           <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton id="answer" passData={passLinkAnswer} />
+          <RecordButton type="answer" passData={passLink} />
           <AppTextInput
-            // style={styles.input}
             placeholder="Type Answer Translation"
             onChangeText={(value) => setCpAnswer(value)}
           />

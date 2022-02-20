@@ -32,7 +32,8 @@ function CategoriesScreen({ route, navigation }) {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
-          categoryArray.push(documentSnapshot.data());
+          const id = documentSnapshot.id;
+          categoryArray.push({ id: id, ...documentSnapshot.data() });
         });
 
         setCategories(categoryArray);
@@ -74,6 +75,8 @@ function CategoriesScreen({ route, navigation }) {
                 language: route.params.language,
                 category: item.name,
                 user_type: route.params.user_type,
+                language_key: route.params.language_key,
+                category_key: item.id
               })
             }
           />

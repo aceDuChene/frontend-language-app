@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
 import { Audio } from "expo-av";
 
 import AppButtonSecondary from "./AppButtonSecondary";
 
-function RecordButton({ passData, id }) {
+function RecordButton({ passData, type }) {
   /* To store Audio recordings 
     Method obatined from 'expo-av' documentation https://docs.expo.dev/versions/latest/sdk/audio/
   */
@@ -25,7 +24,6 @@ function RecordButton({ passData, id }) {
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
       setRecording(recording);
-      console.log("Recording started");
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -36,9 +34,7 @@ function RecordButton({ passData, id }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    console.log("Storing " + id);
-    passData(uri);
-    console.log("Recording stopped and stored at", uri);
+    passData(uri, type);
   }
 
   return (
