@@ -5,7 +5,7 @@ import { storage } from "../../firebaseSetup";
 
 import colors from "../config/colors";
 
-function AppButtonSecondary({ title, uri, color = colors.lightBlue }) {
+function AppButtonSecondary({ title, uri, color }) {
   //   Make button text black if background color is set to white
   let btnTextColor = colors.white;
   if (color === colors.white) {
@@ -14,7 +14,6 @@ function AppButtonSecondary({ title, uri, color = colors.lightBlue }) {
 
   const [cpRecording, setCpRecording] = useState();
   const [sound, setSound] = useState();
-  console.log("uri passed in: ", uri);
 
   /* Retrieve audio recording from Storage */
   const getAudioUrl = async () => {

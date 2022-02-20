@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Audio } from "expo-av";
 
+import colors from "../config/colors";
 import AppButtonSecondary from "./AppButtonSecondary";
 
 function RecordButton({ passData, type }) {
@@ -41,6 +42,7 @@ function RecordButton({ passData, type }) {
     <AppButtonSecondary
       title={recording ? "Stop Recording" : "Start Recording"}
       onPress={recording ? stopRecording : startRecording}
+      color={colors.lightBlue}
     ></AppButtonSecondary>
   );
 }
