@@ -96,7 +96,7 @@ function LearnerScenarioScreen({ route }) {
             title="submit"
             onPress={(e) => (e.preventDefault(), gradeTranslation())}
           />
-          <View>
+          <View style={styles.answerButtons}>
             <AppButtonSecondary
               title="Show Answer"
               onPress={(e) =>
@@ -108,6 +108,7 @@ function LearnerScenarioScreen({ route }) {
               }
               color={colors.lightRed}
             />
+            <View style={styles.spacer}></View>
             <SoundButton
               title={"Play Answer"}
               uri={scenario.answerRecording[scenario.language]}
@@ -121,6 +122,11 @@ function LearnerScenarioScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+  answerButtons: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
