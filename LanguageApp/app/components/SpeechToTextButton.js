@@ -49,6 +49,7 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
 
     setIsProcessing(true);
     try {
+      getTranscription("Processing...");
       const api = FLASK_BACKEND + languageCode;
       const response = await FileSystem.uploadAsync(api, uri);
       console.log(response);
