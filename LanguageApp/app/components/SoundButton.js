@@ -12,6 +12,7 @@ function AppButtonSecondary({ title, uri, color }) {
     btnTextColor = colors.primary;
   }
 
+  const [error, setError] = useState(null);
   const [cpRecording, setCpRecording] = useState();
   const [sound, setSound] = useState();
 
@@ -40,6 +41,10 @@ function AppButtonSecondary({ title, uri, color }) {
   useEffect(() => {
     getAudioUrl();
   }, []);
+
+  if (error) {
+    return <ErrorMessage message="Error fetching data" />;
+  }
 
   return (
     <TouchableOpacity

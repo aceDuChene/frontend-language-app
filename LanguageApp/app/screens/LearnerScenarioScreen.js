@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Audio } from "expo-av";
-
-import colors from "../config/colors";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -11,58 +8,21 @@ import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 import SoundButton from "../components/SoundButton";
+import SpeechToTextButton from "../components/SpeechToTextButton";
+
+import colors from "../config/colors";
 
 function LearnerScenarioScreen({ route }) {
-  const [scenario, setScenario] = useState(route.params);
-  const [error, setError] = useState(null);
+  const scenario = route.params;
 
-  /* To store Audio recordings */
-  // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
-  const [recording, setRecording] = useState();
-  //Stores just the recording URI
-  const [llanswerAudio, setllAnswerAudio] = useState();
-  //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
 
-  /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
+  /* TO DO: Add functionality to compare LL and CP answers */
   const gradeTranslation = async () => {
-    // If audio -> speech-to-text, update text state with setllAnswer
     // determine distancde-wise match
     // send alert about correct/try again
     console.log("grading the answer");
   };
-
-  /* For recording audio using expo-av */
-  async function startRecording() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
-
-  async function stopRecording() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    setllAnswerAudio(recording.getURI());
-    console.log("Recording stopped and stored at", recording.getURI());
-  }
-
-  if (error) {
-    return <ErrorMessage message="Error fetching data" />;
-  }
 
   return (
     <View>
@@ -79,15 +39,13 @@ function LearnerScenarioScreen({ route }) {
             {scenario.promptTranslation[scenario.language]}
           </AppText>
 
-          <View style={styles.spacer}></View>
-
-          <AppButtonSecondary
-            title={recording ? "Stop Recording" : "Record Answer"}
-            onPress={recording ? stopRecording : startRecording}
-            color={colors.lightBlue}
+          <SpeechToTextButton
+            getTranscription={(transcription) => setllAnswer(transcription)}
+            languageCode={scenario.language_code}
           />
+
           <AppTextInput
-            // style={styles.input}
+            value={llAnswer}
             placeholder="Type Answer Translation"
             onChangeText={(value) => setllAnswer(value)}
           />
@@ -132,13 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    width: "100%",
-    padding: 10,
   },
   spacer: {
     margin: 20,
