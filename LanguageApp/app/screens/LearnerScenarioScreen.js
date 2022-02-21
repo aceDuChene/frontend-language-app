@@ -2,47 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Audio } from "expo-av";
-import { storage } from "../../firebaseSetup";
+
+import colors from "../config/colors";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
+import SoundButton from "../components/SoundButton";
 
 function LearnerScenarioScreen({ route }) {
   const [scenario, setScenario] = useState(route.params);
   const [error, setError] = useState(null);
-  const [cpRecording, setCpRecording] = useState();
-  const [sound, setSound] = useState();
 
   /* To store Audio recordings */
   // Stores all of recording object, (sound, uri, duration, etc..), resets to undefined in stopRecording because used in if/else
   const [recording, setRecording] = useState();
-  //Stores just the recording URI; change to what's needed for Firebase
+  //Stores just the recording URI
   const [llanswerAudio, setllAnswerAudio] = useState();
-
   //Stores LL answer text
   const [llAnswer, setllAnswer] = useState("");
-
-  /* Retrieve audio recording from Storage */
-  const getAudioUrl = async () => {
-    let audioRef = storage.refFromURL(
-      scenario.promptRecording[scenario.language]
-    );
-    await audioRef
-      .getDownloadURL()
-      .then((url) => {
-        setCpRecording(url);
-      })
-      .catch((err) => {
-        setError(err);
-      });
-  };
-
-  useEffect(() => {
-    getAudioUrl();
-  }, []);
 
   /* TO DO: Add functionality to compare LL and CP answers, convert speech-to-text as necessary */
   const gradeTranslation = async () => {
@@ -80,16 +60,6 @@ function LearnerScenarioScreen({ route }) {
     console.log("Recording stopped and stored at", recording.getURI());
   }
 
-  /* Playing audio function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
-  async function playSound() {
-    getAudioUrl();
-    const { sound } = await Audio.Sound.createAsync({
-      uri: cpRecording,
-    });
-    setSound(sound);
-    await sound.playAsync();
-  }
-
   if (error) {
     return <ErrorMessage message="Error fetching data" />;
   }
@@ -100,7 +70,11 @@ function LearnerScenarioScreen({ route }) {
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
 
-          <AppButtonSecondary title={"Play prompt"} onPress={playSound} />
+          <SoundButton
+            title={"Play prompt"}
+            uri={scenario.promptRecording[scenario.language]}
+            color={colors.lightBlue}
+          />
           <AppText style={styles.text}>
             {scenario.promptTranslation[scenario.language]}
           </AppText>
@@ -110,6 +84,7 @@ function LearnerScenarioScreen({ route }) {
           <AppButtonSecondary
             title={recording ? "Stop Recording" : "Record Answer"}
             onPress={recording ? stopRecording : startRecording}
+            color={colors.lightBlue}
           />
           <AppTextInput
             // style={styles.input}
@@ -121,18 +96,25 @@ function LearnerScenarioScreen({ route }) {
             title="submit"
             onPress={(e) => (e.preventDefault(), gradeTranslation())}
           />
-
-          <AppButton
-            color="grey"
-            title="Show Answer"
-            onPress={(e) =>
-              Alert.alert(
-                "The translated answer is: ",
-                scenario.answerTranslation[scenario.language],
-                [{ text: "OK" }]
-              )
-            }
-          />
+          <View style={styles.answerButtons}>
+            <AppButtonSecondary
+              title="Show Answer"
+              onPress={(e) =>
+                Alert.alert(
+                  "The translated answer is: ",
+                  scenario.answerTranslation[scenario.language],
+                  [{ text: "OK" }]
+                )
+              }
+              color={colors.lightRed}
+            />
+            <View style={styles.spacer}></View>
+            <SoundButton
+              title={"Play Answer"}
+              uri={scenario.answerRecording[scenario.language]}
+              color={colors.lightRed}
+            />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -140,6 +122,11 @@ function LearnerScenarioScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+  answerButtons: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
