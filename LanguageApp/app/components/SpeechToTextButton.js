@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
-import { FLASK_BACKEND } from "@env";
+import { DOMAIN } from "@env";
 import LoadingSign from "./LoadingSign";
 
 function SpeechToTextButton({ getTranscription, languageCode }) {
@@ -50,11 +50,9 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
     setIsProcessing(true);
     try {
       getTranscription("Processing...");
-      const api = FLASK_BACKEND + languageCode;
+      const api = `https://${DOMAIN}/audio/` + languageCode;
       const response = await FileSystem.uploadAsync(api, uri);
-      console.log(response);
       const body = JSON.parse(response.body);
-      console.log(body.text);
       getTranscription(body.text);
     } catch (err) {
       console.error("Failed to stop recording", err);
