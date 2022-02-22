@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 
 
@@ -9,9 +8,9 @@ import CategoriesScreen from "../screens/CategoriesScreen";
 import ScenariosScreen from "../screens/ScenariosScreen";
 import routes from "./routes";
 import colors from "../config/colors";
-import DrawerMenu from "./DrawerMenu";
+import MenuOpened from "./MenuOpened";
 
-function TheDrawer({ title, onPress, color = colors.lightBlue }) {
+function MenuButton({ title, onPress, color = colors.lightBlue }) {
   // Make button text black if background color is set to white
   let btnTextColor = colors.white;
   if (color === colors.white) {
@@ -31,7 +30,7 @@ function TheDrawer({ title, onPress, color = colors.lightBlue }) {
       <Text style={[styles.text, { color: btnTextColor }]}>
         {toggle ? "Menu" : "Open"}
       </Text>
-      {toggle ? null : <DrawerMenu />}
+      {toggle ? null : <MenuOpened />}
     </TouchableOpacity>
   );
 }
@@ -54,4 +53,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TheDrawer;
+export default MenuButton;

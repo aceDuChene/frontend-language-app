@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, Platform, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -28,7 +28,7 @@ const DATA = [
     </TouchableOpacity>
   );
 
-function DrawerMenu() {
+function MenuOpened() {
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerMenu;
+export default MenuOpened;

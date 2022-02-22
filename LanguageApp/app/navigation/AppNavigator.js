@@ -10,7 +10,7 @@ import ProviderScenarioScreen from "../screens/ProviderScenarioScreen";
 import LearnerScenarioScreen from "../screens/LearnerScenarioScreen";
 import AboutScreen from "../screens/AboutScreen";
 import LoginScreen from "../screens/LoginScreen";
-import TheDrawer from "./DrawerNavigator";
+import MenuButton from "./MenuButton";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +20,7 @@ const AppNavigator = () => (
       headerTitleAlign: "center",
       headerStatusBarHeight: 50,
       headerTitleStyle: { fontSize: 30, paddingBottom: 10 },
-      headerRight: (props) => (<TheDrawer/>)
+      headerRight: (props) => (<MenuButton/>)
     }}
   >
     <Stack.Screen name="User Type" component={UserTypeScreen} />
