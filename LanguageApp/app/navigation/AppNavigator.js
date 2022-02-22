@@ -23,7 +23,6 @@ const AppNavigator = () => (
       headerRight: (props) => (<TheDrawer/>)
     }}
   >
-    {/* <Stack.Screen name="Menu" component={MyDrawer} options={{headerShown:false}}/> */}
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen 
     name="Languages" component={LanguagesScreen} />

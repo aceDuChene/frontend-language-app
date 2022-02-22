@@ -6,6 +6,7 @@ import colors from "../config/colors";
 
 import routes from "./routes";
 
+// React Native FlatList doc https://reactnative.dev/docs/flatlist#example
 const DATA = [
     {
       id: routes.USER_TYPE,
@@ -27,7 +28,7 @@ const DATA = [
     </TouchableOpacity>
   );
 
-function DrawerMenu({ visible }) {
+function DrawerMenu() {
   const [selectedId, setSelectedId] = useState(null);
 
   const renderItem = ({ item }) => {
