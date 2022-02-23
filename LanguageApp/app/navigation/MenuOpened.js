@@ -32,13 +32,13 @@ function MenuOpened({ onPress, currentScreen }) {
     },
   ];
 
-  if (currentScreen != "user") {
-    DATA.push({
-      id: routes.LANGUAGES,
-      title: "Choose Language",
-      nav: () => navigation.navigate(routes.LANGUAGES),
-    });
-  }
+  // if (currentScreen != "user") {
+  //   DATA.push({
+  //     id: routes.LANGUAGES,
+  //     title: "Choose Language",
+  //     nav: () => navigation.navigate(routes.LANGUAGES),
+  //   });
+  // }
 
   DATA.push({
     id: "CLOSE_MODAL",

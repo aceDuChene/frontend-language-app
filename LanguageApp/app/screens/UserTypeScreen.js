@@ -5,7 +5,6 @@ import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
-import MenuOpened from "../navigation/MenuOpened";
 
 function UserTypeScreen({ navigation }) {
   return (
@@ -16,7 +15,7 @@ function UserTypeScreen({ navigation }) {
           color={colors.white}
           onPress={() =>
             navigation.navigate(routes.LANGUAGES, {
-              user_type: "CP"
+              user_type: "CP",
             })
           }
         />

@@ -27,7 +27,7 @@ const AppNavigator = () => (
       name="User Type"
       component={UserTypeScreen}
       options={() => ({
-        headerRight: () => <MenuButton currentScreen={"user"} />,
+        headerRight: (props) => <MenuButton currentScreen={"user"} />,
       })}
     />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
