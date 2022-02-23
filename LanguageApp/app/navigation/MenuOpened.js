@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import colors from "../config/colors";
 import routes from "./routes";
+import { UserTypeContext } from "./UserTypeContext";
 
 // Adapted from React Native FlatList doc https://reactnative.dev/docs/flatlist#example
 
@@ -22,6 +23,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 
 function MenuOpened({ onPress, currentScreen }) {
   const [selectedId, setSelectedId] = useState(null);
+  const [userType, setUserType] = useContext(UserTypeContext);
   const navigation = useNavigation();
 
   const DATA = [
@@ -36,15 +38,25 @@ function MenuOpened({ onPress, currentScreen }) {
     DATA.push({
       id: routes.LANGUAGES,
       title: "Choose Language",
-      nav: () => navigation.navigate(routes.LANGUAGES),
+      nav: () =>
+        navigation.navigate(routes.LANGUAGES, {
+          user_type: userType,
+        }),
     });
   }
 
-  DATA.push({
-    id: "CLOSE_MODAL",
-    title: "Close",
-    nav: onPress,
-  });
+  DATA.push(
+    {
+      id: "LOG_OUT",
+      title: "Log out",
+      nav: () => console.log("pressed logout"),
+    },
+    {
+      id: "CLOSE_MODAL",
+      title: "Close",
+      nav: onPress,
+    }
+  );
 
   const renderItem = ({ item }) => {
     const backgroundColor = colors.white;
