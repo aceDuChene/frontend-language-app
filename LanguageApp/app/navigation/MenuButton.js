@@ -4,7 +4,12 @@ import { StyleSheet, Text, View, Modal, Pressable } from "react-native";
 import colors from "../config/colors";
 import MenuOpened from "./MenuOpened";
 
-function MenuButton({ title, onPress, color = colors.lightBlue }) {
+function MenuButton({
+  title,
+  onPress,
+  color = colors.lightBlue,
+  currentScreen,
+}) {
   // Make button text black if background color is set to white
   let btnTextColor = colors.white;
   if (color === colors.white) {
@@ -23,11 +28,14 @@ function MenuButton({ title, onPress, color = colors.lightBlue }) {
           setModalVisible(!modalVisible);
         }}
       >
-        <MenuOpened onPress={() => setModalVisible(!modalVisible)} />
+        <MenuOpened
+          currentScreen={currentScreen}
+          onPress={() => setModalVisible(!modalVisible)}
+        />
       </Modal>
       <Pressable
-        style={[styles.ourButton, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}
+        style={[styles.button, styles.buttonOpen]}
+        onPress={() => setModalVisible(!modalVisible)}
       >
         <Text style={styles.text}>menu</Text>
       </Pressable>
@@ -36,7 +44,7 @@ function MenuButton({ title, onPress, color = colors.lightBlue }) {
 }
 
 const styles = StyleSheet.create({
-  ourButton: {
+  button: {
     backgroundColor: colors.lightBlue,
     borderWidth: 1,
     borderRadius: 25,
@@ -75,11 +83,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
   },
   buttonOpen: {
     backgroundColor: colors.lightBlue,

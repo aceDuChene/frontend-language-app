@@ -20,10 +20,16 @@ const AppNavigator = () => (
       headerTitleAlign: "center",
       headerStatusBarHeight: 50,
       headerTitleStyle: { fontSize: 30, paddingBottom: 10 },
-      headerRight: (props) => <MenuButton />,
+      headerRight: (props) => <MenuButton currentScreen={"any"} />,
     }}
   >
-    <Stack.Screen name="User Type" component={UserTypeScreen} />
+    <Stack.Screen
+      name="User Type"
+      component={UserTypeScreen}
+      options={() => ({
+        headerRight: () => <MenuButton currentScreen={"user"} />,
+      })}
+    />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
     <Stack.Screen
       name="Categories"

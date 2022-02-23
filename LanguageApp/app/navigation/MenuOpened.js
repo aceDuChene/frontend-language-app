@@ -20,7 +20,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-function MenuOpened({ onPress }) {
+function MenuOpened({ onPress, currentScreen }) {
   const [selectedId, setSelectedId] = useState(null);
   const navigation = useNavigation();
 
@@ -30,22 +30,25 @@ function MenuOpened({ onPress }) {
       title: "Choose User Type",
       nav: () => navigation.navigate(routes.USER_TYPE),
     },
-    {
+  ];
+
+  if (currentScreen != "user") {
+    DATA.push({
       id: routes.LANGUAGES,
       title: "Choose Language",
       nav: () => navigation.navigate(routes.LANGUAGES),
-    },
-    {
-      id: "CLOSE_MODAL",
-      title: "Close",
-      nav: onPress,
-    },
-  ];
+    });
+  }
+
+  DATA.push({
+    id: "CLOSE_MODAL",
+    title: "Close",
+    nav: onPress,
+  });
 
   const renderItem = ({ item }) => {
-    const backgroundColor =
-      item.id === selectedId ? colors.lightBlue : colors.white;
-    const color = item.id === selectedId ? colors.white : colors.black;
+    const backgroundColor = colors.white;
+    const color = colors.black;
 
     return (
       <Item
@@ -64,21 +67,22 @@ function MenuOpened({ onPress }) {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         extraData={selectedId}
-        style={styles.menuThing}
+        style={styles.menuStyle}
       />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  menuThing: {
+  menuStyle: {
     position: "absolute",
     zIndex: 1,
     right: 0,
     borderWidth: 1,
     backgroundColor: colors.white,
     width: 200,
-    top: 50,
+    top: 70,
+    right: 10,
   },
   item: {
     padding: 20,
