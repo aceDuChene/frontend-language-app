@@ -105,9 +105,9 @@ function ProviderScenarioScreen({ route }) {
       .doc(route.params.id)
       .update({
         [answerRecordingLanguage]: answerAudio,
-        [answerTranslationLanguage]: cpPrompt,
+        [answerTranslationLanguage]: cpAnswer,
         [promptRecordingLanguage]: promptAudio,
-        [promptTranslationLanguage]: cpAnswer,
+        [promptTranslationLanguage]: cpPrompt,
         [translatorIdLanguage]: user.uid,
       })
       .then(() => {
