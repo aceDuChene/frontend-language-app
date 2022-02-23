@@ -4,7 +4,12 @@ import { StyleSheet, Text, View, Modal, Pressable } from "react-native";
 import colors from "../config/colors";
 import MenuOpened from "./MenuOpened";
 
-function MenuButton({ color = colors.lightBlue, currentScreen }) {
+function MenuButton({
+  title,
+  onPress,
+  color = colors.lightBlue,
+  currentScreen,
+}) {
   // Make button text black if background color is set to white
   let btnTextColor = colors.white;
   if (color === colors.white) {

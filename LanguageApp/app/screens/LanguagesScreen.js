@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -9,12 +8,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 
-function LanguagesScreen({ route, navigation, props }) {
-  // used to refresh the page when going back thru menu
-  const isFocused = useIsFocused();
-
-  console.log(routes.params.user_type);
-
+function LanguagesScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState();
@@ -45,7 +39,7 @@ function LanguagesScreen({ route, navigation, props }) {
   useEffect(() => {
     setIsLoading(true);
     getLanguages();
-  }, [isFocused]);
+  }, []);
 
   if (isLoading) {
     return <LoadingSign />;
