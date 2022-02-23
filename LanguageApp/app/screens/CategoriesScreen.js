@@ -73,10 +73,11 @@ function CategoriesScreen({ route, navigation }) {
             onPress={() =>
               navigation.navigate(routes.SCENARIOS, {
                 language: route.params.language,
+                language_code: route.params.language_code,
                 category: item.name,
                 user_type: route.params.user_type,
                 language_key: route.params.language_key,
-                category_key: item.id
+                category_key: item.id,
               })
             }
           />

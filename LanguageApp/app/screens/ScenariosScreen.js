@@ -119,6 +119,7 @@ function ScenariosScreen({ route, navigation }) {
               } else {
                 navigation.navigate(routes.LEARNER_SCENARIO, {
                   language: route.params.language,
+                  language_code: route.params.language_code,
                   ...item,
                 });
               }
