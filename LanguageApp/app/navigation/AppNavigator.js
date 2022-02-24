@@ -10,7 +10,7 @@ import ProviderScenarioScreen from "../screens/ProviderScenarioScreen";
 import LearnerScenarioScreen from "../screens/LearnerScenarioScreen";
 import AboutScreen from "../screens/AboutScreen";
 import LoginScreen from "../screens/LoginScreen";
-import MenuButton from "./MenuButton";
+import MenuButton from "../components/MenuButton";
 
 const Stack = createStackNavigator();
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
 
 import colors from "../config/colors";
-import MenuOpened from "./MenuOpened";
+import MenuOpened from "../navigation/MenuOpened";
 
 function MenuButton() {
   // Adapted from React Native Modal Documentation https://reactnative.dev/docs/modal#example
