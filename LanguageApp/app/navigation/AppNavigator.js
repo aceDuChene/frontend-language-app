@@ -23,13 +23,7 @@ const AppNavigator = () => (
       headerRight: (props) => <MenuButton />,
     }}
   >
-    <Stack.Screen
-      name="User Type"
-      component={UserTypeScreen}
-      options={() => ({
-        headerRight: (props) => <MenuButton />,
-      })}
-    />
+    <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
     <Stack.Screen
       name="Categories"
