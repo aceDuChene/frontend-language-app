@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
 
 import colors from "../config/colors";
 
-function AppButtonSecondary({ title, onPress, color = colors.lightBlue }) {
+function AppButtonSecondary({ title, onPress, color }) {
   // Make button text black if background color is set to white
   let btnTextColor = colors.white;
   if (color === colors.white) {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    width: "50%",
+    width: "45%",
     marginVertical: 10,
   },
   text: {

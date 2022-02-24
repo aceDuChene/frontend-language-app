@@ -16,8 +16,6 @@ function ProviderScenarioScreen({ route }) {
   // Retrieve authenticated user information
   const { user } = useContext(AuthenticatedUserContext);
 
-  const [uploading, setUploading] = useState("");
-
   // scenario data from DB brought in from previous screens
   const [scenario, setScenario] = useState(route.params);
   const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
@@ -32,7 +30,10 @@ function ProviderScenarioScreen({ route }) {
   const [answerAudio, setAnswerAudio] = useState();
 
   /* Method to upload audio file to Storage: 
-  https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 */
+  https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
+  Parameters: uri - URI obtained from recording on device
+              type - prompt or answer - passed from button 
+  */
   const updateStorage = async (uri, type) => {
     try {
       const blob = await new Promise((resolve, reject) => {
@@ -81,12 +82,15 @@ function ProviderScenarioScreen({ route }) {
     }
   };
 
-  // Passes audio data between the screen and RecordButton component
-  // adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
+  /* Passes audio data between the screen and RecordButton component
+    adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
+    Parameters: data - data to pass between the screen and component, in this case the recording uri
+                type - string prompt or answer depending which button is pressed */
   const passLink = (data, type) => {
     updateStorage(data, type);
   };
 
+  /* Method to update the scenario document in Firebase */
   const submitTranslation = async () => {
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
@@ -101,9 +105,9 @@ function ProviderScenarioScreen({ route }) {
       .doc(route.params.id)
       .update({
         [answerRecordingLanguage]: answerAudio,
-        [answerTranslationLanguage]: cpPrompt,
+        [answerTranslationLanguage]: cpAnswer,
         [promptRecordingLanguage]: promptAudio,
-        [promptTranslationLanguage]: cpAnswer,
+        [promptTranslationLanguage]: cpPrompt,
         [translatorIdLanguage]: user.uid,
       })
       .then(() => {
