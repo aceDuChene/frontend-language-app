@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -14,8 +13,6 @@ function LanguagesScreen({ route, navigation }) {
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  // used to refresh the page when going back
-  const isFocused = useIsFocused();
 
   async function getLanguages() {
     let languageArray = [];
@@ -42,7 +39,7 @@ function LanguagesScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getLanguages();
-  }, [isFocused]);
+  }, []);
 
   if (isLoading) {
     return <LoadingSign />;
@@ -67,6 +64,7 @@ function LanguagesScreen({ route, navigation }) {
             onPress={() =>
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
+                language_code: item.code,
                 language_key: item.id,
                 user_type: route.params.user_type,
               })

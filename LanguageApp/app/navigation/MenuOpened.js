@@ -22,7 +22,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-function MenuOpened({ onPress, currentScreen }) {
+function MenuOpened({ onPress }) {
   const [selectedId, setSelectedId] = useState(null);
   const navigation = useNavigation();
 
@@ -40,20 +40,6 @@ function MenuOpened({ onPress, currentScreen }) {
       title: "Choose User Type",
       nav: () => navigation.navigate(routes.USER_TYPE),
     },
-  ];
-
-  /* this is for conditional rendering of pages other than user screen
-      to go back to languages. Need a way to bring along the user type
-      for the language screen to work properly. */
-  // if (currentScreen != "user") {
-  //   DATA.push({
-  //     id: routes.LANGUAGES,
-  //     title: "Choose Language",
-  //     nav: () => navigation.navigate(routes.LANGUAGES),
-  //   });
-  // }
-
-  DATA.push(
     {
       id: "LOG_OUT",
       title: "logout",
@@ -61,10 +47,10 @@ function MenuOpened({ onPress, currentScreen }) {
     },
     {
       id: "CLOSE_MODAL",
-      title: "Close",
+      title: "Close Menu",
       nav: onPress,
-    }
-  );
+    },
+  ];
 
   const renderItem = ({ item }) => {
     const backgroundColor = colors.white;
