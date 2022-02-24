@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import colors from "../config/colors";
 import routes from "./routes";
 
+import { auth } from "../../firebaseSetup";
+
 // Adapted from React Native FlatList doc https://reactnative.dev/docs/flatlist#example
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -24,6 +26,14 @@ function MenuOpened({ onPress, currentScreen }) {
   const [selectedId, setSelectedId] = useState(null);
   const navigation = useNavigation();
 
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const DATA = [
     {
       id: routes.USER_TYPE,
@@ -32,6 +42,9 @@ function MenuOpened({ onPress, currentScreen }) {
     },
   ];
 
+  /* this is for conditional rendering of pages other than user screen
+      to go back to languages. Need a way to bring along the user type
+      for the language screen to work properly. */
   // if (currentScreen != "user") {
   //   DATA.push({
   //     id: routes.LANGUAGES,
@@ -40,11 +53,18 @@ function MenuOpened({ onPress, currentScreen }) {
   //   });
   // }
 
-  DATA.push({
-    id: "CLOSE_MODAL",
-    title: "Close",
-    nav: onPress,
-  });
+  DATA.push(
+    {
+      id: "LOG_OUT",
+      title: "logout",
+      nav: handleSignOut,
+    },
+    {
+      id: "CLOSE_MODAL",
+      title: "Close",
+      nav: onPress,
+    }
+  );
 
   const renderItem = ({ item }) => {
     const backgroundColor = colors.white;
