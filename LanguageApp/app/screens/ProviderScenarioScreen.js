@@ -11,8 +11,9 @@ import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+import routes from "../navigation/routes";
 
-function ProviderScenarioScreen({ route }) {
+function ProviderScenarioScreen({ route, navigation }) {
   // Retrieve authenticated user information
   const { user } = useContext(AuthenticatedUserContext);
 
@@ -29,17 +30,41 @@ function ProviderScenarioScreen({ route }) {
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
-  // Log the error
+  // Record if submitting error occurred
   const [submitError, setSubmitError] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
   // create error alert
   const createSubmitAlert = () => Alert.alert(
     "Submission Error",
-    "Please check your submission and try again in a few seconds.",
+    "Please try again in a few seconds.",
     [ {
       text: "OK",
-      onPress: () => console.log("OK Pressed"),
     }]
   )
+
+  // check if everything is filled in, if so then submit
+  const checkInput = () => {
+    if(!cpPrompt.trim()){
+      alert("Please enter prompt translation.");
+      return;
+    }
+    if(!cpAnswer.trim()){
+      alert("Please enter answer translation.");
+      return;
+    }
+    if(!promptAudio){
+      alert("Please record prompt translation.");
+      return;
+    }
+    if(!answerAudio){
+      alert("Please record answer translation.")
+      return;
+    }
+
+    // everything is filled in, so submit
+    submitTranslation();
+  }
 
   /* Method to upload audio file to Storage: 
   https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
@@ -179,9 +204,9 @@ function ProviderScenarioScreen({ route }) {
 
           <AppButton
             title="submit"
-            onPress={(e) => (e.preventDefault(), submitTranslation())}
+            onPress={(e) => (e.preventDefault(), checkInput())}
           />
-          {submitError ? <AuthErrorMsg error={loginError} visible={true} /> : null}
+          {submitError ? createSubmitAlert() : null}
 
         </View>
       </KeyboardAwareScrollView>
