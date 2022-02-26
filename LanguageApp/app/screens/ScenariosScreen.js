@@ -60,7 +60,7 @@ function ScenariosScreen({ route, navigation }) {
     getScenarios();
     return () => {
       isMounted = false;
-    }
+    };
   }, [isFocused]);
 
   const searchFilter = (text) => {

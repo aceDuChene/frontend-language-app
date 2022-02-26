@@ -55,7 +55,7 @@ function CategoriesScreen({ route, navigation }) {
     getCategories();
     return () => {
       isMounted = false;
-    }
+    };
   }, [isFocused]);
 
   if (isLoading) {
@@ -78,7 +78,7 @@ function CategoriesScreen({ route, navigation }) {
           <ListItem
             title={item.name}
             icon={item.icon}
-            onPress={() =>{
+            onPress={() => {
               navigation.navigate(routes.SCENARIOS, {
                 language: route.params.language,
                 language_code: route.params.language_code,
@@ -86,9 +86,9 @@ function CategoriesScreen({ route, navigation }) {
                 user_type: route.params.user_type,
                 language_key: route.params.language_key,
                 category_key: item.id,
-              }); 
-              setMounted(!mounted);}
-            }
+              });
+              setMounted(!mounted);
+            }}
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}

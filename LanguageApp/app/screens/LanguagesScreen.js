@@ -46,8 +46,8 @@ function LanguagesScreen({ route, navigation }) {
     setIsLoading(true);
     getLanguages();
     return () => {
-      isMounted = false
-    }
+      isMounted = false;
+    };
   }, [isFocused]);
 
   if (isLoading) {
@@ -70,7 +70,7 @@ function LanguagesScreen({ route, navigation }) {
           <ListItem
             title={item.englishName}
             imageLink={item.flag}
-            onPress={() =>{
+            onPress={() => {
               navigation.navigate(routes.CATEGORIES, {
                 language: item.englishName,
                 language_code: item.code,

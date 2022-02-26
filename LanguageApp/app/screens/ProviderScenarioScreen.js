@@ -35,36 +35,35 @@ function ProviderScenarioScreen({ route, navigation }) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // create error alert
-  const createSubmitAlert = () => Alert.alert(
-    "Submission Error",
-    "Please try again in a few seconds.",
-    [ {
-      text: "OK",
-    }]
-  )
+  const createSubmitAlert = () =>
+    Alert.alert("Submission Error", "Please try again in a few seconds.", [
+      {
+        text: "OK",
+      },
+    ]);
 
   // check if everything is filled in, if so then submit
   const checkInput = () => {
-    if(!cpPrompt.trim()){
+    if (!cpPrompt.trim()) {
       alert("Please enter prompt translation.");
       return;
     }
-    if(!cpAnswer.trim()){
+    if (!cpAnswer.trim()) {
       alert("Please enter answer translation.");
       return;
     }
-    if(!promptAudio){
+    if (!promptAudio) {
       alert("Please record prompt translation.");
       return;
     }
-    if(!answerAudio){
-      alert("Please record answer translation.")
+    if (!answerAudio) {
+      alert("Please record answer translation.");
       return;
     }
 
     // everything is filled in, so submit and go back to scenarios screen
     submitTranslation();
-  }
+  };
 
   /* Method to upload audio file to Storage: 
   https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
@@ -183,16 +182,16 @@ function ProviderScenarioScreen({ route, navigation }) {
         setSubmitError(true);
       });
 
-      if(!submitError){
-        navigation.navigate(routes.SCENARIOS, {
-          language: route.params.language,
-          language_code: route.params.language_code,
-          category: route.params.category,
-          user_type: "CP",
-          language_key: route.params.language_key,
-          category_key: route.params.category_key,
-        });
-      }
+    if (!submitError) {
+      navigation.navigate(routes.SCENARIOS, {
+        language: route.params.language,
+        language_code: route.params.language_code,
+        category: route.params.category,
+        user_type: "CP",
+        language_key: route.params.language_key,
+        category_key: route.params.category_key,
+      });
+    }
   };
 
   return (
@@ -218,7 +217,6 @@ function ProviderScenarioScreen({ route, navigation }) {
             onPress={(e) => (e.preventDefault(), checkInput())}
           />
           {submitError ? createSubmitAlert() : null}
-
         </View>
       </KeyboardAwareScrollView>
     </View>
