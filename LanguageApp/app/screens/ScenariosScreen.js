@@ -9,6 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 import colors from "../config/colors";
+import { useIsFocused } from "@react-navigation/native";
 
 function ScenariosScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +18,8 @@ function ScenariosScreen({ route, navigation }) {
   const [filteredScenarios, setFilteredScenarios] = useState([]);
   const [search, setSearch] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  // used to automatically refresh the screen
+  const isFocused = useIsFocused();
 
   const getScenarios = async () => {
     let scenarioArray = [];
@@ -52,7 +55,7 @@ function ScenariosScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getScenarios();
-  }, []);
+  }, [isFocused]);
 
   const searchFilter = (text) => {
     if (text) {
