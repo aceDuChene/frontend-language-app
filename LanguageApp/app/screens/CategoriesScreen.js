@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -13,10 +14,11 @@ function CategoriesScreen({ route, navigation }) {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState();
   const [refreshing, setRefreshing] = useState(false);
+  // used to automatically refresh page
+  const isFocused = useIsFocused();
 
   const getCategories = async () => {
     let categoryArray = [];
-
     let categoryQuery = db.collection("Categories");
 
     // Restrict contents of LL screen to categories that have content in the selected language
@@ -48,7 +50,7 @@ function CategoriesScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getCategories();
-  }, []);
+  }, [isFocused]);
 
   if (isLoading) {
     return <LoadingSign />;
