@@ -64,16 +64,6 @@ function ProviderScenarioScreen({ route, navigation }) {
 
     // everything is filled in, so submit and go back to scenarios screen
     submitTranslation();
-    if(!submitError){
-      navigation.navigate(routes.SCENARIOS, {
-        language: route.params.language,
-        language_code: route.params.language_code,
-        category: route.params.category,
-        user_type: route.params.user_type,
-        language_key: route.params.language_key,
-        category_key: route.params.category_key,
-      });
-    }
   }
 
   /* Method to upload audio file to Storage: 
@@ -192,6 +182,17 @@ function ProviderScenarioScreen({ route, navigation }) {
         console.error("Error updating document: ", error);
         setSubmitError(true);
       });
+
+      if(!submitError){
+        navigation.navigate(routes.SCENARIOS, {
+          language: route.params.language,
+          language_code: route.params.language_code,
+          category: route.params.category,
+          user_type: "CP",
+          language_key: route.params.language_key,
+          category_key: route.params.category_key,
+        });
+      }
   };
 
   return (
