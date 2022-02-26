@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
@@ -28,6 +28,18 @@ function ProviderScenarioScreen({ route }) {
   // Contains path to audio files uploaded to Storage
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
+
+  // Log the error
+  const [submitError, setSubmitError] = useState(false);
+  // create error alert
+  const createSubmitAlert = () => Alert.alert(
+    "Submission Error",
+    "Please check your submission and try again in a few seconds.",
+    [ {
+      text: "OK",
+      onPress: () => console.log("OK Pressed"),
+    }]
+  )
 
   /* Method to upload audio file to Storage: 
   https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
@@ -115,6 +127,7 @@ function ProviderScenarioScreen({ route }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
+        setSubmitError(true);
       });
 
     db.collection("Languages")
@@ -127,6 +140,7 @@ function ProviderScenarioScreen({ route }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
+        setSubmitError(true);
       });
 
     db.collection("Categories")
@@ -141,6 +155,7 @@ function ProviderScenarioScreen({ route }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
+        setSubmitError(true);
       });
   };
 
@@ -166,6 +181,8 @@ function ProviderScenarioScreen({ route }) {
             title="submit"
             onPress={(e) => (e.preventDefault(), submitTranslation())}
           />
+          {submitError ? <AuthErrorMsg error={loginError} visible={true} /> : null}
+
         </View>
       </KeyboardAwareScrollView>
     </View>
