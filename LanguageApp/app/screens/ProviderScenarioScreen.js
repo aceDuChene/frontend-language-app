@@ -152,6 +152,7 @@ function ProviderScenarioScreen({ route, navigation }) {
       .catch((error) => {
         console.error("Error updating document: ", error);
         setSubmitError(true);
+        createSubmitAlert();
       });
 
     db.collection("Languages")
@@ -165,6 +166,7 @@ function ProviderScenarioScreen({ route, navigation }) {
       .catch((error) => {
         console.error("Error updating document: ", error);
         setSubmitError(true);
+        createSubmitAlert();
       });
 
     db.collection("Categories")
@@ -180,9 +182,10 @@ function ProviderScenarioScreen({ route, navigation }) {
       .catch((error) => {
         console.error("Error updating document: ", error);
         setSubmitError(true);
+        createSubmitAlert();
       });
 
-    if (!submitError) {
+    if (submitError) {
       navigation.navigate(routes.SCENARIOS, {
         language: route.params.language,
         language_code: route.params.language_code,
