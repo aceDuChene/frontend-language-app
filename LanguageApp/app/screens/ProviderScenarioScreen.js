@@ -30,40 +30,19 @@ function ProviderScenarioScreen({ route, navigation }) {
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
-  // Record if submitting error occurred
-  const [submitError, setSubmitError] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  // create error alert
-  const createSubmitAlert = () =>
+  const createErrorAlert = () =>
     Alert.alert("Submission Error", "Please try again in a few seconds.", [
       {
         text: "OK",
       },
     ]);
-
-  // check if everything is filled in, if so then submit
-  const checkInput = () => {
-    if (!cpPrompt.trim()) {
-      alert("Please enter prompt translation.");
-      return;
-    }
-    if (!cpAnswer.trim()) {
-      alert("Please enter answer translation.");
-      return;
-    }
-    if (!promptAudio) {
-      alert("Please record prompt translation.");
-      return;
-    }
-    if (!answerAudio) {
-      alert("Please record answer translation.");
-      return;
-    }
-
-    // everything is filled in, so submit and go back to scenarios screen
-    submitTranslation();
-  };
+  
+    const createSubmitAlert = () =>
+    Alert.alert("Submission successful", "Your responses have been sent to the database.", [
+      {
+        test:"OK",
+      },
+    ]);
 
   /* Method to upload audio file to Storage: 
   https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
@@ -127,7 +106,9 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   /* Method to update the scenario document in Firebase */
-  const submitTranslation = async () => {
+  const submitTranslation =  async () => {
+    let errorStatus = false;
+
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     const answerRecordingLanguage = "answerRecording." + route.params.language;
@@ -137,7 +118,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     const promptTranslationLanguage =
       "promptTranslation." + route.params.language;
     const translatorIdLanguage = "translatorID." + route.params.language;
-    db.collection("Scenarios")
+    await db.collection("Scenarios")
       .doc(route.params.id)
       .update({
         [answerRecordingLanguage]: answerAudio,
@@ -151,11 +132,11 @@ function ProviderScenarioScreen({ route, navigation }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
-        setSubmitError(true);
-        createSubmitAlert();
+        createErrorAlert();
+        errorStatus = true;
       });
 
-    db.collection("Languages")
+    await db.collection("Languages")
       .doc(route.params.language_key)
       .update({
         hasContent: true,
@@ -165,11 +146,11 @@ function ProviderScenarioScreen({ route, navigation }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
-        setSubmitError(true);
-        createSubmitAlert();
+        createErrorAlert();
+        errorStatus = true;
       });
 
-    db.collection("Categories")
+    await db.collection("Categories")
       .doc(route.params.category_key)
       .update({
         hasContent: firebase.firestore.FieldValue.arrayUnion(
@@ -181,11 +162,16 @@ function ProviderScenarioScreen({ route, navigation }) {
       })
       .catch((error) => {
         console.error("Error updating document: ", error);
-        setSubmitError(true);
-        createSubmitAlert();
+        createErrorAlert();
+        errorStatus = true;
       });
+    return !errorStatus;
+  };
 
-    if (submitError) {
+  // go back to the scenarios screen with our info
+  const sendBackToScenarios = () => {
+      console.log("Successfully updated, returning to scenarios screen");
+      createSubmitAlert();
       navigation.navigate(routes.SCENARIOS, {
         language: route.params.language,
         language_code: route.params.language_code,
@@ -194,7 +180,32 @@ function ProviderScenarioScreen({ route, navigation }) {
         language_key: route.params.language_key,
         category_key: route.params.category_key,
       });
+  }
+
+  // check if everything is filled in, if so then submit
+  const checkInput = async () => {
+    if (!cpPrompt.trim()) {
+      alert("Please enter prompt translation.");
+      return;
     }
+    if (!cpAnswer.trim()) {
+      alert("Please enter answer translation.");
+      return;
+    }
+    if (!promptAudio) {
+      alert("Please record prompt translation.");
+      return;
+    }
+    if (!answerAudio) {
+      alert("Please record answer translation.");
+      return;
+    }
+
+    // everything is filled in, so submit and go back to scenarios screen
+    let successSent = await submitTranslation();
+    console.log(successSent);
+    if(successSent){
+      sendBackToScenarios();}
   };
 
   return (
@@ -217,9 +228,8 @@ function ProviderScenarioScreen({ route, navigation }) {
 
           <AppButton
             title="submit"
-            onPress={(e) => (e.preventDefault(), checkInput())}
+            onPress={() => checkInput()}
           />
-          {submitError ? createSubmitAlert() : null}
         </View>
       </KeyboardAwareScrollView>
     </View>
