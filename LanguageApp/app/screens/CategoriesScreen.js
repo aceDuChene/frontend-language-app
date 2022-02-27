@@ -80,6 +80,8 @@ function CategoriesScreen({ route, navigation }) {
                 user_type: route.params.user_type,
                 language_key: route.params.language_key,
                 category_key: item.id,
+                languageHasContent: route.params.languageHasContent,
+                categoryHasContent: item.hasContent,
               });
             }}
           />

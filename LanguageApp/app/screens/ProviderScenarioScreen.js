@@ -30,6 +30,14 @@ function ProviderScenarioScreen({ route, navigation }) {
   const [promptAudio, setPromptAudio] = useState();
   const [answerAudio, setAnswerAudio] = useState();
 
+  // Track the db state
+  const [languageHasContent, setLanguageHasContent] = useState(
+    route.params.languageHasContent
+  );
+  const [categoryHasContent, setCategoryHasContent] = useState(
+    route.params.categoryHasContent
+  );
+
   const createErrorAlert = () =>
     Alert.alert("Submission Error", "Please try again in a few seconds.", [
       {
@@ -175,6 +183,68 @@ function ProviderScenarioScreen({ route, navigation }) {
     return !errorStatus;
   };
 
+  /* Method to reset the scenario document in Firebase in case of an error*/
+  const resetTranslation = async () => {
+    // Create calls to use to add to DB
+    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
+    const answerRecordingLanguage = "answerRecording." + route.params.language;
+    const answerTranslationLanguage =
+      "answerTranslation." + route.params.language;
+    const promptRecordingLanguage = "promptRecording." + route.params.language;
+    const promptTranslationLanguage =
+      "promptTranslation." + route.params.language;
+    const translatorIdLanguage = "translatorID." + route.params.language;
+
+    await db
+      .collection("Scenarios")
+      .doc(route.params.id)
+      .update({
+        [answerRecordingLanguage]: firebase.firestore.FieldValue.delete(),
+        [answerTranslationLanguage]: firebase.firestore.FieldValue.delete(),
+        [promptRecordingLanguage]: firebase.firestore.FieldValue.delete(),
+        [promptTranslationLanguage]: firebase.firestore.FieldValue.delete(),
+        [translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
+      })
+      .then(() => {
+        console.log(route.params.title, " scenario successfully reset!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+
+    if (!languageHasContent) {
+      await db
+        .collection("Languages")
+        .doc(route.params.language_key)
+        .update({
+          hasContent: false,
+        })
+        .then(() => {
+          console.log(route.params.language, " language successfully reset!");
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    }
+
+    if (!categoryHasContent) {
+      await db
+        .collection("Categories")
+        .doc(route.params.category_key)
+        .update({
+          hasContent: firebase.firestore.FieldValue.arrayRemove(
+            route.params.language
+          ),
+        })
+        .then(() => {
+          console.log(route.params.category, " category successfully reset!");
+        })
+        .catch((error) => {
+          console.error("Error updating document: ", error);
+        });
+    }
+  };
+
   // go back to the scenarios screen with our info
   const sendBackToScenarios = () => {
     console.log("Successfully updated, returning to scenarios screen");
@@ -189,29 +259,14 @@ function ProviderScenarioScreen({ route, navigation }) {
     });
   };
 
-  // check if everything is filled in, if so then submit
-  const checkInput = async () => {
-    // if (!cpPrompt.trim()) {
-    //   alert("Please enter prompt translation.");
-    //   return;
-    // }
-    // if (!cpAnswer.trim()) {
-    //   alert("Please enter answer translation.");
-    //   return;
-    // }
-    // if (!promptAudio) {
-    //   alert("Please record prompt translation.");
-    //   return;
-    // }
-    // if (!answerAudio) {
-    //   alert("Please record answer translation.");
-    //   return;
-    // }
+  const pressedSubmit = async () => {
+    // put input validation here
 
-    // everything is filled in, so submit and go back to scenarios screen
     let successSent = await submitTranslation();
     if (successSent) {
       sendBackToScenarios();
+    } else {
+      resetTranslation();
     }
   };
 
@@ -233,7 +288,7 @@ function ProviderScenarioScreen({ route, navigation }) {
             onChangeText={(value) => setCpAnswer(value)}
           />
 
-          <AppButton title="submit" onPress={() => checkInput()} />
+          <AppButton title="submit" onPress={() => pressedSubmit()} />
         </View>
       </KeyboardAwareScrollView>
     </View>

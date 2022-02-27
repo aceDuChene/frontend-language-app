@@ -55,8 +55,7 @@ function ScenariosScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getScenarios();
-    return () => {
-    };
+    return () => {};
   }, [isFocused]);
 
   const searchFilter = (text) => {
@@ -119,6 +118,8 @@ function ScenariosScreen({ route, navigation }) {
                   language: route.params.language,
                   language_key: route.params.language_key,
                   category_key: route.params.category_key,
+                  languageHasContent: route.params.languageHasContent,
+                  categoryHasContent: route.params.categoryHasContent,
                   ...item,
                 });
               } else {

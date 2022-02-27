@@ -70,6 +70,7 @@ function LanguagesScreen({ route, navigation }) {
                 language_code: item.code,
                 language_key: item.id,
                 user_type: route.params.user_type,
+                languageHasContent: item.hasContent,
               });
             }}
           />
