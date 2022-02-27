@@ -184,26 +184,25 @@ function ProviderScenarioScreen({ route, navigation }) {
 
   // check if everything is filled in, if so then submit
   const checkInput = async () => {
-    if (!cpPrompt.trim()) {
-      alert("Please enter prompt translation.");
-      return;
-    }
-    if (!cpAnswer.trim()) {
-      alert("Please enter answer translation.");
-      return;
-    }
-    if (!promptAudio) {
-      alert("Please record prompt translation.");
-      return;
-    }
-    if (!answerAudio) {
-      alert("Please record answer translation.");
-      return;
-    }
+    // if (!cpPrompt.trim()) {
+    //   alert("Please enter prompt translation.");
+    //   return;
+    // }
+    // if (!cpAnswer.trim()) {
+    //   alert("Please enter answer translation.");
+    //   return;
+    // }
+    // if (!promptAudio) {
+    //   alert("Please record prompt translation.");
+    //   return;
+    // }
+    // if (!answerAudio) {
+    //   alert("Please record answer translation.");
+    //   return;
+    // }
 
     // everything is filled in, so submit and go back to scenarios screen
     let successSent = await submitTranslation();
-    console.log(successSent);
     if(successSent){
       sendBackToScenarios();}
   };
