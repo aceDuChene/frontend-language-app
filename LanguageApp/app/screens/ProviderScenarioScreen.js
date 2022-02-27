@@ -36,13 +36,17 @@ function ProviderScenarioScreen({ route, navigation }) {
         text: "OK",
       },
     ]);
-  
-    const createSubmitAlert = () =>
-    Alert.alert("Submission successful", "Your responses have been sent to the database.", [
-      {
-        test:"OK",
-      },
-    ]);
+
+  const createSubmitAlert = () =>
+    Alert.alert(
+      "Submission successful",
+      "Your responses have been sent to the database.",
+      [
+        {
+          test: "OK",
+        },
+      ]
+    );
 
   /* Method to upload audio file to Storage: 
   https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
@@ -106,7 +110,7 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   /* Method to update the scenario document in Firebase */
-  const submitTranslation =  async () => {
+  const submitTranslation = async () => {
     let errorStatus = false;
 
     // Create calls to use to add to DB
@@ -118,7 +122,8 @@ function ProviderScenarioScreen({ route, navigation }) {
     const promptTranslationLanguage =
       "promptTranslation." + route.params.language;
     const translatorIdLanguage = "translatorID." + route.params.language;
-    await db.collection("Scenarios")
+    await db
+      .collection("Scenarios")
       .doc(route.params.id)
       .update({
         [answerRecordingLanguage]: answerAudio,
@@ -136,7 +141,8 @@ function ProviderScenarioScreen({ route, navigation }) {
         errorStatus = true;
       });
 
-    await db.collection("Languages")
+    await db
+      .collection("Languages")
       .doc(route.params.language_key)
       .update({
         hasContent: true,
@@ -150,7 +156,8 @@ function ProviderScenarioScreen({ route, navigation }) {
         errorStatus = true;
       });
 
-    await db.collection("Categories")
+    await db
+      .collection("Categories")
       .doc(route.params.category_key)
       .update({
         hasContent: firebase.firestore.FieldValue.arrayUnion(
@@ -170,17 +177,17 @@ function ProviderScenarioScreen({ route, navigation }) {
 
   // go back to the scenarios screen with our info
   const sendBackToScenarios = () => {
-      console.log("Successfully updated, returning to scenarios screen");
-      createSubmitAlert();
-      navigation.navigate(routes.SCENARIOS, {
-        language: route.params.language,
-        language_code: route.params.language_code,
-        category: route.params.category,
-        user_type: "CP",
-        language_key: route.params.language_key,
-        category_key: route.params.category_key,
-      });
-  }
+    console.log("Successfully updated, returning to scenarios screen");
+    createSubmitAlert();
+    navigation.navigate(routes.SCENARIOS, {
+      language: route.params.language,
+      language_code: route.params.language_code,
+      category: route.params.category,
+      user_type: "CP",
+      language_key: route.params.language_key,
+      category_key: route.params.category_key,
+    });
+  };
 
   // check if everything is filled in, if so then submit
   const checkInput = async () => {
@@ -203,8 +210,9 @@ function ProviderScenarioScreen({ route, navigation }) {
 
     // everything is filled in, so submit and go back to scenarios screen
     let successSent = await submitTranslation();
-    if(successSent){
-      sendBackToScenarios();}
+    if (successSent) {
+      sendBackToScenarios();
+    }
   };
 
   return (
@@ -225,10 +233,7 @@ function ProviderScenarioScreen({ route, navigation }) {
             onChangeText={(value) => setCpAnswer(value)}
           />
 
-          <AppButton
-            title="submit"
-            onPress={() => checkInput()}
-          />
+          <AppButton title="submit" onPress={() => checkInput()} />
         </View>
       </KeyboardAwareScrollView>
     </View>
