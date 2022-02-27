@@ -15,7 +15,7 @@ function UserTypeScreen({ navigation }) {
           color={colors.white}
           onPress={() =>
             navigation.navigate(routes.LANGUAGES, {
-              user_type: "CP"
+              user_type: "CP",
             })
           }
         />
