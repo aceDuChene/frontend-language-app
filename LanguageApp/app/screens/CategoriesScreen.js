@@ -16,8 +16,6 @@ function CategoriesScreen({ route, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   // used to automatically refresh page
   const isFocused = useIsFocused();
-  // to fix memory leak: https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
-  const [mounted, setMounted] = useState(true);
 
   const getCategories = async () => {
     let categoryArray = [];
@@ -50,12 +48,8 @@ function CategoriesScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    let isMounted = true;
     setIsLoading(true);
     getCategories();
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
 
   if (isLoading) {
@@ -87,7 +81,6 @@ function CategoriesScreen({ route, navigation }) {
                 language_key: route.params.language_key,
                 category_key: item.id,
               });
-              setMounted(!mounted);
             }}
           />
         )}

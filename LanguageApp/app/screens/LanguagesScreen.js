@@ -16,8 +16,6 @@ function LanguagesScreen({ route, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   // used to automatically refresh
   const isFocused = useIsFocused();
-  // to fix memory leak: https://stackoverflow.com/questions/53949393/cant-perform-a-react-state-update-on-an-unmounted-component
-  const [mounted, setMounted] = useState(true);
 
   async function getLanguages() {
     let languageArray = [];
@@ -42,12 +40,8 @@ function LanguagesScreen({ route, navigation }) {
   }
 
   useEffect(() => {
-    let isMounted = true;
     setIsLoading(true);
     getLanguages();
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
 
   if (isLoading) {
@@ -77,7 +71,6 @@ function LanguagesScreen({ route, navigation }) {
                 language_key: item.id,
                 user_type: route.params.user_type,
               });
-              setMounted(!mounted);
             }}
           />
         )}
