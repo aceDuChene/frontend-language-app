@@ -136,7 +136,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     const promptRecordingLanguage = "promptRecording." + route.params.language;
     const promptTranslationLanguage =
       "promptTranslation." + route.params.language;
-    const translatorIdLanguage = "translatorId." + route.params.language;
+    const translatorIdLanguage = "translatorID." + route.params.language;
     db.collection("Scenarios")
       .doc(route.params.id)
       .update({
