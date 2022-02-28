@@ -22,8 +22,6 @@ const validationSchema = Yup.object().shape({
 function LearnerScenarioScreen({ route }) {
   const scenario = route.params;
 
-  // const [llAnswer, setllAnswer] = useState("");
-
   /* TO DO: Add functionality to compare LL and CP answers */
   const gradeTranslation = async () => {
     // determine distancde-wise match
