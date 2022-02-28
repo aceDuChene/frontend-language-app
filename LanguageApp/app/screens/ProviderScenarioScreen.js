@@ -1,16 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import { db } from "../../firebaseSetup";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
+import FormErrorMessages from "../components/FormErrorMessages";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
+
+const validationSchema = Yup.object().shape({
+  cpPrompt: Yup.string().required().label("Prompt text"),
+  cpAnswer: Yup.string().required().label("Answer text"),
+  promptAudio: Yup.string().required().label("Prompt audio"),
+  answerAudio: Yup.string().required().label("Answer audio"),
+});
 
 function ProviderScenarioScreen({ route }) {
   // Retrieve authenticated user information
@@ -18,16 +28,8 @@ function ProviderScenarioScreen({ route }) {
 
   const scenario = route.params;
 
-  // Stores the translated text
-  const [cpPrompt, setCpPrompt] = useState("");
-  const [cpAnswer, setCpAnswer] = useState("");
-
-  // Contains path to audio files uploaded to Storage
-  const [promptAudio, setPromptAudio] = useState();
-  const [answerAudio, setAnswerAudio] = useState();
-
   /* Method to update the scenario document in Firebase */
-  const submitTranslation = async () => {
+  const submitTranslation = async (fields) => {
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     const answerRecordingLanguage = "answerRecording." + route.params.language;
@@ -40,10 +42,10 @@ function ProviderScenarioScreen({ route }) {
     db.collection("Scenarios")
       .doc(route.params.id)
       .update({
-        [answerRecordingLanguage]: answerAudio,
-        [answerTranslationLanguage]: cpAnswer,
-        [promptRecordingLanguage]: promptAudio,
-        [promptTranslationLanguage]: cpPrompt,
+        [answerRecordingLanguage]: fields.answerAudio,
+        [answerTranslationLanguage]: fields.cpAnswer,
+        [promptRecordingLanguage]: fields.promptAudio,
+        [promptTranslationLanguage]: fields.cpPrompt,
         [translatorIdLanguage]: user.uid,
       })
       .then(() => {
@@ -88,36 +90,78 @@ function ProviderScenarioScreen({ route }) {
 
           <AppText style={styles.text}>{scenario.prompt}</AppText>
 
-          <RecordButton
-            type="prompt"
-            getReference={(reference) => setPromptAudio(reference)}
-            scenarioID={scenario.id}
-            language={scenario.language}
-          />
+          <Formik
+            initialValues={{
+              cpPrompt: "",
+              cpAnswer: "",
+              promptAudio: "",
+              answerAudio: "",
+            }}
+            // function that gets called when form is submitted
+            // values contain the data in each field in key value pair
+            onSubmit={(values) => submitTranslation(values)}
+            validationSchema={validationSchema}
+          >
+            {({
+              handleChange,
+              handleSubmit,
+              errors,
+              setFieldTouched,
+              touched,
+            }) => (
+              <>
+                <RecordButton
+                  type="prompt"
+                  getReference={handleChange("promptAudio")}
+                  scenarioID={scenario.id}
+                  language={scenario.language}
+                />
+                <FormErrorMessages
+                  error={errors.promptAudio}
+                  visible={touched.promptAudio}
+                  message="Prompt audio not recorded"
+                />
 
-          <AppTextInput
-            placeholder="Type Prompt Translation"
-            onChangeText={(value) => setCpPrompt(value)}
-          />
+                <AppTextInput
+                  placeholder="Type Prompt Translation"
+                  onChangeText={handleChange("cpPrompt")}
+                  onBlur={() => setFieldTouched("cpPrompt")}
+                />
+                <FormErrorMessages
+                  error={errors.cpPrompt}
+                  visible={touched.cpPrompt}
+                  message={errors.cpPrompt}
+                />
 
-          <AppText style={styles.text}>{scenario.answer}</AppText>
+                <AppText style={styles.text}>{scenario.answer}</AppText>
 
-          <RecordButton
-            type="answer"
-            getReference={(reference) => setAnswerAudio(reference)}
-            scenarioID={scenario.id}
-            language={scenario.language}
-          />
+                <RecordButton
+                  type="answer"
+                  getReference={handleChange("answerAudio")}
+                  scenarioID={scenario.id}
+                  language={scenario.language}
+                />
+                <FormErrorMessages
+                  message="Answer audio not recorded"
+                  error={errors.answerAudio}
+                  visible={touched.answerAudio}
+                />
 
-          <AppTextInput
-            placeholder="Type Answer Translation"
-            onChangeText={(value) => setCpAnswer(value)}
-          />
+                <AppTextInput
+                  placeholder="Type Answer Translation"
+                  onChangeText={handleChange("cpAnswer")}
+                  onBlur={() => setFieldTouched("cpAnswer")}
+                />
+                <FormErrorMessages
+                  error={errors.cpAnswer}
+                  visible={touched.cpAnswer}
+                  message={errors.cpAnswer}
+                />
 
-          <AppButton
-            title="submit"
-            onPress={(e) => (e.preventDefault(), submitTranslation())}
-          />
+                <AppButton title="submit" onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -140,7 +184,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    margin: 12,
+    fontSize: 22,
+    margin: 8,
   },
 });
 

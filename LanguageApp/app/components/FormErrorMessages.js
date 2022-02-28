@@ -4,9 +4,9 @@ import AppText from "./AppText";
 
 import colors from "../config/colors";
 
-function FormErrorMessages({ error }) {
-  if (!error) return null;
-  return <AppText style={styles.error}>{error}</AppText>;
+function FormErrorMessages({ error, message, visible }) {
+  if (!error || !visible) return null;
+  return <AppText style={styles.error}>{message}</AppText>;
 }
 
 const styles = StyleSheet.create({
