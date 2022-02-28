@@ -36,18 +36,25 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
       });
       setRecording(recording);
     } catch (err) {
-      stopRecording;
       console.error("Failed to start recording", err);
     }
   }
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async function stopRecording() {
     setIsRecording(false);
+    setIsProcessing(true);
+    getTranscription("Processing...");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
+    await speechToText();
+  }
 
-    setIsProcessing(true);
+  async function speechToText() {
+    const uri = recording.getURI();
     try {
       getTranscription("Processing...");
       const api = `https://${DOMAIN}/audio/` + languageCode;
