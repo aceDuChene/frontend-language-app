@@ -52,7 +52,14 @@ function LearnerScenarioScreen({ route }) {
             onSubmit={(values) => console.log(values)}
             validationSchema={validationSchema}
           >
-            {({ handleChange, handleSubmit, errors, values }) => (
+            {({
+              handleChange,
+              handleSubmit,
+              setFieldTouched,
+              touched,
+              errors,
+              values,
+            }) => (
               <>
                 <SpeechToTextButton
                   getTranscription={handleChange("llAnswer")}
@@ -63,8 +70,13 @@ function LearnerScenarioScreen({ route }) {
                   value={values.llAnswer}
                   placeholder="Type Answer"
                   onChangeText={handleChange("llAnswer")}
+                  onBlur={() => setFieldTouched("llAnswer")}
                 />
-                <FormErrorMessages error={errors.llAnswer} />
+                <FormErrorMessages
+                  error={errors.llAnswer}
+                  visible={touched.llAnswer}
+                  message={errors.llAnswer}
+                />
 
                 <AppButton title="submit" onPress={handleSubmit} />
               </>
@@ -113,7 +125,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    margin: 12,
+    margin: 8,
+    fontSize: 22,
   },
 });
 
