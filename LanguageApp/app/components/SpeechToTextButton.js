@@ -70,7 +70,7 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={isRecording ? stopRecording : startRecording}
+      onPressOut={isRecording ? stopRecording : startRecording}
     >
       <View style={styles.icon}>
         {isProcessing ? (
