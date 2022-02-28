@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import AppButton from "../components/AppButton";
 import AppTextInput from "../components/AppTextInput";
@@ -9,13 +11,18 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 import SoundButton from "../components/SoundButton";
 import SpeechToTextButton from "../components/SpeechToTextButton";
+import FormErrorMessages from "../components/FormErrorMessages";
 
 import colors from "../config/colors";
+
+const validationSchema = Yup.object().shape({
+  llAnswer: Yup.string().required().label("Answer"),
+});
 
 function LearnerScenarioScreen({ route }) {
   const scenario = route.params;
 
-  const [llAnswer, setllAnswer] = useState("");
+  // const [llAnswer, setllAnswer] = useState("");
 
   /* TO DO: Add functionality to compare LL and CP answers */
   const gradeTranslation = async () => {
@@ -39,21 +46,31 @@ function LearnerScenarioScreen({ route }) {
             {scenario.promptTranslation[scenario.language]}
           </AppText>
 
-          <SpeechToTextButton
-            getTranscription={(transcription) => setllAnswer(transcription)}
-            languageCode={scenario.language_code}
-          />
+          <Formik
+            initialValues={{ llAnswer: "" }}
+            // function that gets called when form is submitted
+            onSubmit={(values) => console.log(values)}
+            validationSchema={validationSchema}
+          >
+            {({ handleChange, handleSubmit, errors, values }) => (
+              <>
+                <SpeechToTextButton
+                  getTranscription={handleChange("llAnswer")}
+                  languageCode={scenario.language_code}
+                />
 
-          <AppTextInput
-            value={llAnswer}
-            placeholder="Type Answer Translation"
-            onChangeText={(value) => setllAnswer(value)}
-          />
+                <AppTextInput
+                  value={values.llAnswer}
+                  placeholder="Type Answer"
+                  onChangeText={handleChange("llAnswer")}
+                />
+                <FormErrorMessages error={errors.llAnswer} />
 
-          <AppButton
-            title="submit"
-            onPress={(e) => (e.preventDefault(), gradeTranslation())}
-          />
+                <AppButton title="submit" onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
+
           <View style={styles.answerButtons}>
             <AppButtonSecondary
               title="Show Answer"
