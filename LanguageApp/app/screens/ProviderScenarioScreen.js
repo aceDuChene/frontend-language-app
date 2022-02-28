@@ -114,92 +114,88 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   const createDBCalls = () => {
-        // Create calls to use to add to DB
+    // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     const dbCalls = {
       answerRecordingLanguage: "answerRecording." + scenario.language,
-      answerTranslationLanguage:
-        "answerTranslation." + scenario.language,
+      answerTranslationLanguage: "answerTranslation." + scenario.language,
       promptRecordingLanguage: "promptRecording." + scenario.language,
-      promptTranslationLanguage:
-        "promptTranslation." + scenario.language,
+      promptTranslationLanguage: "promptTranslation." + scenario.language,
       translatorIdLanguage: "translatorID." + scenario.language,
-    }
+    };
 
     return dbCalls;
-  }
+  };
 
   const updateScenario = async () => {
     let updateError = false;
     const dbCalls = createDBCalls();
 
     await db
-    .collection("Scenarios")
-    .doc(scenario.id)
-    .update({
-      [dbCalls.answerRecordingLanguage]: answerAudio,
-      [dbCalls.answerTranslationLanguage]: cpAnswer,
-      [dbCalls.promptRecordingLanguage]: promptAudio,
-      [dbCalls.promptTranslationLanguage]: cpPrompt,
-      [dbCalls.translatorIdLanguage]: user.uid,
-    })
-    .then(() => {
-      console.log(scenario.title, " scenario successfully updated!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-      createErrorAlert();
-      updateError = true;
-    });
+      .collection("Scenarios")
+      .doc(scenario.id)
+      .update({
+        [dbCalls.answerRecordingLanguage]: answerAudio,
+        [dbCalls.answerTranslationLanguage]: cpAnswer,
+        [dbCalls.promptRecordingLanguage]: promptAudio,
+        [dbCalls.promptTranslationLanguage]: cpPrompt,
+        [dbCalls.translatorIdLanguage]: user.uid,
+      })
+      .then(() => {
+        console.log(scenario.title, " scenario successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+        createErrorAlert();
+        updateError = true;
+      });
     return updateError;
-  }
+  };
 
   const updateLanguage = async () => {
     let updateError = false;
     await db
-    .collection("Languages")
-    .doc(scenario.language_key)
-    .update({
-      hasContent: true,
-    })
-    .then(() => {
-      console.log(scenario.language, " language successfully updated!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-      createErrorAlert();
-      updateError = true;
-    });
+      .collection("Languages")
+      .doc(scenario.language_key)
+      .update({
+        hasContent: true,
+      })
+      .then(() => {
+        console.log(scenario.language, " language successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+        createErrorAlert();
+        updateError = true;
+      });
     return updateError;
-  }
+  };
 
-  const updateCategory =  async () => {
+  const updateCategory = async () => {
     let updateError = false;
     await db
-    .collection("Categories")
-    .doc(scenario.category_key)
-    .update({
-      hasContent: firebase.firestore.FieldValue.arrayUnion(
-        scenario.language
-      ),
-    })
-    .then(() => {
-      console.log(scenario.category, " category successfully updated!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-      createErrorAlert();
-      updateError = true;
-    });
+      .collection("Categories")
+      .doc(scenario.category_key)
+      .update({
+        hasContent: firebase.firestore.FieldValue.arrayUnion(scenario.language),
+      })
+      .then(() => {
+        console.log(scenario.category, " category successfully updated!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+        createErrorAlert();
+        updateError = true;
+      });
     return updateError;
-  }
+  };
 
   /* Method to update the scenario document in Firebase */
   const submitTranslation = async () => {
     const scenarioError = await updateScenario();
     const languageError = await updateLanguage();
     const categoryError = await updateCategory();
-    const errorStatus = (scenarioError || languageError || categoryError);
+    const errorStatus = scenarioError || languageError || categoryError;
     return errorStatus;
   };
 
@@ -207,54 +203,58 @@ function ProviderScenarioScreen({ route, navigation }) {
     const dbCalls = createDBCalls();
 
     await db
-    .collection("Scenarios")
-    .doc(scenario.id)
-    .update({
-      [dbCalls.answerRecordingLanguage]: firebase.firestore.FieldValue.delete(),
-      [dbCalls.answerTranslationLanguage]: firebase.firestore.FieldValue.delete(),
-      [dbCalls.promptRecordingLanguage]: firebase.firestore.FieldValue.delete(),
-      [dbCalls.promptTranslationLanguage]: firebase.firestore.FieldValue.delete(),
-      [dbCalls.translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
-    })
-    .then(() => {
-      console.log(scenario.title, " scenario successfully reset!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-    });
-  }
+      .collection("Scenarios")
+      .doc(scenario.id)
+      .update({
+        [dbCalls.answerRecordingLanguage]:
+          firebase.firestore.FieldValue.delete(),
+        [dbCalls.answerTranslationLanguage]:
+          firebase.firestore.FieldValue.delete(),
+        [dbCalls.promptRecordingLanguage]:
+          firebase.firestore.FieldValue.delete(),
+        [dbCalls.promptTranslationLanguage]:
+          firebase.firestore.FieldValue.delete(),
+        [dbCalls.translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
+      })
+      .then(() => {
+        console.log(scenario.title, " scenario successfully reset!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  };
 
   const resetLanguage = async () => {
     await db
-        .collection("Languages")
-        .doc(scenario.language_key)
-        .update({
-          hasContent: false,
-        })
-        .then(() => {
-          console.log(scenario.language, " language successfully reset!");
-        })
-        .catch((error) => {
-          console.error("Error updating document: ", error);
-        });
-  }
+      .collection("Languages")
+      .doc(scenario.language_key)
+      .update({
+        hasContent: false,
+      })
+      .then(() => {
+        console.log(scenario.language, " language successfully reset!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  };
 
   const resetCategory = async () => {
     await db
-    .collection("Categories")
-    .doc(scenario.category_key)
-    .update({
-      hasContent: firebase.firestore.FieldValue.arrayRemove(
-        scenario.language
-      ),
-    })
-    .then(() => {
-      console.log(scenario.category, " category successfully reset!");
-    })
-    .catch((error) => {
-      console.error("Error updating document: ", error);
-    });
-  }
+      .collection("Categories")
+      .doc(scenario.category_key)
+      .update({
+        hasContent: firebase.firestore.FieldValue.arrayRemove(
+          scenario.language
+        ),
+      })
+      .then(() => {
+        console.log(scenario.category, " category successfully reset!");
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
+      });
+  };
 
   /* Method to reset the scenario document in Firebase in case of an error*/
   const resetTranslation = async () => {
@@ -262,7 +262,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     if (!languageHasContent) {
       await resetLanguage();
     }
-    if (!(categoryHasContent.includes(scenario.language))) {
+    if (!categoryHasContent.includes(scenario.language)) {
       await resetCategory();
     }
   };
