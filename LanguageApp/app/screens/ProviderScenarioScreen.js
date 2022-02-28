@@ -34,9 +34,6 @@ function ProviderScenarioScreen({ route, navigation }) {
   const languageHasContent = scenario.languageHasContent;
   const categoryHasContent = scenario.categoryHasContent;
 
-  // if there is an error when submitting
-  const [errorStatus, setErrorStatus] = useState(false);
-
   const createErrorAlert = () =>
     Alert.alert("Submission Error", "Please try again in a few seconds.", [
       {
@@ -116,26 +113,35 @@ function ProviderScenarioScreen({ route, navigation }) {
     updateStorage(data, type);
   };
 
-  const updateScenario = async () => {
-    // Create calls to use to add to DB
+  const createDBCalls = () => {
+        // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
-    const answerRecordingLanguage = "answerRecording." + scenario.language;
-    const answerTranslationLanguage =
-      "answerTranslation." + scenario.language;
-    const promptRecordingLanguage = "promptRecording." + scenario.language;
-    const promptTranslationLanguage =
-      "promptTranslation." + route.params.language;
-    const translatorIdLanguage = "translatorID." + scenario.language;
+    const dbCalls = {
+      answerRecordingLanguage: "answerRecording." + scenario.language,
+      answerTranslationLanguage:
+        "answerTranslation." + scenario.language,
+      promptRecordingLanguage: "promptRecording." + scenario.language,
+      promptTranslationLanguage:
+        "promptTranslation." + scenario.language,
+      translatorIdLanguage: "translatorID." + scenario.language,
+    }
 
-    db
+    return dbCalls;
+  }
+
+  const updateScenario = async () => {
+    let updateError = false;
+    const dbCalls = createDBCalls();
+
+    await db
     .collection("Scenarios")
     .doc(scenario.id)
     .update({
-      [answerRecordingLanguage]: answerAudio,
-      [answerTranslationLanguage]: cpAnswer,
-      [promptRecordingLanguage]: promptAudio,
-      [promptTranslationLanguage]: cpPrompt,
-      [translatorIdLanguage]: user.uid,
+      [dbCalls.answerRecordingLanguage]: answerAudio,
+      [dbCalls.answerTranslationLanguage]: cpAnswer,
+      [dbCalls.promptRecordingLanguage]: promptAudio,
+      [dbCalls.promptTranslationLanguage]: cpPrompt,
+      [dbCalls.translatorIdLanguage]: user.uid,
     })
     .then(() => {
       console.log(scenario.title, " scenario successfully updated!");
@@ -143,12 +149,14 @@ function ProviderScenarioScreen({ route, navigation }) {
     .catch((error) => {
       console.error("Error updating document: ", error);
       createErrorAlert();
-      setErrorStatus(true);
+      updateError = true;
     });
+    return updateError;
   }
 
   const updateLanguage = async () => {
-    db
+    let updateError = false;
+    await db
     .collection("Languages")
     .doc(scenario.language_key)
     .update({
@@ -160,12 +168,14 @@ function ProviderScenarioScreen({ route, navigation }) {
     .catch((error) => {
       console.error("Error updating document: ", error);
       createErrorAlert();
-      setErrorStatus(true);
+      updateError = true;
     });
+    return updateError;
   }
 
   const updateCategory =  async () => {
-    db
+    let updateError = false;
+    await db
     .collection("Categories")
     .doc(scenario.category_key)
     .update({
@@ -179,39 +189,35 @@ function ProviderScenarioScreen({ route, navigation }) {
     .catch((error) => {
       console.error("Error updating document: ", error);
       createErrorAlert();
-      setErrorStatus(true);
+      updateError = true;
     });
+    return updateError;
   }
 
   /* Method to update the scenario document in Firebase */
   const submitTranslation = async () => {
-    await updateScenario();
-    await updateLanguage();
-    await updateCategory();
+    const scenarioError = await updateScenario();
+    const languageError = await updateLanguage();
+    const categoryError = await updateCategory();
+    const errorStatus = (scenarioError || languageError || categoryError);
+    return errorStatus;
   };
 
   const resetScenario = async () => {
-    // Create calls to use to reset DB
-    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
-    const answerRecordingLanguage = "answerRecording." + scenario.language;
-    const answerTranslationLanguage =
-      "answerTranslation." + scenario.language;
-    const promptRecordingLanguage = "promptRecording." + scenario.language;
-    const promptTranslationLanguage =
-      "promptTranslation." + scenario.language;
-    const translatorIdLanguage = "translatorID." + scenario.language;  
-    db
+    const dbCalls = createDBCalls();
+
+    await db
     .collection("Scenarios")
     .doc(scenario.id)
     .update({
-      [answerRecordingLanguage]: firebase.firestore.FieldValue.delete(),
-      [answerTranslationLanguage]: firebase.firestore.FieldValue.delete(),
-      [promptRecordingLanguage]: firebase.firestore.FieldValue.delete(),
-      [promptTranslationLanguage]: firebase.firestore.FieldValue.delete(),
-      [translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
+      [dbCalls.answerRecordingLanguage]: firebase.firestore.FieldValue.delete(),
+      [dbCalls.answerTranslationLanguage]: firebase.firestore.FieldValue.delete(),
+      [dbCalls.promptRecordingLanguage]: firebase.firestore.FieldValue.delete(),
+      [dbCalls.promptTranslationLanguage]: firebase.firestore.FieldValue.delete(),
+      [dbCalls.translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
     })
     .then(() => {
-      console.log(route.params.title, " scenario successfully reset!");
+      console.log(scenario.title, " scenario successfully reset!");
     })
     .catch((error) => {
       console.error("Error updating document: ", error);
@@ -219,7 +225,7 @@ function ProviderScenarioScreen({ route, navigation }) {
   }
 
   const resetLanguage = async () => {
-    db
+    await db
         .collection("Languages")
         .doc(scenario.language_key)
         .update({
@@ -234,7 +240,7 @@ function ProviderScenarioScreen({ route, navigation }) {
   }
 
   const resetCategory = async () => {
-    db
+    await db
     .collection("Categories")
     .doc(scenario.category_key)
     .update({
@@ -256,7 +262,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     if (!languageHasContent) {
       await resetLanguage();
     }
-    if (!categoryHasContent) {
+    if (!(categoryHasContent.includes(scenario.language))) {
       await resetCategory();
     }
   };
@@ -266,20 +272,22 @@ function ProviderScenarioScreen({ route, navigation }) {
     console.log("Successfully updated, returning to scenarios screen");
     createSubmitAlert();
     navigation.navigate(routes.SCENARIOS, {
-      language: route.params.language,
-      language_code: route.params.language_code,
-      category: route.params.category,
+      language: scenario.language,
+      language_code: scenario.language_code,
+      category: scenario.category,
       user_type: "CP",
-      language_key: route.params.language_key,
-      category_key: route.params.category_key,
+      language_key: scenario.language_key,
+      category_key: scenario.category_key,
+      languageHasContent: languageHasContent,
+      categoryHasContent: categoryHasContent,
     });
   };
 
   const pressedSubmit = async () => {
     // put input validation here
 
-    let successSent = await submitTranslation();
-    if (successSent) {
+    const errorStatus = await submitTranslation();
+    if (!errorStatus) {
       sendBackToScenarios();
     } else {
       resetTranslation();
