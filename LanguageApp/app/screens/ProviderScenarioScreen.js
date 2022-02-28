@@ -284,8 +284,6 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   const pressedSubmit = async () => {
-    // put input validation here
-
     const errorStatus = await submitTranslation();
     if (!errorStatus) {
       sendBackToScenarios();
