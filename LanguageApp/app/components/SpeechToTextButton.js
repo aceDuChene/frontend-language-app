@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
@@ -68,21 +68,24 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Pressable
-        onPressIn={startRecording}
-        onPressOut={stopRecording}
-        style={[styles.button, isRecording && styles.dim]}
-      >
-        <View style={styles.icon}>
-          {isProcessing ? (
-            <LoadingSign />
-          ) : (
-            <MaterialCommunityIcons name="microphone" size={40} />
-          )}
-        </View>
-      </Pressable>
-    </View>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={isRecording ? stopRecording : startRecording}
+    >
+      <View style={styles.icon}>
+        {isProcessing ? (
+          <LoadingSign />
+        ) : (
+          <View>
+            {isRecording ? (
+              <MaterialCommunityIcons name="stop" size={40} />
+            ) : (
+              <MaterialCommunityIcons name="microphone" size={40} />
+            )}
+          </View>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -91,8 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  button: {
     width: 70,
     height: 70,
     backgroundColor: "white",
