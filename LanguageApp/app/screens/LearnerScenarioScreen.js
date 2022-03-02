@@ -14,6 +14,7 @@ import SpeechToTextButton from "../components/SpeechToTextButton";
 import FormErrorMessages from "../components/FormErrorMessages";
 
 import colors from "../config/colors";
+import { DOMAIN } from "@env";
 
 const validationSchema = Yup.object().shape({
   llAnswer: Yup.string().required().label("Answer"),
@@ -23,10 +24,25 @@ function LearnerScenarioScreen({ route }) {
   const scenario = route.params;
 
   /* TO DO: Add functionality to compare LL and CP answers */
-  const gradeTranslation = async () => {
-    // determine distancde-wise match
-    // send alert about correct/try again
-    console.log("grading the answer");
+  const gradeTranslation = async (userAnswer, correctAnswer) => {
+    const apiUrl = `https://${DOMAIN}/text-comparison`;
+    if (userAnswer === correctAnswer) {
+      console.log("Correct");
+    } else {
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_answer: userAnswer,
+          correct_answer: correctAnswer,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data));
+    }
   };
 
   return (
@@ -47,7 +63,12 @@ function LearnerScenarioScreen({ route }) {
           <Formik
             initialValues={{ llAnswer: "" }}
             // function that gets called when form is submitted
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) =>
+              gradeTranslation(
+                values.llAnswer,
+                scenario.answerTranslation[scenario.language]
+              )
+            }
             validationSchema={validationSchema}
           >
             {({
