@@ -17,18 +17,7 @@ function ProviderScenarioScreen({ route, navigation }) {
   // Retrieve authenticated user information
   const { user } = useContext(AuthenticatedUserContext);
 
-  // scenario data from DB brought in from previous screens
-  const [scenario, setScenario] = useState(route.params);
-  const [scenarioLanguage, setScenarioLanguage] = useState(scenario.language);
-  const [scenarioCategory, setScenarioCategory] = useState(scenario.category);
-
-  // Stores the translated text
-  const [cpPrompt, setCpPrompt] = useState("");
-  const [cpAnswer, setCpAnswer] = useState("");
-
-  // Contains path to audio files uploaded to Storage
-  const [promptAudio, setPromptAudio] = useState();
-  const [answerAudio, setAnswerAudio] = useState();
+  const scenario = route.params;
 
   // Track the db state
   const languageHasContent = scenario.languageHasContent;
@@ -52,67 +41,6 @@ function ProviderScenarioScreen({ route, navigation }) {
       ]
     );
 
-  /* Method to upload audio file to Storage: 
-  https://dev.to/lankinen/expo-audio-upload-recording-to-firebase-storage-and-download-it-later-25o6 
-  Parameters: uri - URI obtained from recording on device
-              type - prompt or answer - passed from button 
-  */
-  const updateStorage = async (uri, type) => {
-    try {
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = () => {
-          try {
-            resolve(xhr.response);
-          } catch (error) {
-            console.log("error:", error);
-          }
-        };
-        xhr.onerror = (e) => {
-          console.log(e);
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", uri, true);
-        xhr.send(null);
-      });
-      if (blob != null) {
-        const uriParts = uri.split(".");
-        const fileType = uriParts[uriParts.length - 1];
-        const fileName =
-          type + scenario.id + route.params.language + "." + fileType;
-        const filePath = "/cp-audio/" + fileName;
-        storage
-          .ref()
-          .child(`${filePath}`)
-          .put(blob, {
-            contentType: `audio/${fileType}`,
-          })
-          .then(() => {
-            const storagePath = "gs://capstone-language-app-fa069.appspot.com";
-            if (type == "prompt") {
-              setPromptAudio(storagePath + filePath);
-            } else {
-              setAnswerAudio(storagePath + filePath);
-            }
-          })
-          .catch((e) => console.log("error:", e));
-      } else {
-        console.log("error with blob");
-      }
-    } catch (error) {
-      console.log("error:", error);
-    }
-  };
-
-  /* Passes audio data between the screen and RecordButton component
-    adapted from https://www.kindacode.com/article/passing-data-from-a-child-component-to-the-parent-in-react/
-    Parameters: data - data to pass between the screen and component, in this case the recording uri
-                type - string prompt or answer depending which button is pressed */
-  const passLink = (data, type) => {
-    updateStorage(data, type);
-  };
-
   const createDBCalls = () => {
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
@@ -127,7 +55,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     return dbCalls;
   };
 
-  const updateScenario = async () => {
+  const updateScenario = async (fields) => {
     let updateError = false;
     const dbCalls = createDBCalls();
 
@@ -135,10 +63,10 @@ function ProviderScenarioScreen({ route, navigation }) {
       .collection("Scenarios")
       .doc(scenario.id)
       .update({
-        [dbCalls.answerRecordingLanguage]: answerAudio,
-        [dbCalls.answerTranslationLanguage]: cpAnswer,
-        [dbCalls.promptRecordingLanguage]: promptAudio,
-        [dbCalls.promptTranslationLanguage]: cpPrompt,
+        [dbCalls.answerRecordingLanguage]: fields.answerAudio,
+        [dbCalls.answerTranslationLanguage]: fields.cpAnswer,
+        [dbCalls.promptRecordingLanguage]: fields.promptAudio,
+        [dbCalls.promptTranslationLanguage]: fields.cpPrompt,
         [dbCalls.translatorIdLanguage]: user.uid,
       })
       .then(() => {
@@ -269,7 +197,7 @@ function ProviderScenarioScreen({ route, navigation }) {
 
   // go back to the scenarios screen with our info
   const sendBackToScenarios = () => {
-    console.log("Successfully updated, returning to scenarios screen");
+    console.log("Successfully updated, returning to scenarios screen.");
     createSubmitAlert();
     navigation.navigate(routes.SCENARIOS, {
       language: scenario.language,
