@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
@@ -36,18 +36,25 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
       });
       setRecording(recording);
     } catch (err) {
-      stopRecording;
       console.error("Failed to start recording", err);
     }
   }
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async function stopRecording() {
     setIsRecording(false);
+    setIsProcessing(true);
+    getTranscription("Processing...");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    const uri = recording.getURI();
+    await speechToText();
+  }
 
-    setIsProcessing(true);
+  async function speechToText() {
+    const uri = recording.getURI();
     try {
       getTranscription("Processing...");
       const api = `https://${DOMAIN}/audio/` + languageCode;
@@ -61,21 +68,24 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Pressable
-        onPressIn={startRecording}
-        onPressOut={stopRecording}
-        style={[styles.button, isRecording && styles.dim]}
-      >
-        <View style={styles.icon}>
-          {isProcessing ? (
-            <LoadingSign />
-          ) : (
-            <MaterialCommunityIcons name="microphone" size={40} />
-          )}
-        </View>
-      </Pressable>
-    </View>
+    <TouchableOpacity
+      style={styles.container}
+      onPressOut={isRecording ? stopRecording : startRecording}
+    >
+      <View style={styles.icon}>
+        {isProcessing ? (
+          <LoadingSign />
+        ) : (
+          <View>
+            {isRecording ? (
+              <MaterialCommunityIcons name="stop" size={40} />
+            ) : (
+              <MaterialCommunityIcons name="microphone" size={40} />
+            )}
+          </View>
+        )}
+      </View>
+    </TouchableOpacity>
   );
 }
 
@@ -84,8 +94,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  button: {
     width: 70,
     height: 70,
     backgroundColor: "white",

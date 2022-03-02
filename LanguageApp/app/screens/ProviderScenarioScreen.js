@@ -1,17 +1,27 @@
-import React, { useContext, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
-import { db, storage } from "../../firebaseSetup";
+import { db } from "../../firebaseSetup";
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
+import FormErrorMessages from "../components/FormErrorMessages";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import routes from "../navigation/routes";
+
+const validationSchema = Yup.object().shape({
+  cpPrompt: Yup.string().required().label("Prompt text"),
+  cpAnswer: Yup.string().required().label("Answer text"),
+  promptAudio: Yup.string().required().label("Prompt audio"),
+  answerAudio: Yup.string().required().label("Answer audio"),
+});
 
 function ProviderScenarioScreen({ route, navigation }) {
   // Retrieve authenticated user information
@@ -19,7 +29,7 @@ function ProviderScenarioScreen({ route, navigation }) {
 
   const scenario = route.params;
 
-  // Track the db state
+  // keep track of how the db was before submitting
   const languageHasContent = scenario.languageHasContent;
   const categoryHasContent = scenario.categoryHasContent;
 
@@ -41,7 +51,6 @@ function ProviderScenarioScreen({ route, navigation }) {
       ]
     );
 
-  const createDBCalls = () => {
     // Create calls to use to add to DB
     // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
     const dbCalls = {
@@ -52,12 +61,8 @@ function ProviderScenarioScreen({ route, navigation }) {
       translatorIdLanguage: "translatorID." + scenario.language,
     };
 
-    return dbCalls;
-  };
-
   const updateScenario = async (fields) => {
     let updateError = false;
-    const dbCalls = createDBCalls();
 
     await db
       .collection("Scenarios")
@@ -128,8 +133,6 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   const resetScenario = async () => {
-    const dbCalls = createDBCalls();
-
     await db
       .collection("Scenarios")
       .doc(scenario.id)
@@ -211,8 +214,8 @@ function ProviderScenarioScreen({ route, navigation }) {
     });
   };
 
-  const pressedSubmit = async () => {
-    const errorStatus = await submitTranslation();
+  const pressedSubmit = async (fields) => {
+    const errorStatus = await submitTranslation(fields);
     if (!errorStatus) {
       sendBackToScenarios();
     } else {
@@ -225,20 +228,81 @@ function ProviderScenarioScreen({ route, navigation }) {
       <KeyboardAwareScrollView>
         <View style={styles.container}>
           <ScenarioImage uriLink={scenario.image} />
-          <AppText style={styles.text}>{scenario.prompt}</AppText>
-          <RecordButton type="prompt" passData={passLink} />
-          <AppTextInput
-            placeholder="Type Prompt Translation"
-            onChangeText={(value) => setCpPrompt(value)}
-          />
-          <AppText style={styles.text}>{scenario.answer}</AppText>
-          <RecordButton type="answer" passData={passLink} />
-          <AppTextInput
-            placeholder="Type Answer Translation"
-            onChangeText={(value) => setCpAnswer(value)}
-          />
 
-          <AppButton title="submit" onPress={() => pressedSubmit()} />
+          <AppText style={styles.text}>{scenario.prompt}</AppText>
+
+          <Formik
+            initialValues={{
+              cpPrompt: "",
+              cpAnswer: "",
+              promptAudio: "",
+              answerAudio: "",
+            }}
+            // function that gets called when form is submitted
+            // values contain the data in each field in key value pair
+            onSubmit={(values) => pressedSubmit(values)}
+            validationSchema={validationSchema}
+          >
+            {({
+              handleChange,
+              handleSubmit,
+              errors,
+              setFieldTouched,
+              touched,
+            }) => (
+              <>
+                <RecordButton
+                  type="prompt"
+                  getReference={handleChange("promptAudio")}
+                  scenarioID={scenario.id}
+                  language={scenario.language}
+                />
+                <FormErrorMessages
+                  error={errors.promptAudio}
+                  visible={touched.promptAudio}
+                  message="Prompt audio not recorded"
+                />
+
+                <AppTextInput
+                  placeholder="Type Prompt Translation"
+                  onChangeText={handleChange("cpPrompt")}
+                  onBlur={() => setFieldTouched("cpPrompt")}
+                />
+                <FormErrorMessages
+                  error={errors.cpPrompt}
+                  visible={touched.cpPrompt}
+                  message={errors.cpPrompt}
+                />
+
+                <AppText style={styles.text}>{scenario.answer}</AppText>
+
+                <RecordButton
+                  type="answer"
+                  getReference={handleChange("answerAudio")}
+                  scenarioID={scenario.id}
+                  language={scenario.language}
+                />
+                <FormErrorMessages
+                  message="Answer audio not recorded"
+                  error={errors.answerAudio}
+                  visible={touched.answerAudio}
+                />
+
+                <AppTextInput
+                  placeholder="Type Answer Translation"
+                  onChangeText={handleChange("cpAnswer")}
+                  onBlur={() => setFieldTouched("cpAnswer")}
+                />
+                <FormErrorMessages
+                  error={errors.cpAnswer}
+                  visible={touched.cpAnswer}
+                  message={errors.cpAnswer}
+                />
+
+                <AppButton title="submit" onPress={handleSubmit} />
+              </>
+            )}
+          </Formik>
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -261,7 +325,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    margin: 12,
+    fontSize: 22,
+    margin: 8,
   },
 });
 
