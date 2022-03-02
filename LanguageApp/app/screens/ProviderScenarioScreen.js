@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
@@ -22,7 +22,6 @@ const validationSchema = Yup.object().shape({
   promptAudio: Yup.string().required().label("Prompt audio"),
   answerAudio: Yup.string().required().label("Answer audio"),
 });
-
 function ProviderScenarioScreen({ route, navigation }) {
   // Retrieve authenticated user information
   const { user } = useContext(AuthenticatedUserContext);
@@ -51,15 +50,15 @@ function ProviderScenarioScreen({ route, navigation }) {
       ]
     );
 
-    // Create calls to use to add to DB
-    // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
-    const dbCalls = {
-      answerRecordingLanguage: "answerRecording." + scenario.language,
-      answerTranslationLanguage: "answerTranslation." + scenario.language,
-      promptRecordingLanguage: "promptRecording." + scenario.language,
-      promptTranslationLanguage: "promptTranslation." + scenario.language,
-      translatorIdLanguage: "translatorID." + scenario.language,
-    };
+  // Create calls to use to add to DB
+  // https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects
+  const dbCalls = {
+    answerRecordingLanguage: "answerRecording." + scenario.language,
+    answerTranslationLanguage: "answerTranslation." + scenario.language,
+    promptRecordingLanguage: "promptRecording." + scenario.language,
+    promptTranslationLanguage: "promptTranslation." + scenario.language,
+    translatorIDLanguage: "translatorID." + scenario.language,
+  };
 
   const updateScenario = async (fields) => {
     let updateError = false;
@@ -72,7 +71,7 @@ function ProviderScenarioScreen({ route, navigation }) {
         [dbCalls.answerTranslationLanguage]: fields.cpAnswer,
         [dbCalls.promptRecordingLanguage]: fields.promptAudio,
         [dbCalls.promptTranslationLanguage]: fields.cpPrompt,
-        [dbCalls.translatorIdLanguage]: user.uid,
+        [dbCalls.translatorIDLanguage]: user.uid,
       })
       .then(() => {
         console.log(scenario.title, " scenario successfully updated!");
@@ -124,8 +123,8 @@ function ProviderScenarioScreen({ route, navigation }) {
   };
 
   /* Method to update the scenario document in Firebase */
-  const submitTranslation = async () => {
-    const scenarioError = await updateScenario();
+  const submitTranslation = async (fields) => {
+    const scenarioError = await updateScenario(fields);
     const languageError = await updateLanguage();
     const categoryError = await updateCategory();
     const errorStatus = scenarioError || languageError || categoryError;
@@ -145,7 +144,7 @@ function ProviderScenarioScreen({ route, navigation }) {
           firebase.firestore.FieldValue.delete(),
         [dbCalls.promptTranslationLanguage]:
           firebase.firestore.FieldValue.delete(),
-        [dbCalls.translatorIdLanguage]: firebase.firestore.FieldValue.delete(),
+        [dbCalls.translatorIDLanguage]: firebase.firestore.FieldValue.delete(),
       })
       .then(() => {
         console.log(scenario.title, " scenario successfully reset!");
@@ -252,7 +251,7 @@ function ProviderScenarioScreen({ route, navigation }) {
             }) => (
               <>
                 <RecordButton
-                  type="prompt"
+                  type="Prompt"
                   getReference={handleChange("promptAudio")}
                   scenarioID={scenario.id}
                   language={scenario.language}
@@ -277,7 +276,7 @@ function ProviderScenarioScreen({ route, navigation }) {
                 <AppText style={styles.text}>{scenario.answer}</AppText>
 
                 <RecordButton
-                  type="answer"
+                  type="Answer"
                   getReference={handleChange("answerAudio")}
                   scenarioID={scenario.id}
                   language={scenario.language}
