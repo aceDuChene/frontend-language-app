@@ -12,7 +12,7 @@ import AppText from "../components/AppText";
 import ScenarioImage from "../components/ScenarioImage";
 import RecordButton from "../components/RecordButton";
 import AppTextInput from "../components/AppTextInput";
-import FormErrorMessages from "../components/FormErrorMessages";
+import FormMessages from "../components/FormMessages";
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import routes from "../navigation/routes";
 
@@ -248,6 +248,7 @@ function ProviderScenarioScreen({ route, navigation }) {
               errors,
               setFieldTouched,
               touched,
+              values,
             }) => (
               <>
                 <RecordButton
@@ -256,10 +257,13 @@ function ProviderScenarioScreen({ route, navigation }) {
                   scenarioID={scenario.id}
                   language={scenario.language}
                 />
-                <FormErrorMessages
+                {values.promptAudio ? (
+                  <FormMessages successMessage="Prompt audio recorded" />
+                ) : null}
+                <FormMessages
                   error={errors.promptAudio}
                   visible={touched.promptAudio}
-                  message="Prompt audio not recorded"
+                  errorMessage="Prompt audio not recorded"
                 />
 
                 <AppTextInput
@@ -267,10 +271,10 @@ function ProviderScenarioScreen({ route, navigation }) {
                   onChangeText={handleChange("cpPrompt")}
                   onBlur={() => setFieldTouched("cpPrompt")}
                 />
-                <FormErrorMessages
+                <FormMessages
                   error={errors.cpPrompt}
                   visible={touched.cpPrompt}
-                  message={errors.cpPrompt}
+                  errorMessage={errors.cpPrompt}
                 />
 
                 <AppText style={styles.text}>{scenario.answer}</AppText>
@@ -281,10 +285,13 @@ function ProviderScenarioScreen({ route, navigation }) {
                   scenarioID={scenario.id}
                   language={scenario.language}
                 />
-                <FormErrorMessages
-                  message="Answer audio not recorded"
+                {values.answerAudio ? (
+                  <FormMessages successMessage="Answer audio recorded" />
+                ) : null}
+                <FormMessages
                   error={errors.answerAudio}
                   visible={touched.answerAudio}
+                  errorMessage="Answer audio not recorded"
                 />
 
                 <AppTextInput
@@ -292,10 +299,11 @@ function ProviderScenarioScreen({ route, navigation }) {
                   onChangeText={handleChange("cpAnswer")}
                   onBlur={() => setFieldTouched("cpAnswer")}
                 />
-                <FormErrorMessages
+
+                <FormMessages
                   error={errors.cpAnswer}
                   visible={touched.cpAnswer}
-                  message={errors.cpAnswer}
+                  errorMessage={errors.cpAnswer}
                 />
 
                 <AppButton title="submit" onPress={handleSubmit} />

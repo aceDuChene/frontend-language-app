@@ -11,7 +11,7 @@ import ScenarioImage from "../components/ScenarioImage";
 import AppButtonSecondary from "../components/AppButtonSecondary";
 import SoundButton from "../components/SoundButton";
 import SpeechToTextButton from "../components/SpeechToTextButton";
-import FormErrorMessages from "../components/FormErrorMessages";
+import FormMessages from "../components/FormMessages";
 
 import colors from "../config/colors";
 
@@ -70,10 +70,10 @@ function LearnerScenarioScreen({ route }) {
                   onChangeText={handleChange("llAnswer")}
                   onBlur={() => setFieldTouched("llAnswer")}
                 />
-                <FormErrorMessages
+                <FormMessages
                   error={errors.llAnswer}
                   visible={touched.llAnswer}
-                  message={errors.llAnswer}
+                  errorMessage={errors.llAnswer}
                 />
 
                 <AppButton title="submit" onPress={handleSubmit} />
