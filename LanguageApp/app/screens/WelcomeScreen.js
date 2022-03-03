@@ -20,7 +20,7 @@ const WelcomeScreen = ({ navigation }) => {
         >
           <Image
             style={styles.mainLogo}
-            source={require("../assets/LOCUTE.png")}
+            source={require("../assets/locute-logo-circle.png")}
           />
         </TouchableOpacity>
 
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
   mainLogo: {
     height: 200,
     width: 200,
-    borderRadius: 100,
   },
   welcomeText: {
     paddingTop: 15,

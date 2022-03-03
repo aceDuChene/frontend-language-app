@@ -25,6 +25,7 @@ function LanguagesScreen({ route, navigation }) {
       query = query.where("hasContent", "==", true);
     }
     await query
+      .orderBy("englishName")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
