@@ -1,8 +1,6 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import React from "react";
 
-import AppButton from "../components/AppButton";
-import routes from "../navigation/routes";
 import colors from "../config/colors";
 import AppText from "../components/AppText";
 
@@ -27,10 +25,6 @@ function UserTypeScreen({ navigation }) {
           enter text of your translation of prompts and answers. Your reponses
           will be saved for Language Learners to study from.{"\n"}
         </AppText>
-        <AppButton
-          title="Let's get started!"
-          onPress={() => navigation.navigate(routes.USER_TYPE)}
-        ></AppButton>
       </ScrollView>
     </View>
   );
