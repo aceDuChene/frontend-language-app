@@ -45,7 +45,7 @@ function LearnerScenarioScreen({ route }) {
           </AppText>
 
           <Formik
-            initialValues={{ llAnswer: "" }}
+            initialValues={{ llAnswer: "", errorMessage: "" }}
             // function that gets called when form is submitted
             onSubmit={(values) => console.log(values)}
             validationSchema={validationSchema}
@@ -61,8 +61,12 @@ function LearnerScenarioScreen({ route }) {
               <>
                 <SpeechToTextButton
                   getTranscription={handleChange("llAnswer")}
+                  setErrorMessage={handleChange("errorMessage")}
                   languageCode={scenario.language_code}
                 />
+                {values.errorMessage ? (
+                  <AppText style={styles.error}>{values.errorMessage}</AppText>
+                ) : null}
 
                 <AppTextInput
                   value={values.llAnswer}
@@ -75,7 +79,6 @@ function LearnerScenarioScreen({ route }) {
                   visible={touched.llAnswer}
                   errorMessage={errors.llAnswer}
                 />
-
                 <AppButton title="submit" onPress={handleSubmit} />
               </>
             )}
@@ -121,6 +124,7 @@ const styles = StyleSheet.create({
   spacer: {
     margin: 20,
   },
+  error: { color: colors.red, fontStyle: "italic" },
   text: {
     textAlign: "center",
     margin: 8,
