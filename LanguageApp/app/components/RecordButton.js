@@ -65,8 +65,8 @@ function RecordButton({ type, getReference, scenarioID, language }) {
       if (blob != null) {
         const uriParts = uri.split(".");
         const fileType = uriParts[uriParts.length - 1];
-        const fileName = type + scenarioID + language + "." + fileType;
-        const filePath = "/cp-audio/" + fileName;
+        const fileName = scenarioID + language + type + "." + fileType;
+        const filePath = `/cp-audio/${fileName}`
         storage
           .ref()
           .child(`${filePath}`)
@@ -74,7 +74,7 @@ function RecordButton({ type, getReference, scenarioID, language }) {
             contentType: `audio/${fileType}`,
           })
           .then(() => {
-            const storagePath = "gs://" + REACT_APP_STORAGE_BUCKET;
+            const storagePath = `gs://${REACT_APP_STORAGE_BUCKET}`;
             getReference(storagePath + filePath);
           })
           .catch((e) => console.log("error:", e));

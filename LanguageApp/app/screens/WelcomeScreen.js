@@ -24,10 +24,15 @@ const WelcomeScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        <AppTitle style={styles.welcomeText}>TITLE OF THE APP</AppTitle>
-        <AppText style={[styles.welcomeText, { paddingBottom: 50 }]}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        <AppTitle style={styles.welcomeText}>LOCUTE</AppTitle>
+        <AppText style={[styles.welcomeText]}>Practice to learn.</AppText>
+        <AppText style={[styles.welcomeText, { paddingTop: 0 }]}>
+          Provide to help.
+        </AppText>
+        <AppText
+          style={[styles.welcomeText, { paddingTop: 0, paddingBottom: 15 }]}
+        >
+          We can all Locute.
         </AppText>
         <AppButton
           title="LOG IN"
