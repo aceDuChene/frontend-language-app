@@ -23,7 +23,7 @@ function MenuButton() {
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(!modalVisible)}
       >
-        <MaterialCommunityIcons name="menu" size={40} />
+        <MaterialCommunityIcons name="menu" size={30} />
       </TouchableOpacity>
     </View>
   );
@@ -31,8 +31,8 @@ function MenuButton() {
 
 const styles = StyleSheet.create({
   button: {
-    bottom: "45%",
-    right: 15,
+    bottom: 12,
+    right: 18,
     justifyContent: "center",
   },
   text: {

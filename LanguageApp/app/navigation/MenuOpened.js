@@ -69,7 +69,7 @@ function MenuOpened({ onPress }) {
         style={[styles.button, styles.buttonOpen]}
         onPress={onPress}
       >
-        <MaterialCommunityIcons name="menu" size={40} />
+        <MaterialCommunityIcons name="menu" size={30} />
       </TouchableOpacity>
       <FlatList
         data={DATA}
@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "flex-end",
     justifyContent: "flex-end",
-    right: 14,
-    bottom: 5,
+    right: 17,
+    bottom: 0,
   },
   menuStyle: {
     position: "absolute",
