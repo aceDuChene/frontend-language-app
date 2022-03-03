@@ -14,8 +14,6 @@ function CategoriesScreen({ route, navigation }) {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  // used to automatically refresh page
-  const isFocused = useIsFocused();
 
   const getCategories = async () => {
     let categoryArray = [];
@@ -50,7 +48,7 @@ function CategoriesScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getCategories();
-  }, [isFocused]);
+  }, []);
 
   if (isLoading) {
     return <LoadingSign />;

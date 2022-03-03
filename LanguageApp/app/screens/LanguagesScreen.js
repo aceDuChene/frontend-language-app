@@ -7,15 +7,12 @@ import LoadingSign from "../components/LoadingSign";
 import ErrorMessage from "../components/ErrorMessage";
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
-import { useIsFocused } from "@react-navigation/native";
 
 function LanguagesScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [languages, setLanguages] = useState();
   const [refreshing, setRefreshing] = useState(false);
-  // used to automatically refresh
-  const isFocused = useIsFocused();
 
   async function getLanguages() {
     let languageArray = [];
@@ -42,7 +39,7 @@ function LanguagesScreen({ route, navigation }) {
   useEffect(() => {
     setIsLoading(true);
     getLanguages();
-  }, [isFocused]);
+  }, []);
 
   if (isLoading) {
     return <LoadingSign />;
