@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AppText from "../components/AppText";
 
 import colors from "../config/colors";
 import routes from "./routes";
@@ -18,7 +20,7 @@ import { auth } from "../../firebaseSetup";
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-    <Text style={[styles.text, textColor]}>{item.title}</Text>
+    <AppText style={[styles.text, textColor]}>{item.title}</AppText>
   </TouchableOpacity>
 );
 
@@ -37,18 +39,13 @@ function MenuOpened({ onPress }) {
   const DATA = [
     {
       id: routes.USER_TYPE,
-      title: "Choose User Type",
+      title: "Change User Type",
       nav: () => navigation.navigate(routes.USER_TYPE),
     },
     {
       id: "LOG_OUT",
       title: "logout",
       nav: handleSignOut,
-    },
-    {
-      id: "CLOSE_MODAL",
-      title: "Close Menu",
-      nav: onPress,
     },
   ];
 
@@ -68,6 +65,12 @@ function MenuOpened({ onPress }) {
 
   return (
     <>
+      <TouchableOpacity
+        style={[styles.button, styles.buttonOpen]}
+        onPress={onPress}
+      >
+        <MaterialCommunityIcons name="menu" size={40} />
+      </TouchableOpacity>
       <FlatList
         data={DATA}
         renderItem={renderItem}
@@ -80,25 +83,32 @@ function MenuOpened({ onPress }) {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    right: 14,
+    bottom: 5,
+  },
   menuStyle: {
     position: "absolute",
     zIndex: 1,
     right: 0,
-    borderWidth: 1,
+    borderWidth: 0.5,
     backgroundColor: colors.white,
     width: 200,
-    top: 70,
+    top: 50,
     right: 10,
   },
   item: {
-    padding: 20,
+    padding: 17,
     borderWidth: 2,
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     textTransform: "uppercase",
     fontWeight: "bold",
-    fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
 });
 

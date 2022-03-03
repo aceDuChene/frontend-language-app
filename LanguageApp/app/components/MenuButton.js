@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Pressable,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
 
-import colors from "../config/colors";
 import MenuOpened from "../navigation/MenuOpened";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -39,10 +31,9 @@ function MenuButton() {
 
 const styles = StyleSheet.create({
   button: {
-    bottom: "50%",
-    right: 10,
+    bottom: "45%",
+    right: 15,
     justifyContent: "center",
-    alignItems: "center",
   },
   text: {
     fontSize: 14,
