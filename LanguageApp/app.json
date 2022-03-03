@@ -4,9 +4,9 @@
     "slug": "LanguageApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./app/assets/LOCUTE.png",
+    "icon": "./app/assets/locute-logo-circle.png",
     "splash": {
-      "image": "./app/assets/LOCUTE.png",
+      "image": "./app/assets/locute-logo-circle.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
