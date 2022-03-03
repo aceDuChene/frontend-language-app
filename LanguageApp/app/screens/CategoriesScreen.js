@@ -88,10 +88,10 @@ function CategoriesScreen({ route, navigation }) {
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        onRefresh={() =>
+        onRefresh={() => {
           // call backend to retrieve categories
-          setCategories(categories)
-        }
+          getCategories();
+        }}
       />
     </View>
   );

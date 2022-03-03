@@ -77,7 +77,9 @@ function LanguagesScreen({ route, navigation }) {
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        onRefresh={() => setLanguages(languages)}
+        onRefresh={() => {
+          getLanguages();
+        }}
       />
     </View>
   );
