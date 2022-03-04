@@ -116,7 +116,6 @@ function ScenariosScreen({ route, navigation }) {
               if (route.params.user_type === "CP") {
                 navigation.navigate(routes.PROVIDER_SCENARIO, {
                   language: route.params.language,
-                  language_key: route.params.language_key,
                   category_key: route.params.category_key,
                   languageHasContent: route.params.languageHasContent,
                   categoryHasContent: route.params.categoryHasContent,
