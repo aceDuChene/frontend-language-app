@@ -6,12 +6,17 @@ import * as FileSystem from "expo-file-system";
 import { DOMAIN } from "@env";
 import LoadingSign from "./LoadingSign";
 
-function SpeechToTextButton({ getTranscription, languageCode }) {
+function SpeechToTextButton({
+  getTranscription,
+  setErrorMessage,
+  languageCode,
+}) {
   const [recording, setRecording] = useState();
   const [isRecording, setIsRecording] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   async function startRecording() {
+    setErrorMessage("");
     setIsRecording(true);
     try {
       await Audio.requestPermissionsAsync();
@@ -40,29 +45,34 @@ function SpeechToTextButton({ getTranscription, languageCode }) {
     }
   }
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function stopRecording() {
     setIsRecording(false);
-    setIsProcessing(true);
-    getTranscription("Processing...");
     setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await speechToText();
+    try {
+      await recording.stopAndUnloadAsync();
+      await speechToText();
+    } catch (err) {
+      console.error("Failed to stop recording", err);
+    }
   }
 
   async function speechToText() {
     const uri = recording.getURI();
+    setIsProcessing(true);
+    getTranscription("Processing...");
     try {
-      getTranscription("Processing...");
       const api = `https://${DOMAIN}/audio/` + languageCode;
       const response = await FileSystem.uploadAsync(api, uri);
-      const body = JSON.parse(response.body);
-      getTranscription(body.text);
+      if (response.status === 400) {
+        const body = JSON.parse(response.body);
+        setErrorMessage(body.text);
+        getTranscription("");
+      } else {
+        const body = JSON.parse(response.body);
+        getTranscription(body.text);
+      }
     } catch (err) {
-      console.error("Failed to stop recording", err);
+      setErrorMessage("Trascription currently not available");
     }
     setIsProcessing(false);
   }

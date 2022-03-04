@@ -30,7 +30,6 @@ function AppButtonSecondary({ title, uri, color }) {
   };
   /* Playing audio function based upon documentation: https://docs.expo.dev/versions/latest/sdk/audio/ */
   async function playSound() {
-    console.log("cpRecording: ", cpRecording);
     const { sound } = await Audio.Sound.createAsync({
       uri: cpRecording,
     });

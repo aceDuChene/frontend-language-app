@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 import ListItem from "../components/ListItem";
 import ListItemSeparator from "../components/ListItemSeparator";
@@ -16,7 +17,6 @@ function CategoriesScreen({ route, navigation }) {
 
   const getCategories = async () => {
     let categoryArray = [];
-
     let categoryQuery = db.collection("Categories");
 
     // Restrict contents of LL screen to categories that have content in the selected language
@@ -70,24 +70,26 @@ function CategoriesScreen({ route, navigation }) {
           <ListItem
             title={item.name}
             icon={item.icon}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate(routes.SCENARIOS, {
                 language: route.params.language,
                 language_code: route.params.language_code,
                 category: item.name,
                 user_type: route.params.user_type,
-                language_key: route.params.language_key,
+
                 category_key: item.id,
-              })
-            }
+                languageHasContent: route.params.languageHasContent,
+                categoryHasContent: item.hasContent,
+              });
+            }}
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        onRefresh={() =>
+        onRefresh={() => {
           // call backend to retrieve categories
-          setCategories(categories)
-        }
+          getCategories();
+        }}
       />
     </View>
   );

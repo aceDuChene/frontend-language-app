@@ -56,24 +56,26 @@ function LanguagesScreen({ route, navigation }) {
       <ListItemSeparator />
       <FlatList
         data={languages}
-        keyExtractor={(language) => language.englishName}
+        keyExtractor={(language) => language.id}
         renderItem={({ item }) => (
           <ListItem
-            title={item.englishName}
+            title={item.id}
             imageLink={item.flag}
-            onPress={() =>
+            onPress={() => {
               navigation.navigate(routes.CATEGORIES, {
-                language: item.englishName,
+                language: item.id,
                 language_code: item.code,
-                language_key: item.id,
                 user_type: route.params.user_type,
-              })
-            }
+                languageHasContent: item.hasContent,
+              });
+            }}
           />
         )}
         ItemSeparatorComponent={ListItemSeparator}
         refreshing={refreshing}
-        onRefresh={() => setLanguages(languages)}
+        onRefresh={() => {
+          getLanguages();
+        }}
       />
     </View>
   );
