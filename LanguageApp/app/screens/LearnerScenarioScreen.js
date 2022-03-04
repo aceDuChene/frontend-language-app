@@ -23,26 +23,35 @@ const validationSchema = Yup.object().shape({
 function LearnerScenarioScreen({ route }) {
   const scenario = route.params;
 
-  /* TO DO: Add functionality to compare LL and CP answers */
-  const gradeTranslation = async (userAnswer, correctAnswer) => {
+  // Makes call to backend to check user answer
+  const checkAnswer = async (userAnswer, correctAnswer) => {
     const apiUrl = `https://${DOMAIN}/text-comparison`;
+
+    // Don't make backend call if answer is identical to correct answer
     if (userAnswer === correctAnswer) {
-      console.log("Correct");
-    } else {
-      fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_answer: userAnswer,
-          correct_answer: correctAnswer,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
+      Alert.alert(`Correct! \n${correctAnswer}`);
+      return;
     }
+
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_answer: userAnswer,
+        correct_answer: correctAnswer,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.answer === true) {
+          Alert.alert(`Correct! \n${correctAnswer}`);
+        } else {
+          Alert.alert("Incorrect, please try again.");
+        }
+      });
   };
 
   return (
@@ -64,7 +73,7 @@ function LearnerScenarioScreen({ route }) {
             initialValues={{ llAnswer: "", errorMessage: "" }}
             // function that gets called when form is submitted
             onSubmit={(values) =>
-              gradeTranslation(
+              checkAnswer(
                 values.llAnswer,
                 scenario.answerTranslation[scenario.language]
               )
