@@ -29,7 +29,7 @@ function LearnerScenarioScreen({ route }) {
 
     // Don't make backend call if answer is identical to correct answer
     if (userAnswer === correctAnswer) {
-      Alert.alert(`✅ Correct! \n${correctAnswer}`);
+      Alert.alert(`✅ Correct! \nAnswer: ${correctAnswer}`);
       return;
     }
 
@@ -47,7 +47,7 @@ function LearnerScenarioScreen({ route }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.answer === true) {
-          Alert.alert(`✅ Correct! \n${correctAnswer}`);
+          Alert.alert(`✅ Correct! \nAnswer: ${correctAnswer}`);
         } else {
           Alert.alert("❌ Incorrect, please try again.");
         }
