@@ -46,7 +46,7 @@ function LearnerScenarioScreen({ route }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.answer === true) {
+        if (data.answer) {
           Alert.alert(`✅ Correct! \nAnswer: ${correctAnswer}`);
         } else {
           Alert.alert("❌ Incorrect, please try again.");
