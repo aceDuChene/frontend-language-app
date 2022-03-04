@@ -34,7 +34,6 @@ function RecordButton({ type, getReference, scenarioID, language }) {
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
     const uri = recording.getURI();
-    console.log(uri);
     await updateStorage(uri);
   }
 
@@ -66,7 +65,7 @@ function RecordButton({ type, getReference, scenarioID, language }) {
         const uriParts = uri.split(".");
         const fileType = uriParts[uriParts.length - 1];
         const fileName = scenarioID + language + type + "." + fileType;
-        const filePath = `/cp-audio/${fileName}`
+        const filePath = `/cp-audio/${fileName}`;
         storage
           .ref()
           .child(`${filePath}`)

@@ -76,7 +76,7 @@ function CategoriesScreen({ route, navigation }) {
                 language_code: route.params.language_code,
                 category: item.name,
                 user_type: route.params.user_type,
-                language_key: route.params.language_key,
+
                 category_key: item.id,
                 languageHasContent: route.params.languageHasContent,
                 categoryHasContent: item.hasContent,

@@ -22,7 +22,6 @@ function LanguagesScreen({ route, navigation }) {
       query = query.where("hasContent", "==", true);
     }
     await query
-      .orderBy("englishName")
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((documentSnapshot) => {
@@ -57,16 +56,15 @@ function LanguagesScreen({ route, navigation }) {
       <ListItemSeparator />
       <FlatList
         data={languages}
-        keyExtractor={(language) => language.englishName}
+        keyExtractor={(language) => language.id}
         renderItem={({ item }) => (
           <ListItem
-            title={item.englishName}
+            title={item.id}
             imageLink={item.flag}
             onPress={() => {
               navigation.navigate(routes.CATEGORIES, {
-                language: item.englishName,
+                language: item.id,
                 language_code: item.code,
-                language_key: item.id,
                 user_type: route.params.user_type,
                 languageHasContent: item.hasContent,
               });

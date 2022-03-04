@@ -88,7 +88,7 @@ function ProviderScenarioScreen({ route, navigation }) {
     let updateError = false;
     await db
       .collection("Languages")
-      .doc(scenario.language_key)
+      .doc(scenario.language)
       .update({
         hasContent: true,
       })
@@ -157,7 +157,7 @@ function ProviderScenarioScreen({ route, navigation }) {
   const resetLanguage = async () => {
     await db
       .collection("Languages")
-      .doc(scenario.language_key)
+      .doc(scenario.language)
       .update({
         hasContent: false,
       })
@@ -206,7 +206,6 @@ function ProviderScenarioScreen({ route, navigation }) {
       language_code: scenario.language_code,
       category: scenario.category,
       user_type: "CP",
-      language_key: scenario.language_key,
       category_key: scenario.category_key,
       languageHasContent: languageHasContent,
       categoryHasContent: categoryHasContent,
