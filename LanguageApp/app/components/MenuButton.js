@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable, Modal } from "react-native";
+import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
 
-import colors from "../config/colors";
 import MenuOpened from "../navigation/MenuOpened";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function MenuButton() {
   // Adapted from React Native Modal Documentation https://reactnative.dev/docs/modal#example
@@ -19,27 +19,21 @@ function MenuButton() {
       >
         <MenuOpened onPress={() => setModalVisible(!modalVisible)} />
       </Modal>
-      <Pressable
+      <TouchableOpacity
         style={[styles.button, styles.buttonOpen]}
         onPress={() => setModalVisible(!modalVisible)}
       >
-        <Text style={styles.text}>menu</Text>
-      </Pressable>
+        <MaterialCommunityIcons name="menu" size={30} />
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.lightBlue,
-    borderWidth: 1,
-    borderRadius: 25,
-    padding: 5,
-    bottom: "50%",
-    right: 10,
-    width: 60,
+    bottom: 12,
+    right: 18,
     justifyContent: "center",
-    alignItems: "center",
   },
   text: {
     fontSize: 14,
@@ -54,9 +48,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
-  },
-  buttonOpen: {
-    backgroundColor: colors.lightBlue,
   },
 });
 
