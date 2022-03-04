@@ -56,7 +56,7 @@ function LanguagesScreen({ route, navigation }) {
       <ListItemSeparator />
       <FlatList
         data={languages}
-        keyExtractor={(language) => language.englishName}
+        keyExtractor={(language) => language.id}
         renderItem={({ item }) => (
           <ListItem
             title={item.id}
