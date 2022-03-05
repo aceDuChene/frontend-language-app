@@ -7,12 +7,15 @@ import { db } from "../../firebaseSetup";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import AppButton from "../components/AppButton";
-import AppText from "../components/AppText";
-import ScenarioImage from "../components/ScenarioImage";
-import RecordButton from "../components/RecordButton";
-import AppTextInput from "../components/AppTextInput";
-import FormMessages from "../components/FormMessages";
+import {
+  AppButton,
+  AppText,
+  ScenarioImage,
+  RecordButton,
+  AppTextInput,
+  FormMessages,
+} from "../components";
+
 import { AuthenticatedUserContext } from "../navigation/AuthenticatedUserProvider";
 import routes from "../navigation/routes";
 

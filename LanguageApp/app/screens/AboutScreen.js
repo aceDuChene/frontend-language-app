@@ -2,7 +2,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import React from "react";
 
 import colors from "../config/colors";
-import AppText from "../components/AppText";
+import { AppText } from "../components";
 
 function UserTypeScreen({ navigation }) {
   return (

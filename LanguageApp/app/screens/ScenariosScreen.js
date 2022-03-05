@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import ListItem from "../components/ListItem";
-import ListItemSeparator from "../components/ListItemSeparator";
-import LoadingSign from "../components/LoadingSign";
-import AppTextInput from "../components/AppTextInput";
-import ErrorMessage from "../components/ErrorMessage";
+import {
+  ListItem,
+  ListItemSeparator,
+  LoadingSign,
+  AppTextInput,
+  ErrorMessage,
+} from "../components";
+
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 import colors from "../config/colors";

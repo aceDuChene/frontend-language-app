@@ -1,5 +1,4 @@
 // Source: https://blog.jscrambler.com/how-to-integrate-firebase-authentication-with-an-expo-app
-
 import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { View, ActivityIndicator } from "react-native";

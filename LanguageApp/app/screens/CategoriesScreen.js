@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 
-import ListItem from "../components/ListItem";
-import ListItemSeparator from "../components/ListItemSeparator";
-import LoadingSign from "../components/LoadingSign";
-import ErrorMessage from "../components/ErrorMessage";
+import {
+  ListItem,
+  ListItemSeparator,
+  LoadingSign,
+  ErrorMessage,
+} from "../components";
+
 import routes from "../navigation/routes";
 import { db } from "../../firebaseSetup";
 

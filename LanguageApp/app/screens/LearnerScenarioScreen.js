@@ -4,14 +4,16 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import AppButton from "../components/AppButton";
-import AppTextInput from "../components/AppTextInput";
-import AppText from "../components/AppText";
-import ScenarioImage from "../components/ScenarioImage";
-import AppButtonSecondary from "../components/AppButtonSecondary";
-import SoundButton from "../components/SoundButton";
-import SpeechToTextButton from "../components/SpeechToTextButton";
-import FormMessages from "../components/FormMessages";
+import {
+  AppButton,
+  AppTextInput,
+  AppText,
+  ScenarioImage,
+  AppButtonSecondary,
+  SoundButton,
+  SpeechToTextButton,
+  FormMessages,
+} from "../components";
 
 import colors from "../config/colors";
 import { DOMAIN } from "@env";

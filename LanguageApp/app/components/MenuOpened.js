@@ -1,18 +1,12 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Platform,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AppText from "../components/AppText";
+import AppText from "./AppText";
 
 import colors from "../config/colors";
-import routes from "./routes";
+import routes from "../navigation/routes";
 
 import { auth } from "../../firebaseSetup";
 
