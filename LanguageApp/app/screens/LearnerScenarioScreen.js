@@ -14,6 +14,7 @@ import SpeechToTextButton from "../components/SpeechToTextButton";
 import FormMessages from "../components/FormMessages";
 
 import colors from "../config/colors";
+import { DOMAIN } from "@env";
 
 const validationSchema = Yup.object().shape({
   llAnswer: Yup.string().required().label("Answer"),
@@ -22,11 +23,35 @@ const validationSchema = Yup.object().shape({
 function LearnerScenarioScreen({ route }) {
   const scenario = route.params;
 
-  /* TO DO: Add functionality to compare LL and CP answers */
-  const gradeTranslation = async () => {
-    // determine distancde-wise match
-    // send alert about correct/try again
-    console.log("grading the answer");
+  // Makes call to backend to check user answer
+  const checkAnswer = async (userAnswer, correctAnswer) => {
+    const apiUrl = `https://${DOMAIN}/text-comparison`;
+
+    // Don't make backend call if answer is identical to correct answer
+    if (userAnswer === correctAnswer) {
+      Alert.alert(`✅ Correct! \nAnswer: ${correctAnswer}`);
+      return;
+    }
+
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_answer: userAnswer,
+        correct_answer: correctAnswer,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.answer) {
+          Alert.alert(`✅ Correct! \nAnswer: ${correctAnswer}`);
+        } else {
+          Alert.alert("❌ Incorrect, please try again.");
+        }
+      });
   };
 
   return (
@@ -47,7 +72,12 @@ function LearnerScenarioScreen({ route }) {
           <Formik
             initialValues={{ llAnswer: "", errorMessage: "" }}
             // function that gets called when form is submitted
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) =>
+              checkAnswer(
+                values.llAnswer,
+                scenario.answerTranslation[scenario.language]
+              )
+            }
             validationSchema={validationSchema}
           >
             {({
