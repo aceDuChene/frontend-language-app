@@ -12,6 +12,8 @@ import AboutScreen from "../screens/AboutScreen";
 import LoginScreen from "../screens/LoginScreen";
 import MenuButton from "../components/MenuButton";
 
+import AdminScreen from "../screens/AdminScreen";
+
 const Stack = createStackNavigator();
 
 const AppNavigator = () => (
@@ -23,6 +25,7 @@ const AppNavigator = () => (
       headerRight: (props) => <MenuButton />,
     }}
   >
+    <Stack.Screen name="Admin Page" component={AdminScreen} />
     <Stack.Screen name="User Type" component={UserTypeScreen} />
     <Stack.Screen name="Languages" component={LanguagesScreen} />
     <Stack.Screen
