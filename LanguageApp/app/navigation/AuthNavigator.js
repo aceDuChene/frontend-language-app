@@ -1,8 +1,10 @@
 import React from "react";
-import LoginScreen from "../screens/LoginScreen";
-import SignupScreen from "../screens/SignupScreen";
-import WelcomeScreen from "../screens/WelcomeScreen";
-import AboutScreen from "../screens/AboutScreen";
+import {
+  LoginScreen,
+  SignupScreen,
+  WelcomeScreen,
+  AboutScreen,
+} from "../screens";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
