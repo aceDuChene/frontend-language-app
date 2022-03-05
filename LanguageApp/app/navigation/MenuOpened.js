@@ -9,7 +9,7 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import AppText from "../components/AppText";
+import { AppText } from "../components";
 
 import colors from "../config/colors";
 import routes from "./routes";

@@ -1,10 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
-
-import AppTitle from "../components/AppTitle";
-import AppText from "../components/AppText";
-import Screen from "../components/Screen";
-import AppButton from "../components/AppButton";
+import { AppTitle, AppText, Screen, AppButton } from "../components";
 import routes from "../navigation/routes";
 import colors from "../config/colors";
 

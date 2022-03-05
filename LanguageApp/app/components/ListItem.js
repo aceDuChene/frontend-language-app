@@ -5,8 +5,7 @@ import { storage } from "../../firebaseSetup";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
-import LoadingSign from "./LoadingSign";
-import ErrorMessage from "./ErrorMessage";
+import { LoadingSign, ErrorMessage } from "./";
 
 function ListItem({ title, prompt, imageLink, icon, onPress }) {
   const [isLoading, setIsLoading] = useState();

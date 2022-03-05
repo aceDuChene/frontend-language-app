@@ -3,11 +3,7 @@
 import React from "react";
 import { useState } from "react";
 import { View } from "react-native";
-
-import AppButton from "../components/AppButton";
-import AppTextInput from "../components/AppTextInput";
-import AuthErrorMsg from "../components/AuthErrorMsg";
-
+import { AppButton, AppTextInput, AuthErrorMsg } from "../components";
 import LoginSignUpStyles from "../styles/LoginSignupStyles";
 
 import { auth } from "../../firebaseSetup";

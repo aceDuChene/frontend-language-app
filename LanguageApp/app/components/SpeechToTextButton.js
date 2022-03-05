@@ -4,7 +4,7 @@ import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";
 import { DOMAIN } from "@env";
-import LoadingSign from "./LoadingSign";
+import { LoadingSign } from "./";
 
 function SpeechToTextButton({
   getTranscription,
