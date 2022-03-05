@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Pressable, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Audio } from "expo-av";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as FileSystem from "expo-file-system";

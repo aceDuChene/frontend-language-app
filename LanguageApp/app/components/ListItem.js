@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Image, View, StyleSheet, TouchableHighlight } from "react-native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { storage } from "../../firebaseSetup";
 
 import AppText from "./AppText";

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useContext } from "react";
+import React from "react";
 import { Screen, AppButton } from "../components";
 import routes from "../navigation/routes";
 import colors from "../config/colors";

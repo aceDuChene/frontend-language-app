@@ -1,5 +1,4 @@
 // Source: https://blog.jscrambler.com/how-to-integrate-firebase-authentication-with-an-expo-app
-
 import React from "react";
 import { useState } from "react";
 import { View } from "react-native";

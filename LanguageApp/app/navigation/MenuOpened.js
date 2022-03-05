@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Platform,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
