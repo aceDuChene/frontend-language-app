@@ -3,7 +3,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 
-import { AppText } from "./";
+import AppText from "./AppText";
 
 const AuthErrorMsg = ({ error, visible }) => {
   if (!error || !visible) {

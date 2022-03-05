@@ -10,6 +10,7 @@ import ListItem from "./ListItem";
 import ListItemSeparator from "./ListItemSeparator";
 import LoadingSign from "./LoadingSign";
 import MenuButton from "./MenuButton";
+import MenuOpened from "./MenuOpened";
 import RecordButton from "./RecordButton";
 import ScenarioImage from "./ScenarioImage";
 import Screen from "./Screen";
@@ -29,6 +30,7 @@ export {
   ListItemSeparator,
   LoadingSign,
   MenuButton,
+  MenuOpened,
   RecordButton,
   ScenarioImage,
   Screen,

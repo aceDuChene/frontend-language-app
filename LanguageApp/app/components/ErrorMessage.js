@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { AppText } from "./";
+import AppText from "./AppText";
 
 function ErrorMessage({ style, message }) {
   return (

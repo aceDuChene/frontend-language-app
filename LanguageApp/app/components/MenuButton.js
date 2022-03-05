@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
 
-import MenuOpened from "../navigation/MenuOpened";
+import MenuOpened from "./MenuOpened";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function MenuButton() {
