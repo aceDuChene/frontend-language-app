@@ -13,7 +13,7 @@ The goal of this app is to allow two types of users to translate provided scenar
 
 
 # Installation
-The app can be accessed using the provided `.apk` file, `LanuageApp.apk`. Simply drag and drop the `.apk` file onto a running Android emulator. You will see a screen indicating the APK is being installed (Figure 1). When installation is complete, swipe from the bottom of the home screen upwards to see the list of apps installed on the Android device. Language App should be in the list of apps (Figure 2). Click on the app to open.  
+The app can be accessed using the provided `.apk` file, `Locute.apk`. Simply drag and drop the `.apk` file onto a running Android emulator. You will see a screen indicating the APK is being installed (Figure 1). When installation is complete, swipe from the bottom of the home screen upwards to see the list of apps installed on the Android device. Language App should be in the list of apps (Figure 2). Click on the app to open.  
 
 To use the recording feature you must enable the microphone on the emulator. Click on the ‘Extended Controls’ button from the emulator menu (Figure 2, red circle). Within the Extended Controls menu, select ‘Microphone’ from the left-side menu. Toggle-on the third option: ‘Virtual microphone uses host audio input’. 
 
