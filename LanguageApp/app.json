@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "LanguageApp",
-    "slug": "LanguageApp",
+    "name": "Locute",
+    "slug": "Locute",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/locute-logo-circle.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/adaptive-icon.png",
+        "foregroundImage": "./app/assets/locute-logo-circle.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.gabeechka.LanguageApp"
